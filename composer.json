@@ -1,0 +1,20 @@
+{
+    "name": "clickandmortar/advanced-csv-connector-bundle",
+    "description": "Advanced CSV Connector for Akeneo",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon CARRE",
+            "email": "simon.carre@clickandmortar.fr"
+        }
+    ],
+    "require": {
+        "akeneo/pim-community-dev": "^2.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ClickAndMortar\\ImportBundle\\": ""
+        }
+    }
+}

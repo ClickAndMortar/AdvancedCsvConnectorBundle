@@ -1,0 +1,8 @@
+services:
+    candm_advanced_csv_connector.provider.form.job_instance:
+        class: '%pim_enrich.provider.form.job_instance.class%'
+        arguments:
+            -
+                csv_advanced_product_import: pim-job-instance-csv-advanced-product-import
+        tags:
+            - { name: pim_enrich.provider.form }

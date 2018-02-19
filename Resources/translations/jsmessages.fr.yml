@@ -1,0 +1,9 @@
+# Custom
+batch_jobs:
+    csv_advanced_product_import:
+        label: Import des produits avancé (CSV)
+        fields:
+            mapping:
+                label: Mapping des données
+        import:
+            label: Import des produits
