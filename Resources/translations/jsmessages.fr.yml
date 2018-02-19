@@ -7,3 +7,5 @@ batch_jobs:
                 label: Mapping des données
         import:
             label: Import des produits
+        validation:
+            label: Validation du fichier

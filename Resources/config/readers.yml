@@ -1,0 +1,11 @@
+parameters:
+    candm_advanced_csv_connector.reader.file.csv_advanced_product.class: ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductAdvancedReader
+
+services:
+    candm_advanced_csv_connector.reader.file.csv_advanced_product:
+        class: '%candm_advanced_csv_connector.reader.file.csv_advanced_product.class%'
+        arguments:
+            - '@pim_connector.reader.file.csv_iterator_factory'
+            - '@pim_connector.array_converter.flat_to_standard.product_delocalized'
+            - '@pim_connector.reader.file.media_path_transformer'
+            - []

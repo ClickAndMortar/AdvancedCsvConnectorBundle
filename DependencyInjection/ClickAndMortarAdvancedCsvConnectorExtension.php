@@ -19,6 +19,8 @@ class ClickAndMortarAdvancedCsvConnectorExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('jobs.yml');
+        $loader->load('steps.yml');
+        $loader->load('readers.yml');
         $loader->load('job_constraints.yml');
         $loader->load('job_defaults.yml');
         $loader->load('providers.yml');

@@ -1,0 +1,11 @@
+services:
+    candm_advanced_csv_connector.step.csv_advanced_product.import:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'import'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@candm_advanced_csv_connector.reader.file.csv_advanced_product'
+            - '@pim_connector.processor.denormalization.product'
+            - '@pim_connector.writer.database.product'
+            - '%pim_connector.step.product.import.bulk_size%'
