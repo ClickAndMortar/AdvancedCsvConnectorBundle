@@ -10,7 +10,6 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
-                - '@pim_connector.step.charset_validator'
                 - '@candm_advanced_csv_connector.step.csv_advanced_product.import'
                 - '@pim_connector.step.csv_product.import_associations'
         tags:

@@ -1,0 +1,10 @@
+parameters:
+    candm_advanced_csv_connector.helper.import.class: ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper
+
+services:
+    candm_advanced_csv_connector.helper.import:
+        class: '%candm_advanced_csv_connector.helper.import.class%'
+        arguments:
+            - '@logger'
+            - '%kernel.root_dir%'
+            - '%data_in_directory%'
