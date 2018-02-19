@@ -72,7 +72,7 @@ class ImportHelper
      */
     public function splitFiles($filePath)
     {
-        $filePaths                 = array();
+        $filePaths                 = [];
         $hasAtLeastOneSplittedFile = false;
         $prefixFilename            = str_replace('*', '', pathinfo($filePath, PATHINFO_FILENAME));
         $prefixFilename            = str_replace(' ', '-', $prefixFilename);
@@ -119,6 +119,24 @@ class ImportHelper
         }
 
         return $filePaths;
+    }
+
+    /**
+     * Get value in $item by $code
+     *
+     * @param array  $item
+     * @param string $code
+     * @param null   $default
+     *
+     * @return string | null
+     */
+    public function getByCode($item, $code, $default = null)
+    {
+        if (array_key_exists($code, $item)) {
+            return $item[$code];
+        }
+
+        return $default;
     }
 
     /**

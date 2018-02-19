@@ -30,14 +30,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      *
      * @var array
      */
-    protected $filesPaths = array();
+    protected $filesPaths = [];
 
     /**
      * Waiting list for CSV files process
      *
      * @var array
      */
-    protected $waitingListCsvFilesPaths = array();
+    protected $waitingListCsvFilesPaths = [];
 
     /**
      * Current file path
@@ -45,6 +45,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @var string
      */
     protected $currentFilePath = null;
+
+    /**
+     * Attributes mapping
+     *
+     * @var array
+     */
+    protected $mapping = [];
 
     /**
      * Product advanced reader constructor.
@@ -80,6 +87,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             $jobFilePath                    = $jobParameters->get('filePath');
             $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath);
             $this->waitingListCsvFilesPaths = $this->filesPaths;
+        }
+
+        if (empty($this->mapping)) {
+            $mappingAsJson = $jobParameters->get('mapping');
+            $this->mapping = json_decode($mappingAsJson, true);
         }
 
         if (!empty($this->waitingListCsvFilesPaths)) {
@@ -139,9 +151,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             $data               = array_merge($data, $missingValues);
         }
         $item = array_combine($this->fileIterator->getHeaders(), $data);
-
-        // Update item with attributes codes
-        // TODO : read mapping from current job here
+        $item = $this->updateByMapping($item);
 
         try {
             $item = $this->converter->convert($item, $this->getArrayConverterOptions());
@@ -150,5 +160,42 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         return $item;
+    }
+
+    /**
+     * Get all files paths
+     *
+     * @return array
+     */
+    public function getFilePaths()
+    {
+        return $this->filesPaths;
+    }
+
+    /**
+     * Update item by job mapping
+     *
+     * @param array $item
+     *
+     * @return array
+     */
+    protected function updateByMapping($item)
+    {
+        $newItem = [];
+        foreach ($this->mapping['attributes'] as $attributeMapping) {
+            $value = null;
+
+            // Simple mapping
+            if (isset($attributeMapping['dataCode'])) {
+                $value = $this->importHelper->getByCode($item, $attributeMapping['dataCode']);
+            }
+
+            // Add value in new item
+            if ($value !== null) {
+                $newItem[$attributeMapping['attributeCode']] = $value;
+            }
+        }
+
+        return $newItem;
     }
 }

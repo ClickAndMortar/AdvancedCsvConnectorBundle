@@ -11,6 +11,5 @@ services:
             - '@akeneo_batch.job_repository'
             -
                 - '@candm_advanced_csv_connector.step.csv_advanced_product.import'
-                - '@pim_connector.step.csv_product.import_associations'
         tags:
             - { name: akeneo_batch.job, connector: '%candm_advanced_csv_connector.connector_name.csv%', type: '%pim_connector.job.import_type%' }
