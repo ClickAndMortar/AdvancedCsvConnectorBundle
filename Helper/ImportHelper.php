@@ -159,6 +159,9 @@ class ImportHelper
      */
     public function setMetricUnitAsSuffix($attributeValue, $attributeCode)
     {
+        // Set to 0 if we have empty value
+        $attributeValue = !empty($attributeValue) ? floatval($attributeValue) : 0;
+
         /** @var Attribute $attribute */
         $attribute = $this->attributeRepository->findOneByIdentifier($attributeCode);
         if ($attribute !== null && $attribute->getBackendType() == AttributeTypes::BACKEND_TYPE_METRIC) {
