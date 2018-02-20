@@ -6,5 +6,6 @@ services:
         class: '%candm_advanced_csv_connector.helper.import.class%'
         arguments:
             - '@logger'
+            - '@pim_catalog.repository.attribute'
             - '%kernel.root_dir%'
             - '%data_in_directory%'

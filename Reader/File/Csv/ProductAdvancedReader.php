@@ -2,7 +2,9 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv;
 
+use Akeneo\Component\Batch\Item\FileInvalidItem;
 use Akeneo\Component\Batch\Item\InitializableInterface;
+use Akeneo\Component\Batch\Item\InvalidItemException;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
 use Pim\Component\Connector\ArrayConverter\ArrayConverterInterface;
 use Pim\Component\Connector\Exception\DataArrayConversionException;
@@ -178,6 +180,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param array $item
      *
      * @return array
+     * @throws InvalidItemException
      */
     protected function updateByMapping($item)
     {
@@ -192,10 +195,38 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
             // Add value in new item
             if ($value !== null) {
+                // Update value by callback method if necessary
+                if (isset($attributeMapping['callback'])) {
+                    if (method_exists($this->importHelper, $attributeMapping['callback'])) {
+                        $value = $this->importHelper->{$attributeMapping['callback']}($value, $attributeMapping['attributeCode']);
+                    } else {
+                        $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.no_callback_method', ['%callbackMethod%' => $attributeMapping['callback']]);
+                    }
+                }
+
                 $newItem[$attributeMapping['attributeCode']] = $value;
             }
         }
 
         return $newItem;
+    }
+
+    /**
+     * Throw an invalid item exception
+     *
+     * @param array  $item
+     * @param string $message
+     * @param array  $parameters
+     *
+     * @return void
+     * @throws InvalidItemException
+     */
+    protected function throwInvalidItemException($item, $message, $parameters = [])
+    {
+        $invalidItem = new FileInvalidItem(
+            $item,
+            ($this->stepExecution->getSummaryInfo('item_position'))
+        );
+        throw new InvalidItemException($message, $invalidItem, $parameters);
     }
 }

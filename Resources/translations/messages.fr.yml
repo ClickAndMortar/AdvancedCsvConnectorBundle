@@ -1,0 +1,6 @@
+# Custom
+batch_jobs:
+    csv_advanced_product_import:
+        import:
+            warnings:
+                no_callback_method: La méthode "%callbackMethod%" n'existe pas sur le helper

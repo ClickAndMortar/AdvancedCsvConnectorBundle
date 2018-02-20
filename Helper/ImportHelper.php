@@ -4,6 +4,9 @@ namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
 use Exception;
 use Monolog\Logger;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeRepository;
+use Pim\Bundle\CatalogBundle\Entity\Attribute;
+use Pim\Component\Catalog\AttributeTypes;
 use Symfony\Component\Process\Process;
 
 /**
@@ -50,15 +53,22 @@ class ImportHelper
     protected $dataInDirectory;
 
     /**
+     * @var AttributeRepository
+     */
+    protected $attributeRepository;
+
+    /**
      * ImportHelper constructor.
      *
-     * @param Logger $logger
-     * @param string $kernelRootDirectory
-     * @param string $dataInDirectory
+     * @param Logger              $logger
+     * @param AttributeRepository $attributeRepository
+     * @param string              $kernelRootDirectory
+     * @param string              $dataInDirectory
      */
-    public function __construct(Logger $logger, $kernelRootDirectory, $dataInDirectory)
+    public function __construct(Logger $logger, AttributeRepository $attributeRepository, $kernelRootDirectory, $dataInDirectory)
     {
         $this->logger              = $logger;
+        $this->attributeRepository = $attributeRepository;
         $this->kernelRootDirectory = $kernelRootDirectory;
         $this->dataInDirectory     = $dataInDirectory;
     }
@@ -137,6 +147,25 @@ class ImportHelper
         }
 
         return $default;
+    }
+
+    /**
+     * Complete metric attribute value with unit
+     *
+     * @param string $attributeValue
+     * @param string $attributeCode
+     *
+     * @return string
+     */
+    public function setMetricUnitAsSuffix($attributeValue, $attributeCode)
+    {
+        /** @var Attribute $attribute */
+        $attribute = $this->attributeRepository->findOneByIdentifier($attributeCode);
+        if ($attribute !== null && $attribute->getBackendType() == AttributeTypes::BACKEND_TYPE_METRIC) {
+            $attributeValue = sprintf('%s %s', $attributeValue, $attribute->getDefaultMetricUnit());
+        }
+
+        return $attributeValue;
     }
 
     /**
