@@ -51,6 +51,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_CALLBACK_KEY = 'callback';
 
     /**
+     * Default value key in mapping
+     *
+     * @var string
+     */
+    const MAPPING_DEFAULT_VALUE_KEY = 'defaultValue';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -222,6 +229,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             // Simple mapping
             if (isset($attributeMapping[self::MAPPING_DATA_CODE_KEY])) {
                 $value = $this->importHelper->getByCode($item, $attributeMapping[self::MAPPING_DATA_CODE_KEY]);
+            }
+
+            // Default value
+            if (empty($value) && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])) {
+                $value = $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY];
             }
 
             // Add value in new item

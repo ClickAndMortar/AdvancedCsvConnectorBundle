@@ -57,7 +57,8 @@ Import mapping example:
         },
         {
             "attributeCode": "life_cycle",
-            "dataCode": "idCycleVie"
+            "dataCode": "idCycleVie",
+            "defaultValue": "1"
         },
         {
             "attributeCode": "price-EUR",
@@ -73,6 +74,7 @@ Mapping explanation:
 * `attributeCode` (mandatory): The attribute code in your Akeneo project
 * `dataCode` (mandatory): The column name in your file
 * `callback`: The method name in your import helper to transform data from CSV file
+* `defaultValue`: Default value for attribute if empty data in file
 
 ### Export
 
