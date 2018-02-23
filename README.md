@@ -53,7 +53,8 @@ Import mapping example:
         },
         {
             "attributeCode": "age_range",
-            "dataCode": "trancheAge"
+            "dataCode": "trancheAge",
+            "normalizerCallback": "getAgeRange"
         },
         {
             "attributeCode": "life_cycle",
@@ -64,7 +65,33 @@ Import mapping example:
             "attributeCode": "price-EUR",
             "dataCode": "prix"
         }
-    ]
+    ],
+    "normalizers": [
+            {
+                "code": "getAgeRange",
+                "values": [
+                    {
+                        "normalizedValue": "0-18",
+                        "originalValues": [
+                            "5",
+                            "12"
+                        ]
+                    },
+                    {
+                        "normalizedValue": "18-35",
+                        "originalValues": [
+                            "19",
+                            "26"
+                        ]
+                    },
+                    {
+                        "normalizedValue": "35-50",
+                        "originalValues": [
+                            "38"
+                        ]
+                    }
+            }
+        ]
 }
 ```
 

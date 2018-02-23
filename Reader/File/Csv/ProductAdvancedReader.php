@@ -58,6 +58,20 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_DEFAULT_VALUE_KEY = 'defaultValue';
 
     /**
+     * Normalizer callback key in mapping
+     *
+     * @var string
+     */
+    const MAPPING_NORMALIZER_CALLBACK_KEY = 'normalizerCallback';
+
+    /**
+     * Normalizers key in mapping
+     *
+     * @var string
+     */
+    const MAPPING_NORMALIZERS_KEY = 'normalizers';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -247,6 +261,12 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                     }
                 }
 
+                // Update value with callback normalizer
+                if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
+                    $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
+                    $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues);
+                }
+
                 $newItem[$attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]] = $value;
             }
         }
@@ -278,6 +298,30 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         return true;
+    }
+
+    /**
+     * Get normalized values by normalizer code
+     *
+     * @param string $normalizerCode
+     *
+     * @return array
+     */
+    protected function getNormalizedValuesByCode($normalizerCode)
+    {
+        if (isset($this->mapping[self::MAPPING_NORMALIZERS_KEY])) {
+            foreach ($this->mapping[self::MAPPING_NORMALIZERS_KEY] as $normalizer) {
+                if (
+                    isset($normalizer['code'])
+                    && isset($normalizer['values'])
+                    && $normalizer['code'] === $normalizerCode
+                ) {
+                    return $normalizer['values'];
+                }
+            }
+        }
+
+        return [];
     }
 
     /**

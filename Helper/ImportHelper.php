@@ -172,6 +172,29 @@ class ImportHelper
     }
 
     /**
+     * Get normalized value
+     *
+     * @param string $value
+     * @param array  $normalizedValuesArray
+     *
+     * @return string
+     */
+    public function getNormalizedValue($value, $normalizedValuesArray)
+    {
+        foreach ($normalizedValuesArray as $normalizedValueArray) {
+            if (
+                isset($normalizedValueArray['originalValues'])
+                && isset($normalizedValueArray['normalizedValue'])
+                && in_array($value, $normalizedValueArray['originalValues'])
+            ) {
+                return $normalizedValueArray['normalizedValue'];
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Check and encode file to UTF-8 if necessary
      *
      * @param string $filePath
