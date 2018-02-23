@@ -329,11 +329,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         // Check for complete callback
+        if ($isNewProduct === null) {
+            $isNewProduct = $this->productRepository->findOneByIdentifier($newItem[$this->identifierCode]) === null;
+        }
         if (
             isset($this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
             && method_exists($this->importHelper, $this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
         ) {
-            $newItem = $this->importHelper->{$this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem);
+            $newItem = $this->importHelper->{$this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $isNewProduct);
         }
 
         return $newItem;
