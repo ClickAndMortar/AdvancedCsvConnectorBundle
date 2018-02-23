@@ -174,9 +174,9 @@ class ImportHelper
     /**
      * Get normalized value
      *
-     * @param string $value
-     * @param array  $normalizedValuesArray
-     * @param string | null   $defaultValue
+     * @param string        $value
+     * @param array         $normalizedValuesArray
+     * @param string | null $defaultValue
      *
      * @return string
      */

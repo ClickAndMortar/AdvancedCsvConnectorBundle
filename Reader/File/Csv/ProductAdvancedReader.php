@@ -71,6 +71,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      */
     const MAPPING_NORMALIZERS_KEY = 'normalizers';
 
+
+    /**
+     * Complete callback mapping key
+     *
+     * @var string
+     */
+    const MAPPING_COMPLETE_CALLBACK_KEY = 'completeCallback';
+
     /**
      * Import helper
      *
@@ -270,6 +278,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
                 $newItem[$attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]] = $value;
             }
+        }
+
+        // Check for complete callback
+        if (
+            isset($this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
+            && method_exists($this->importHelper, $this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
+        ) {
+            $newItem = $this->importHelper->{$this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem);
         }
 
         return $newItem;
