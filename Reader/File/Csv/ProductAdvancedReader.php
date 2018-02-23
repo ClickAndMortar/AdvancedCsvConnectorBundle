@@ -264,7 +264,8 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                 // Update value with callback normalizer
                 if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
                     $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
-                    $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues);
+                    $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
+                    $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
                 }
 
                 $newItem[$attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]] = $value;

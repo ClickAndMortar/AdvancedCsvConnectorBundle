@@ -176,10 +176,11 @@ class ImportHelper
      *
      * @param string $value
      * @param array  $normalizedValuesArray
+     * @param string | null   $defaultValue
      *
      * @return string
      */
-    public function getNormalizedValue($value, $normalizedValuesArray)
+    public function getNormalizedValue($value, $normalizedValuesArray, $defaultValue = null)
     {
         foreach ($normalizedValuesArray as $normalizedValueArray) {
             if (
@@ -191,7 +192,7 @@ class ImportHelper
             }
         }
 
-        return $value;
+        return $defaultValue;
     }
 
     /**
