@@ -8,6 +8,7 @@ use Akeneo\Component\Batch\Item\InvalidItemException;
 use Akeneo\Component\Batch\Job\BatchStatus;
 use Akeneo\Component\Batch\Job\ExitStatus;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
+use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
 use Pim\Component\Connector\ArrayConverter\ArrayConverterInterface;
 use Pim\Component\Connector\Exception\DataArrayConversionException;
 use Pim\Component\Connector\Reader\File\Csv\ProductReader;
@@ -71,7 +72,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      */
     const MAPPING_NORMALIZERS_KEY = 'normalizers';
 
-
     /**
      * Complete callback mapping key
      *
@@ -80,11 +80,32 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_COMPLETE_CALLBACK_KEY = 'completeCallback';
 
     /**
+     * Complete callback mapping key
+     *
+     * @var string
+     */
+    const MAPPING_ONLY_ON_CREATION_KEY = 'onlyOnCreation';
+
+    /**
+     * Identifier mapping key
+     *
+     * @var string
+     */
+    const MAPPING_IDENTIFIER_KEY = 'identifier';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
      */
     protected $importHelper;
+
+    /**
+     * Product repository
+     *
+     * @var ProductRepository
+     */
+    protected $productRepository;
 
     /**
      * All CSV file paths
@@ -115,6 +136,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $mapping = [];
 
     /**
+     * Identifier attribute code
+     *
+     * @var null
+     */
+    protected $identifierCode = null;
+
+    /**
      * Product advanced reader constructor.
      *
      * @param FileIteratorFactory     $fileIteratorFactory
@@ -122,18 +150,21 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param MediaPathTransformer    $mediaPathTransformer
      * @param array                   $options
      * @param ImportHelper            $importHelper
+     * @param ProductRepository       $productRepository
      */
     public function __construct(
         FileIteratorFactory $fileIteratorFactory,
         ArrayConverterInterface $converter,
         MediaPathTransformer $mediaPathTransformer,
         array $options = [],
-        ImportHelper $importHelper
+        ImportHelper $importHelper,
+        ProductRepository $productRepository
     )
     {
         parent::__construct($fileIteratorFactory, $converter, $mediaPathTransformer, $options);
 
-        $this->importHelper = $importHelper;
+        $this->importHelper      = $importHelper;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -244,9 +275,26 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      */
     protected function updateByMapping($item)
     {
-        $newItem = [];
+        $newItem      = [];
+        $isNewProduct = null;
+
         foreach ($this->mapping[self::MAPPING_BASE_ATTRIBUTES_KEY] as $attributeMapping) {
             $value = null;
+
+            // Check if attribute need to be define only on creation
+            if (
+                isset($attributeMapping[self::MAPPING_ONLY_ON_CREATION_KEY])
+                && $attributeMapping[self::MAPPING_ONLY_ON_CREATION_KEY] === true
+            ) {
+                // Make a request to check if is a new product
+                if ($isNewProduct === null) {
+                    $isNewProduct = $this->productRepository->findOneByIdentifier($newItem[$this->identifierCode]) === null;
+                }
+
+                if (!$isNewProduct) {
+                    continue;
+                }
+            }
 
             // Simple mapping
             if (isset($attributeMapping[self::MAPPING_DATA_CODE_KEY])) {
@@ -312,6 +360,18 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
                 return false;
             }
+
+            // And set identifier
+            if (isset($attributeMapping[self::MAPPING_IDENTIFIER_KEY])) {
+                $this->identifierCode = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
+            }
+        }
+
+        // Check identifier
+        if ($this->identifierCode === null) {
+            $this->stopStepExecution('batch_jobs.csv_advanced_product_import.import.errors.mapping_no_identifier');
+
+            return false;
         }
 
         return true;

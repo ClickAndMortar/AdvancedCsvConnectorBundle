@@ -10,3 +10,4 @@ services:
             - '@pim_connector.reader.file.media_path_transformer'
             - []
             - '@candm_advanced_csv_connector.helper.import'
+            - '@pim_catalog.repository.product'
