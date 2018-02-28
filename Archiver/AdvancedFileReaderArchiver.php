@@ -33,14 +33,16 @@ class AdvancedFileReaderArchiver extends FileReaderArchiver
                 if ($reader instanceof ProductAdvancedReader) {
                     $filePaths = $reader->getFilePaths();
                     foreach ($filePaths as $filePath) {
-                        $key = strtr(
-                            $this->getRelativeArchivePath($jobExecution),
-                            [
-                                '%filename%' => basename($filePath),
-                            ]
-                        );
-                        $this->filesystem->put($key, file_get_contents($filePath));
-                        unlink($filePath);
+                        if (file_exists($filePath)) {
+                            $key = strtr(
+                                $this->getRelativeArchivePath($jobExecution),
+                                [
+                                    '%filename%' => basename($filePath),
+                                ]
+                            );
+                            $this->filesystem->put($key, file_get_contents($filePath));
+                            unlink($filePath);
+                        }
                     }
                 } else {
                     $jobParameters = $jobExecution->getJobParameters();

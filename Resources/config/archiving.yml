@@ -1,2 +1,3 @@
 parameters:
     pim_connector.archiver.file_reader_archiver.class: ClickAndMortar\AdvancedCsvConnectorBundle\Archiver\AdvancedFileReaderArchiver
+    pim_connector.archiver.invalid_item_csv_writer.class: ClickAndMortar\AdvancedCsvConnectorBundle\Archiver\AdvancedCsvInvalidItemWriter
