@@ -6,6 +6,6 @@ services:
         class: '%candm_advanced_csv_connector.helper.import.class%'
         arguments:
             - '@logger'
-            - '@pim_catalog.repository.attribute'
+            - '@doctrine.orm.entity_manager'
             - '%kernel.root_dir%'
             - '%data_in_directory%'

@@ -2,6 +2,7 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
+use Doctrine\ORM\EntityManager;
 use Exception;
 use Monolog\Logger;
 use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeRepository;
@@ -39,6 +40,13 @@ class ImportHelper
     protected $logger;
 
     /**
+     * Entity manager
+     *
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
      * Kernel root directory
      *
      * @var string
@@ -60,17 +68,19 @@ class ImportHelper
     /**
      * ImportHelper constructor.
      *
-     * @param Logger              $logger
-     * @param AttributeRepository $attributeRepository
-     * @param string              $kernelRootDirectory
-     * @param string              $dataInDirectory
+     * @param Logger        $logger
+     * @param EntityManager $entityManager
+     * @param string        $kernelRootDirectory
+     * @param string        $dataInDirectory
      */
-    public function __construct(Logger $logger, AttributeRepository $attributeRepository, $kernelRootDirectory, $dataInDirectory)
+    public function __construct(Logger $logger, EntityManager $entityManager, $kernelRootDirectory, $dataInDirectory)
     {
         $this->logger              = $logger;
-        $this->attributeRepository = $attributeRepository;
+        $this->entityManager       = $entityManager;
         $this->kernelRootDirectory = $kernelRootDirectory;
         $this->dataInDirectory     = $dataInDirectory;
+
+        $this->loadRepositories();
     }
 
     /**
@@ -254,5 +264,15 @@ class ImportHelper
         fclose($file);
 
         return $linesNumber;
+    }
+
+    /**
+     * Load repositories from entity manager
+     *
+     * @return void
+     */
+    protected function loadRepositories()
+    {
+        $this->attributeRepository = $this->entityManager->getRepository('PimCatalogBundle:Attribute');
     }
 }
