@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "akeneo/pim-community-dev": "^2.1.0"
+        "akeneo/pim-community-dev": "^2.1.0",
+        " clickandmortar/advanced-enrich-bundle": "dev-master"
     },
     "autoload": {
         "psr-4": {
