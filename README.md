@@ -2,20 +2,13 @@
 
 Advanced CSV Connector is an extension of classic Akeneo CSV Connector. It allows to customize columns mapping on import or export with JSON as job parameter.
 
+Made by :heart: by C&M
+
 ## Installation
 
-Add package your **`composer.json`** file:
-```javascript
-"require": {
-    ...
-    "clickandmortar/advanced-csv-connector-bundle": "^1.0"
-    ...
-}
-```
-
-Launch `composer update` to add bundle to your project:
+Add package with composer:
 ```bash
-composer update clickandmortar/advanced-csv-connector-bundle
+composer require clickandmortar/advanced-csv-connector-bundle "^1.0"
 ```
 
 Add bundle in your **`app/AppKernel.php`** file:
