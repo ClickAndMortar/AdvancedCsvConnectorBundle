@@ -33,7 +33,8 @@ Import mapping example:
     "attributes": [
         {
             "attributeCode": "ean_code",
-            "dataCode": "codeEan"
+            "dataCode": "codeEan",
+            "identifier": true
         },
         {
             "attributeCode": "lens_height",
@@ -42,7 +43,8 @@ Import mapping example:
         },
         {
             "attributeCode": "universe",
-            "dataCode": "style"
+            "dataCode": "style",
+            "onlyOnCreation": true
         },
         {
             "attributeCode": "age_range",
@@ -90,11 +92,13 @@ Import mapping example:
 
 Mapping explanation:
 
+* `identifier` (mandatory): Used to defined main identifier attribute of product
 * `attributes` (mandatory): This is the default key that must contain mapping for all output/input attributes
 * `attributeCode` (mandatory): The attribute code in your Akeneo project
 * `dataCode` (mandatory): The column name in your file
 * `callback`: The method name in your import helper to transform data from CSV file
 * `defaultValue`: Default value for attribute if empty data in file
+* `onlyOnCreation`: Set attribute value only if product is new (checked with `identifier` attribute)
 
 ### Export
 
