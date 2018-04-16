@@ -8,4 +8,4 @@ services:
             - '@candm_advanced_csv_connector.reader.file.csv_advanced_product'
             - '@pim_connector.processor.denormalization.product'
             - '@pim_connector.writer.database.product'
-            - '%pim_connector.step.product.import.bulk_size%'
+            - '%pim_job_product_batch_size%'
