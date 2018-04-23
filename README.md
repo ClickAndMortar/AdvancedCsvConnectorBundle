@@ -44,7 +44,11 @@ Import mapping example:
         {
             "attributeCode": "universe",
             "dataCode": "style",
-            "onlyOnCreation": true
+            "onlyOnCreation": true,
+            "locales": [
+                "fr_FR",
+                "en_GB"
+            ]
         },
         {
             "attributeCode": "age_range",
@@ -99,6 +103,7 @@ Mapping explanation:
 * `callback`: The method name in your import helper to transform data from CSV file
 * `defaultValue`: Default value for attribute if empty data in file
 * `onlyOnCreation`: Set attribute value only if product is new (checked with `identifier` attribute)
+* `locales`: Used to set same attribute value for different locales
 
 ### Export
 

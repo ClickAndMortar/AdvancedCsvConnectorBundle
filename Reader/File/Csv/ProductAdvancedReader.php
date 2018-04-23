@@ -94,6 +94,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_IDENTIFIER_KEY = 'identifier';
 
     /**
+     * Locales mapping key
+     *
+     * @var string
+     */
+    const MAPPING_LOCALES_KEY = 'locales';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -279,52 +286,64 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $isNewProduct = null;
 
         foreach ($this->mapping[self::MAPPING_BASE_ATTRIBUTES_KEY] as $attributeMapping) {
-            $value = null;
-
-            // Check if attribute need to be define only on creation
-            if (
-                isset($attributeMapping[self::MAPPING_ONLY_ON_CREATION_KEY])
-                && $attributeMapping[self::MAPPING_ONLY_ON_CREATION_KEY] === true
-            ) {
-                // Make a request to check if is a new product
-                if ($isNewProduct === null) {
-                    $isNewProduct = $this->productRepository->findOneByIdentifier($newItem[$this->identifierCode]) === null;
-                }
-
-                if (!$isNewProduct) {
-                    continue;
+            // Get attributes codes with locales if necessary
+            $attributesCodes = [];
+            if (!isset($attributeMapping[self::MAPPING_LOCALES_KEY])) {
+                $attributesCodes[] = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
+            } else {
+                foreach ($attributeMapping[self::MAPPING_LOCALES_KEY] as $locale) {
+                    $attributesCodes[] = sprintf('%s-%s', $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY], $locale);
                 }
             }
 
-            // Simple mapping
-            if (isset($attributeMapping[self::MAPPING_DATA_CODE_KEY])) {
-                $value = $this->importHelper->getByCode($item, $attributeMapping[self::MAPPING_DATA_CODE_KEY]);
-            }
+            foreach ($attributesCodes as $attributesCode) {
+                $value = null;
 
-            // Default value
-            if (empty($value) && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])) {
-                $value = $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY];
-            }
+                // Check if attribute need to be define only on creation
+                if (
+                    isset($attributeMapping[self::MAPPING_ONLY_ON_CREATION_KEY])
+                    && $attributeMapping[self::MAPPING_ONLY_ON_CREATION_KEY] === true
+                ) {
+                    // Make a request to check if is a new product
+                    if ($isNewProduct === null) {
+                        $isNewProduct = $this->productRepository->findOneByIdentifier($newItem[$this->identifierCode]) === null;
+                    }
 
-            // Add value in new item
-            if ($value !== null) {
-                // Update value by callback method if necessary
-                if (isset($attributeMapping[self::MAPPING_CALLBACK_KEY])) {
-                    if (method_exists($this->importHelper, $attributeMapping[self::MAPPING_CALLBACK_KEY])) {
-                        $value = $this->importHelper->{$attributeMapping[self::MAPPING_CALLBACK_KEY]}($value, $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]);
-                    } else {
-                        $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.no_callback_method', ['%callbackMethod%' => $attributeMapping[self::MAPPING_CALLBACK_KEY]]);
+                    if (!$isNewProduct) {
+                        continue;
                     }
                 }
 
-                // Update value with callback normalizer
-                if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
-                    $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
-                    $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
-                    $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
+                // Simple mapping
+                if (isset($attributeMapping[self::MAPPING_DATA_CODE_KEY])) {
+                    $value = $this->importHelper->getByCode($item, $attributeMapping[self::MAPPING_DATA_CODE_KEY]);
                 }
 
-                $newItem[$attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]] = $value;
+                // Default value
+                if (empty($value) && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])) {
+                    $value = $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY];
+                }
+
+                // Add value in new item
+                if ($value !== null) {
+                    // Update value by callback method if necessary
+                    if (isset($attributeMapping[self::MAPPING_CALLBACK_KEY])) {
+                        if (method_exists($this->importHelper, $attributeMapping[self::MAPPING_CALLBACK_KEY])) {
+                            $value = $this->importHelper->{$attributeMapping[self::MAPPING_CALLBACK_KEY]}($value, $attributesCode);
+                        } else {
+                            $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.no_callback_method', ['%callbackMethod%' => $attributeMapping[self::MAPPING_CALLBACK_KEY]]);
+                        }
+                    }
+
+                    // Update value with callback normalizer
+                    if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
+                        $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
+                        $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
+                        $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
+                    }
+
+                    $newItem[$attributesCode] = $value;
+                }
             }
         }
 
