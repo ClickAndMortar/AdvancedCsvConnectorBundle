@@ -1,5 +1,6 @@
 parameters:
     candm_advanced_csv_connector.helper.import.class: ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper
+    candm_advanced_csv_connector.helper.export.class: ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ExportHelper
 
 services:
     candm_advanced_csv_connector.helper.import:
@@ -9,3 +10,8 @@ services:
             - '@doctrine.orm.entity_manager'
             - '%kernel.root_dir%'
             - '%data_in_directory%'
+
+    candm_advanced_csv_connector.helper.export:
+        class: %candm_advanced_csv_connector.helper.export.class%
+        arguments:
+            - '@doctrine.orm.entity_manager'

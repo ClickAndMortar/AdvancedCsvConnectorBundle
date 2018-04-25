@@ -1,5 +1,6 @@
 parameters:
     candm_advanced_csv_connector.job.job_parameters.constraint_collection_provider.product_csv_advanced_import.class: ClickAndMortar\AdvancedCsvConnectorBundle\Job\JobParameters\ConstraintCollectionProvider\ProductCsvAdvancedImport
+    candm_advanced_csv_connector.job.job_parameters.constraint_collection_provider.product_csv_advanced_export.class: ClickAndMortar\AdvancedCsvConnectorBundle\Job\JobParameters\ConstraintCollectionProvider\ProductCsvAdvancedExport
 
 services:
     candm_advanced_csv_connector.job.job_parameters.constraint_collection_provider.product_csv_import:
@@ -8,5 +9,14 @@ services:
             - '@pim_connector.job.job_parameters.constraint_collection_provider.product_csv_import'
             -
                 - '%candm_advanced_csv_connector.job_name.csv_advanced_product_import%'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
+
+    candm_advanced_csv_connector.job.job_parameters.constraint_collection_provider.product_csv_export:
+        class: '%candm_advanced_csv_connector.job.job_parameters.constraint_collection_provider.product_csv_advanced_export.class%'
+        arguments:
+            - '@pim_connector.job.job_parameters.constraint_collection_provider.product_csv_export'
+            -
+                - '%candm_advanced_csv_connector.job_name.csv_advanced_product_export%'
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }

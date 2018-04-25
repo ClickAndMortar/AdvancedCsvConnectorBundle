@@ -1,0 +1,29 @@
+parameters:
+    candm_advanced_csv_connector.writer.file.product.column_sorter_by_mapping.class: ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\ProductColumnSorterByMapping
+    candm_advanced_csv_connector.writer.file.csv_advanced_product.class: ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\Csv\ProductAdvancedWriter
+
+services:
+    candm_advanced_csv_connector.writer.file.product.column_sorter_by_mapping:
+        class: '%candm_advanced_csv_connector.writer.file.product.column_sorter_by_mapping.class%'
+        arguments:
+            - '@pim_connector.array_converter.flat_to_standard.product.field_splitter'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_catalog.repository.association_type'
+            - ['categories', 'enabled', 'family', 'parent', 'groups']
+
+    candm_advanced_csv_connector.writer.file.product.flat_item_buffer_flusher:
+        class: '%pim_connector.writer.file.flat_item_buffer_flusher.class%'
+        arguments:
+             - '@candm_advanced_csv_connector.writer.file.product.column_sorter_by_mapping'
+
+    candm_advanced_csv_connector.writer.file.csv_advanced_product:
+        class: '%candm_advanced_csv_connector.writer.file.csv_advanced_product.class%'
+        arguments:
+            - '@pim_connector.array_converter.standard_to_flat.product_localized'
+            - '@pim_connector.factory.flat_item_buffer'
+            - '@candm_advanced_csv_connector.writer.file.product.flat_item_buffer_flusher'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_connector.writer.file.media_exporter_path_generator'
+            - ['pim_catalog_file', 'pim_catalog_image']
+            - 'filePath'
+            - '@candm_advanced_csv_connector.helper.export'

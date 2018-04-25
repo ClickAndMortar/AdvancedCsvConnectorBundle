@@ -1,6 +1,7 @@
 parameters:
     candm_advanced_csv_connector.connector_name.csv: 'Click And Mortar Advanced CSV Connector'
     candm_advanced_csv_connector.job_name.csv_advanced_product_import: 'csv_advanced_product_import'
+    candm_advanced_csv_connector.job_name.csv_advanced_product_export: 'csv_advanced_product_export'
 
 services:
     candm_advanced_csv_connector.job.csv_advanced_product_import:
@@ -13,3 +14,14 @@ services:
                 - '@candm_advanced_csv_connector.step.csv_advanced_product.import'
         tags:
             - { name: akeneo_batch.job, connector: '%candm_advanced_csv_connector.connector_name.csv%', type: '%pim_connector.job.import_type%' }
+
+    candm_advanced_csv_connector.job.csv_advanced_product_export:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+            - '%candm_advanced_csv_connector.job_name.csv_advanced_product_export%'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            -
+                - '@candm_advanced_csv_connector.step.csv_advanced_product.export'
+        tags:
+            - { name: akeneo_batch.job, connector: '%candm_advanced_csv_connector.connector_name.csv%', type: '%pim_connector.job.export_type%' }
