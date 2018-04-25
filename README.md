@@ -107,4 +107,74 @@ Mapping explanation:
 
 ### Export
 
-TODO
+To create a new export job based on Advanced CSV connector, go to `Exports` part and create a new job with type `Export des produits avancé (CSV)`.
+After job creation, go to edition mode and update `Mapping` parameter in global parameters tab.
+
+Export mapping example:
+
+```json
+{
+    "columns": [
+        {
+            "attributeCode": "sku",
+            "columnName": "Code reference"
+        },
+        {
+            "attributeCode": "ean_code",
+            "columnName": "EAN Code",
+            "forcedValue": "Same code"
+        },
+        {
+            "attributeCode": "family_code",
+            "columnName": "Family code",
+            "normalizerCallback": "getNormalizedFamily"
+        },
+        {
+            "attributeCode": "age_range",
+            "columnName": "Age",
+            "callback": "completeAgeRange"
+        }
+    ],
+    "normalizers": [
+        {
+            "code": "getNormalizedFamily",
+            "values": [
+                {
+                    "normalizedValue": "Man",
+                    "originalValues": [
+                        "12",
+                        "121",
+                        "122"
+                    ]
+                }
+            ]
+        }
+    ],
+    "replacements": [
+        {
+            "values": [
+                "!"
+            ],
+            "newValue": "!!!"
+        }
+    ],
+    "additionalColumns": [
+        {
+            "columnName": "Additional column",
+            "value": "Same content"
+        }
+    ]
+}
+```
+
+Mapping explanation:
+
+* `columns` (mandatory): Contains all columns mapping for export
+  * `attributeCode` (mandatory): Attribute code in Akeneo for column mapping
+  * `columnName`: Custom column name in CSV exported file
+  * `forcedValue`: Force a value
+  * `normalizerCallback`: Normalizer code to update value from Akeneo
+  * `callback`: Method name in **ImportHelper** to update value from Akeneo
+* `normalizers`: List of available normalizers used in mapping
+* `replacements`: Replace **values** by **newValue** in all columns
+* `additionalColumns`: Force static columns in CSV exported file
