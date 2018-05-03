@@ -20,3 +20,14 @@ services:
             - '@pim_connector.processor.normalization.product'
             - '@candm_advanced_csv_connector.writer.file.csv_advanced_product'
             - 10
+
+    candm_advanced_csv_connector.step.csv_advanced_product_model.import:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'import'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@candm_advanced_csv_connector.reader.file.csv_advanced_product_model'
+            - '@pim_connector.processor.denormalization.root_product_model'
+            - '@pim_connector.writer.database.product_model'
+            - '%pim_connector.step.product_model.import.bulk_size%'

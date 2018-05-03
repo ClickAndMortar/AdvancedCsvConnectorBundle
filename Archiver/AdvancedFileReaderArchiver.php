@@ -5,6 +5,7 @@ namespace ClickAndMortar\AdvancedCsvConnectorBundle\Archiver;
 use Akeneo\Component\Batch\Model\JobExecution;
 use Akeneo\Component\Batch\Step\ItemStep;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductAdvancedReader;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductModelAdvancedReader;
 use Pim\Component\Connector\Archiver\FileReaderArchiver;
 
 /**
@@ -30,7 +31,7 @@ class AdvancedFileReaderArchiver extends FileReaderArchiver
             $reader = $step->getReader();
 
             if ($this->isReaderUsable($reader)) {
-                if ($reader instanceof ProductAdvancedReader) {
+                if ($reader instanceof ProductAdvancedReader || $reader instanceof ProductModelAdvancedReader) {
                     $filePaths = $reader->getFilePaths();
                     foreach ($filePaths as $filePath) {
                         if (file_exists($filePath)) {

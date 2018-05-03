@@ -5,5 +5,6 @@ services:
             -
                 csv_advanced_product_import: pim-job-instance-csv-advanced-product-import
                 csv_advanced_product_export: pim-job-instance-csv-advanced-product-export
+                csv_advanced_product_model_import: pim-job-instance-csv-advanced-product-model-import
         tags:
             - { name: pim_enrich.provider.form }
