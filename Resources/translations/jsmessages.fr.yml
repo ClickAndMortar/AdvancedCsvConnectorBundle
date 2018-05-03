@@ -15,3 +15,11 @@ batch_jobs:
                 label: Mapping des données
         export:
             label: Export des produits
+
+    csv_advanced_product_model_import:
+        label: Import des modèles de produits avancé (CSV)
+        fields:
+            mapping:
+                label: Mapping des données
+        import:
+            label: Import des modèles de produits

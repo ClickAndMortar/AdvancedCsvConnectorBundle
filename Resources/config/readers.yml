@@ -1,5 +1,6 @@
 parameters:
     candm_advanced_csv_connector.reader.file.csv_advanced_product.class: ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductAdvancedReader
+    candm_advanced_csv_connector.reader.file.csv_advanced_product_model.class: ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductModelAdvancedReader
 
 services:
     candm_advanced_csv_connector.reader.file.csv_advanced_product:
@@ -11,3 +12,12 @@ services:
             - []
             - '@candm_advanced_csv_connector.helper.import'
             - '@pim_catalog.repository.product'
+    candm_advanced_csv_connector.reader.file.csv_advanced_product_model:
+        class: '%candm_advanced_csv_connector.reader.file.csv_advanced_product_model.class%'
+        arguments:
+            - '@pim_connector.reader.file.csv_iterator_factory'
+            - '@pim_connector.array_converter.flat_to_standard.product_model_delocalized'
+            - '@pim_connector.reader.file.media_path_transformer'
+            - []
+            - '@candm_advanced_csv_connector.helper.import'
+            - '@pim_catalog.repository.product_model'
