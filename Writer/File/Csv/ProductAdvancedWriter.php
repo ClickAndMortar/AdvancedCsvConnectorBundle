@@ -207,7 +207,9 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             $originalItem = $item;
             foreach ($item as $attributeKey => $attributeValue) {
                 $keepCurrentAttribute = false;
+                $attributeBaseValue = $attributeValue;
                 foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
+                    $attributeValue = $attributeBaseValue;
                     if ($attributeKey == $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]) {
                         $keepCurrentAttribute = true;
 
