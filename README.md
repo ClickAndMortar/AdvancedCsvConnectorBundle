@@ -133,6 +133,23 @@ Export mapping example:
             "attributeCode": "age_range",
             "columnName": "Age",
             "callback": "completeAgeRange"
+        },
+        {
+            "attributeCode": "color",
+            "columnName": "Couleur",
+            "useLabel": true
+            "locale": "fr_FR"
+        },
+        {
+            "attributeCode": "type",
+            "columnName": "Type",
+            "useReferenceLabel": "ClickAndMortarTypeBundle:Type"
+            "locale": "fr_FR",
+        },
+        {
+            "attributeCode": "brand",
+            "columnName": "Marque",
+            "capitalized": true
         }
     ],
     "normalizers": [
@@ -175,6 +192,10 @@ Mapping explanation:
   * `forcedValue`: Force a value
   * `normalizerCallback`: Normalizer code to update value from Akeneo
   * `callback`: Method name in **ImportHelper** to update value from Akeneo
+  * `useLabel`: Boolean to get the label associated to the code given
+  * `useReferenceLabel`: Takes the entity path of a customed entity to get the label associated to the code given
+  * `locale`: Select a specific locale for the label to export from the **useLabel** and **useReferenceLabel** methods
+  * `capitalized`: Capitalize the value
 * `normalizers`: List of available normalizers used in mapping
 * `replacements`: Replace **values** by **newValue** in all columns
 * `additionalColumns`: Force static columns in CSV exported file

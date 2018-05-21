@@ -27,3 +27,5 @@ services:
             - ['pim_catalog_file', 'pim_catalog_image']
             - 'filePath'
             - '@candm_advanced_csv_connector.helper.export'
+            - '@doctrine.orm.entity_manager'
+            - 'fr_FR'
