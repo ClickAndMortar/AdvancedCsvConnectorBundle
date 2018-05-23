@@ -1,0 +1,8 @@
+parameters:
+    candm_advanced_csv_connector.event_subscriber.load_class_metadata.class: ClickAndMortar\AdvancedCsvConnectorBundle\EventSubscriber\LoadClassMetadataSubscriber
+
+services:
+    candm_advanced_csv_connector.event_subscriber.load_class_metadata:
+        class: '%candm_advanced_csv_connector.event_subscriber.load_class_metadata.class%'
+        tags:
+            - { name: doctrine.event_subscriber }

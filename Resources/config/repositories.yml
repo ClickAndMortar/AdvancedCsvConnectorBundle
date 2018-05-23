@@ -1,0 +1,2 @@
+parameters:
+    candm_advanced_csv_connector.repository.attribute_option.class: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\AttributeOptionRepository
