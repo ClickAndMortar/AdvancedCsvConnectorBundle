@@ -27,5 +27,6 @@ class ClickAndMortarAdvancedCsvConnectorExtension extends Extension
         $loader->load('providers.yml');
         $loader->load('archiving.yml');
         $loader->load('helpers.yml');
+        $loader->load('subscribers.yml');
     }
 }
