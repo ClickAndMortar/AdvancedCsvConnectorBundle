@@ -28,4 +28,25 @@ class AttributeOptionRepository extends baseRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param $attributeCode
+     * @param $attributeValue
+     *
+     * @return array
+     */
+    public function findOptionByValue($attributeCode, $attributeValue)
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.attribute', 'a')
+            ->innerJoin('PimCatalogBundle:AttributeOptionValue', 'v','WITH','v.option = o.id')
+            ->where('a.code = :attribute_code')
+            ->andWhere('v.value = :attribute_value')
+            ->setParameters([
+                'attribute_code'  => $attributeCode,
+                'attribute_value' => $attributeValue
+            ])
+            ->getQuery()
+            ->getResult();
+    }
 }
