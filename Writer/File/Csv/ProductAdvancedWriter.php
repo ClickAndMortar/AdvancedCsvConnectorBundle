@@ -86,6 +86,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_COLUMNS_KEY = 'columns';
 
     /**
+     * Columns order key in mapping
+     *
+     * @var string
+     */
+    const COLUMNS_ORDER_KEY = 'columnsOrder';
+
+    /**
      * Attribute code key
      *
      * @var string
@@ -336,6 +343,18 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             foreach ($mapping[self::MAPPING_ADDITIONAL_COLUMNS_KEY] as $additionalColumn) {
                 $item[$additionalColumn[self::MAPPING_COLUMN_NAME_KEY]] = $additionalColumn['value'];
             }
+        }
+
+        if (!empty($mapping[self::COLUMNS_ORDER_KEY]) && !empty($item)) {
+            $itemOrder = $mapping[self::COLUMNS_ORDER_KEY];
+            $orderedItem = [];
+            foreach($itemOrder as $itemKey) {
+                $orderedItem[$itemKey] = '';
+                if (!empty($item[$itemKey])) {
+                    $orderedItem[$itemKey] = $item[$itemKey];
+                }
+            }
+            $item = $orderedItem;
         }
 
         return $item;
