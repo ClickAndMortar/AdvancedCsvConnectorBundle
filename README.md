@@ -180,6 +180,15 @@ Export mapping example:
             "columnName": "Additional column",
             "value": "Same content"
         }
+    ],
+    "columnsOrder": [
+        "Code reference",
+        "Family Code",
+        "EAN Code",
+        "Type",
+        "Marque",
+        "Couleur",
+        "Age"
     ]
 }
 ```
@@ -199,3 +208,4 @@ Mapping explanation:
 * `normalizers`: List of available normalizers used in mapping
 * `replacements`: Replace **values** by **newValue** in all columns
 * `additionalColumns`: Force static columns in CSV exported file
+* `columnsOrder`: Provide a specific columns order to output 
