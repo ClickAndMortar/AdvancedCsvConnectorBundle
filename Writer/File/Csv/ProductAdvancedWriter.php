@@ -322,6 +322,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                             $item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]] = $attributeValue;
                         }
                     }
+
+                    if ($attributeKey != $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]
+                        && isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
+                        && $attributeKey == $columnMapping[self::MAPPING_COLUMN_NAME_KEY]
+                    ) {
+                        $keepCurrentAttribute = true;
+                    }
                 }
 
                 // Delete original column
