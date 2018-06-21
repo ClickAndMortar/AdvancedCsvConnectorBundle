@@ -180,7 +180,11 @@ Export mapping example:
             "columnName": "Additional column",
             "value": "Same content"
         }
-    ]
+    ],
+    "additionalHeadersLine": {
+        "Code reference": "My code reference",
+        "EAN Code": "EAN technical code"
+    }
 }
 ```
 
@@ -199,3 +203,4 @@ Mapping explanation:
 * `normalizers`: List of available normalizers used in mapping
 * `replacements`: Replace **values** by **newValue** in all columns
 * `additionalColumns`: Force static columns in CSV exported file
+* `additionalHeadersLine`: Allow to add second headers line with mapping of original headers line

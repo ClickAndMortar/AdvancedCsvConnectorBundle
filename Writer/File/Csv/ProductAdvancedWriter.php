@@ -120,6 +120,12 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      */
     const MAPPING_LOCALE_KEY = 'locale';
 
+    /**
+     * Additional headers line key
+     *
+     * @var string
+     */
+    const MAPPING_ADDITIONAL_HEADERS_LINE_KEY = 'additionalHeadersLine';
 
     /**
      * Capitalized option key
@@ -150,6 +156,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $defaultLocale;
 
     /**
+     * Additional headers line (optional) added?
+     *
+     * @var bool
+     */
+    protected $additionalHeadersLineAdded = false;
+
+    /**
      * @param ArrayConverterInterface            $arrayConverter
      * @param BufferFactory                      $bufferFactory
      * @param FlatItemBufferFlusher              $flusher
@@ -175,7 +188,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     )
     {
         parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $mediaAttributeTypes, $jobParamFilePath);
-        $this->exportHelper = $exportHelper;
+        $this->exportHelper  = $exportHelper;
         $this->entityManager = $entityManager;
         $this->defaultLocale = $defaultLocale;
     }
@@ -185,21 +198,30 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      */
     public function write(array $items)
     {
-        $parameters = $this->stepExecution->getJobParameters();
-        $mapping = $this->getMappingFromJobParameters($parameters);
+        $parameters       = $this->stepExecution->getJobParameters();
+        $mapping          = $this->getMappingFromJobParameters($parameters);
         $converterOptions = $this->getConverterOptions($parameters);
-        $flatItems = [];
-        $directory = $this->stepExecution->getJobExecution()->getExecutionContext()
-            ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
+        $flatItems        = [];
+        $directory        = $this->stepExecution->getJobExecution()->getExecutionContext()
+                                                ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
+
+        // Check for additional headers line
+        if (isset($mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY]) && !$this->additionalHeadersLineAdded) {
+            $flatItems[] = $mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY];
+            $this->additionalHeadersLineAdded = true;
+        }
 
         foreach ($items as $item) {
             if ($parameters->has('with_media') && $parameters->get('with_media')) {
                 $item = $this->resolveMediaPaths($item, $directory);
             }
-            $flatItem = $this->arrayConverter->convert($item, $converterOptions);
-            $flatItem = $this->updateItemByMapping($flatItem, $mapping);
+            $flatItem    = $this->arrayConverter->convert($item, $converterOptions);
+            $flatItem    = $this->updateItemByMapping($flatItem, $mapping);
             $flatItems[] = $flatItem;
         }
+        /** @var Logger $logger */
+        $logger = $GLOBALS['kernel']->getContainer()->get('logger');
+        $logger->error(print_r($flatItems, true));
         $this->flatRowBuffer->write($flatItems, ['withHeader' => $parameters->get('withHeader')]);
     }
 
@@ -236,8 +258,8 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected function getMappingFromJobParameters(JobParameters $parameters)
     {
         $mappingAsArray = [];
-        $mapping = $parameters->get('mapping');
-        $mapping = json_decode($mapping, true);
+        $mapping        = $parameters->get('mapping');
+        $mapping        = json_decode($mapping, true);
         if (is_array($mapping)) {
             $mappingAsArray = $mapping;
         }
@@ -259,8 +281,8 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             $originalItem = $item;
             foreach ($item as $attributeKey => $attributeValue) {
                 $keepCurrentAttribute = false;
-                $attributeBaseValue = $attributeValue;
-                $locale = $this->defaultLocale;
+                $attributeBaseValue   = $attributeValue;
+                $locale               = $this->defaultLocale;
                 foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
                     $attributeValue = $attributeBaseValue;
                     if ($attributeKey == $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]) {
@@ -268,27 +290,27 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
                         // Force value if necessary
                         if (isset($columnMapping[self::MAPPING_FORCE_VALUE_KEY])) {
-                            $attributeValue = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
+                            $attributeValue      = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
                             $item[$attributeKey] = $attributeValue;
                         }
 
                         // Normalize value if necessary
                         if (isset($columnMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
-                            $normalizedValues = $this->getNormalizedValuesByCode($mapping[self::MAPPING_NORMALIZERS_KEY], $columnMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
-                            $attributeValue = $this->getNormalizedValue($attributeValue, $normalizedValues);
+                            $normalizedValues    = $this->getNormalizedValuesByCode($mapping[self::MAPPING_NORMALIZERS_KEY], $columnMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
+                            $attributeValue      = $this->getNormalizedValue($attributeValue, $normalizedValues);
                             $item[$attributeKey] = $attributeValue;
                         }
 
                         // Update value if necessary
                         if (isset($columnMapping[self::MAPPING_CALLBACK_KEY]) && method_exists($this->exportHelper, $columnMapping[self::MAPPING_CALLBACK_KEY])) {
-                            $attributeValue = $this->exportHelper->{$columnMapping[self::MAPPING_CALLBACK_KEY]}($attributeValue, $originalItem);
+                            $attributeValue      = $this->exportHelper->{$columnMapping[self::MAPPING_CALLBACK_KEY]}($attributeValue, $originalItem);
                             $item[$attributeKey] = $attributeValue;
                         }
 
                         // Replace specific characters if necessary
                         if (isset($mapping[self::MAPPING_REPLACEMENTS_KEY])) {
                             foreach ($mapping[self::MAPPING_REPLACEMENTS_KEY] as $replacement) {
-                                $attributeValue = str_replace($replacement['values'], $replacement['newValue'], $attributeValue);
+                                $attributeValue      = str_replace($replacement['values'], $replacement['newValue'], $attributeValue);
                                 $item[$attributeKey] = $attributeValue;
                             }
                         }
@@ -300,25 +322,25 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
                         // Use Label instead of code in list value cases
                         if (isset($columnMapping[self::MAPPING_USE_LABEL_KEY]) && $columnMapping[self::MAPPING_USE_LABEL_KEY] == true) {
-                            $attributeValue = $this->getValueFromCode($attributeKey, $attributeValue, $locale);
+                            $attributeValue      = $this->getValueFromCode($attributeKey, $attributeValue, $locale);
                             $item[$attributeKey] = $attributeValue;
                         }
 
                         // Use reference label instead of code in reference data cases
                         if (isset($columnMapping[self::MAPPING_USE_REFERENCE_LABEL_KEY])) {
-                            $attributeValue = $this->getReferenceValueFromCode($attributeValue, $locale, $columnMapping[self::MAPPING_USE_REFERENCE_LABEL_KEY]);
+                            $attributeValue      = $this->getReferenceValueFromCode($attributeValue, $locale, $columnMapping[self::MAPPING_USE_REFERENCE_LABEL_KEY]);
                             $item[$attributeKey] = $attributeValue;
                         }
 
                         // Capitalize value if necessary
                         if (isset($columnMapping[self::MAPPING_CAPITALIZED_KEY]) && $columnMapping[self::MAPPING_CAPITALIZED_KEY] == true) {
-                            $attributeValue = strtoupper($item[$attributeKey]);
+                            $attributeValue      = strtoupper($item[$attributeKey]);
                             $item[$attributeKey] = $attributeValue;
                         }
 
                         // Update column name if necessary
                         if (isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])) {
-                            $keepCurrentAttribute = false;
+                            $keepCurrentAttribute                                = false;
                             $item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]] = $attributeValue;
                         }
                     }
@@ -403,7 +425,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected function getValueFromCode($attributeKey, $attributeValue, $locale)
     {
         $attributeOptionRepository = $this->entityManager->getRepository('PimCatalogBundle:AttributeOption');
-        $option = $attributeOptionRepository->findOptionByCode($attributeKey, array($attributeValue));
+        $option                    = $attributeOptionRepository->findOptionByCode($attributeKey, array($attributeValue));
 
         if (empty($option) || empty($option[0])) {
             return '';
