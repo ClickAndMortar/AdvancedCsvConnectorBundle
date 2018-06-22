@@ -219,9 +219,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             $flatItem    = $this->updateItemByMapping($flatItem, $mapping);
             $flatItems[] = $flatItem;
         }
-        /** @var Logger $logger */
-        $logger = $GLOBALS['kernel']->getContainer()->get('logger');
-        $logger->error(print_r($flatItems, true));
         $this->flatRowBuffer->write($flatItems, ['withHeader' => $parameters->get('withHeader')]);
     }
 
