@@ -7,6 +7,7 @@ use Akeneo\Component\Batch\Job\JobInterface;
 use Akeneo\Component\Batch\Job\JobParameters;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Component\Buffer\BufferFactory;
+use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Connector\ArrayConverter\ArrayConverterInterface;
@@ -207,7 +208,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
         // Check for additional headers line
         if (isset($mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY]) && !$this->additionalHeadersLineAdded) {
-            $flatItems[] = $mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY];
+            $flatItems[]                      = $mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY];
             $this->additionalHeadersLineAdded = true;
         }
 
@@ -442,18 +443,29 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      */
     protected function getReferenceValueFromCode($attributeValue, $locale, $entity)
     {
+        $label      = '';
         $repository = $this->entityManager->getRepository($entity);
 
-        /** @var AbstractTranslatableCustomEntity $entity */
+        /** @var AbstractTranslatableCustomEntity | AbstractCustomEntity $entity */
         $entity = $repository->findOneBy(array('code' => $attributeValue));
-
-        if (empty($entity)
-            || empty($entity->getLabels())
-            || empty($entity->getLabels()[$locale])
-        ) {
-            return '';
+        if ($entity === null) {
+            return $label;
         }
 
-        return $entity->getLabels()[$locale];
+        // Check if we have translatable entity or not
+        if ($entity instanceof AbstractTranslatableCustomEntity) {
+            if (
+                empty($entity->getLabels())
+                || empty($entity->getLabels()[$locale])
+            ) {
+                return $label;
+            }
+
+            $label = $entity->getLabels()[$locale];
+        } elseif ($entity instanceof AbstractCustomEntity) {
+            $label = $entity->getLabel();
+        }
+
+        return $label;
     }
 }
