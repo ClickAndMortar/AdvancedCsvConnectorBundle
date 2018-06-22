@@ -20,6 +20,6 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             - '@pim_connector.reader.database.product'
-            - '@pim_connector.processor.normalization.product'
+            - '@candm_advanced_csv_connector.processor.normalization.advanced_product'
             - '@candm_advanced_csv_connector.writer.file.csv_advanced_product'
             - 10
