@@ -104,10 +104,6 @@ class AdvancedProductProcessor extends ProductProcessor
             $this->detacher->detach($product);
         }
 
-        /** @var Logger $logger */
-        $logger = $GLOBALS['kernel']->getContainer()->get('logger');
-        $logger->error(print_r($productStandard, true));
-
         return $productStandard;
     }
 
