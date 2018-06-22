@@ -136,6 +136,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_CAPITALIZED_KEY = 'capitalized';
 
     /**
+     * Max length key
+     *
+     * @var string
+     */
+    const MAPPING_MAX_LENGTH_KEY = 'maxLength';
+
+    /**
      * Export helper
      *
      * @var ExportHelper
@@ -334,6 +341,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         if (isset($columnMapping[self::MAPPING_CAPITALIZED_KEY]) && $columnMapping[self::MAPPING_CAPITALIZED_KEY] == true) {
                             $attributeValue      = strtoupper($item[$attributeKey]);
                             $item[$attributeKey] = $attributeValue;
+                        }
+
+                        // Shorten value if necessary
+                        if (isset($columnMapping[self::MAPPING_MAX_LENGTH_KEY]) && strlen($attributeValue) > $columnMapping[self::MAPPING_MAX_LENGTH_KEY]) {
+                            $attributeValue = substr($attributeValue, 0, $columnMapping[self::MAPPING_MAX_LENGTH_KEY]);
                         }
 
                         // Update column name if necessary

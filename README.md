@@ -143,13 +143,18 @@ Export mapping example:
         {
             "attributeCode": "type",
             "columnName": "Type",
-            "useReferenceLabel": "ClickAndMortarTypeBundle:Type"
-            "locale": "fr_FR",
+            "useReferenceLabel": "ClickAndMortarTypeBundle:Type",
+            "locale": "fr_FR"
         },
         {
             "attributeCode": "brand",
             "columnName": "Marque",
             "capitalized": true
+        },
+        {
+            "attributeCode": "label",
+            "columnName": "Libellé",
+            "maxLength": 50
         }
     ],
     "normalizers": [
@@ -200,6 +205,7 @@ Mapping explanation:
   * `useReferenceLabel`: Takes the entity path of a customed entity to get the label associated to the code given
   * `locale`: Select a specific locale for the label to export from the **useLabel** and **useReferenceLabel** methods
   * `capitalized`: Capitalize the value
+  * `maxLength`: Integer use to shorten attribute value if necessary
 * `normalizers`: List of available normalizers used in mapping
 * `replacements`: Replace **values** by **newValue** in all columns
 * `additionalColumns`: Force static columns in CSV exported file
