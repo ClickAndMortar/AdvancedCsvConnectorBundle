@@ -334,7 +334,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
                         // Use Label instead of code in list value cases
                         if (isset($columnMapping[self::MAPPING_USE_LABEL_KEY]) && $columnMapping[self::MAPPING_USE_LABEL_KEY] == true) {
-                            $attributeValue      = $this->getValueFromCode($attributeKey, $attributeValue, $locale);
+                            $attributeValue      = $this->exportHelper->getValueFromCode($attributeKey, $attributeValue, $locale);
                             $item[$attributeKey] = $attributeValue;
                         }
 
@@ -436,29 +436,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         return $value;
-    }
-
-    /**
-     * Get value from code in a list case
-     *
-     * @param string $attributeKey
-     * @param string $attributeValue
-     * @param string $locale
-     *
-     * @return string
-     */
-    protected function getValueFromCode($attributeKey, $attributeValue, $locale)
-    {
-        $attributeOptionRepository = $this->entityManager->getRepository('PimCatalogBundle:AttributeOption');
-        $option                    = $attributeOptionRepository->findOptionByCode($attributeKey, array($attributeValue));
-
-        if (empty($option) || empty($option[0])) {
-            return '';
-        }
-
-        $option[0]->setLocale($locale)->getTranslation();
-
-        return $option[0]->getOptionValue()->getLabel();
     }
 
     /**

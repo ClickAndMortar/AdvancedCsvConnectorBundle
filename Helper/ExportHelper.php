@@ -3,6 +3,7 @@
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
 use Doctrine\ORM\EntityManager;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 
 /**
  * Export helper
@@ -20,6 +21,13 @@ class ExportHelper
     protected $entityManager;
 
     /**
+     * Attribute option repository
+     *
+     * @var AttributeOptionRepository
+     */
+    protected $attributeOptionRepository;
+
+    /**
      * ExportHelper constructor.
      *
      * @param EntityManager $entityManager
@@ -32,11 +40,33 @@ class ExportHelper
     }
 
     /**
+     * Get value from code in a list case
+     *
+     * @param string $attributeKey
+     * @param string $attributeValue
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function getValueFromCode($attributeKey, $attributeValue, $locale)
+    {
+        $option = $this->attributeOptionRepository->findOptionByCode($attributeKey, array($attributeValue));
+        if (empty($option) || empty($option[0])) {
+            return '';
+        }
+
+        $option[0]->setLocale($locale)->getTranslation();
+
+        return $option[0]->getOptionValue()->getLabel();
+    }
+
+    /**
      * Load repositories from entity manager if necessary
      *
      * @return void
      */
     protected function loadRepositories()
     {
+        $this->attributeOptionRepository = $this->entityManager->getRepository('PimCatalogBundle:AttributeOption');
     }
 }
