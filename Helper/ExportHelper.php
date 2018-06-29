@@ -27,5 +27,16 @@ class ExportHelper
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+
+        $this->loadRepositories();
+    }
+
+    /**
+     * Load repositories from entity manager if necessary
+     *
+     * @return void
+     */
+    protected function loadRepositories()
+    {
     }
 }
