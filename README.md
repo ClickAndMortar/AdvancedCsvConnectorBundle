@@ -90,7 +90,8 @@ Import mapping example:
                         ]
                     }
             }
-        ]
+        ],
+    "completeCallback": "completeProductItem"
 }
 ```
 
@@ -104,6 +105,7 @@ Mapping explanation:
 * `defaultValue`: Default value for attribute if empty data in file
 * `onlyOnCreation`: Set attribute value only if product is new (checked with `identifier` attribute)
 * `locales`: Used to set same attribute value for different locales
+* `completeCallback`: Used to add some more fields with **ImportHelper**
 
 ### Export
 
