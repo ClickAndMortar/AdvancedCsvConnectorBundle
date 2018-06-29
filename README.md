@@ -191,7 +191,8 @@ Export mapping example:
     "additionalHeadersLine": {
         "Code reference": "My code reference",
         "EAN Code": "EAN technical code"
-    }
+    },
+    "completeCallback": "completeProductColumns"
 }
 ```
 
@@ -202,7 +203,7 @@ Mapping explanation:
   * `columnName`: Custom column name in CSV exported file
   * `forcedValue`: Force a value
   * `normalizerCallback`: Normalizer code to update value from Akeneo
-  * `callback`: Method name in **ImportHelper** to update value from Akeneo
+  * `callback`: Method name in **ExportHelper** to update value from Akeneo
   * `useLabel`: Boolean to get the label associated to the code given
   * `useReferenceLabel`: Takes the entity path of a customed entity to get the label associated to the code given
   * `locale`: Select a specific locale for the label to export from the **useLabel** and **useReferenceLabel** methods
@@ -212,3 +213,4 @@ Mapping explanation:
 * `replacements`: Replace **values** by **newValue** in all columns
 * `additionalColumns`: Force static columns in CSV exported file
 * `additionalHeadersLine`: Allow to add second headers line with mapping of original headers line
+* `completeCallback`: Complete product item with callback method defined in **ExportHelper**

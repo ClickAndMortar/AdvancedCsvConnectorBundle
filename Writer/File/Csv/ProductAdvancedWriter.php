@@ -143,6 +143,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_MAX_LENGTH_KEY = 'maxLength';
 
     /**
+     * Complete callback key
+     *
+     * @var string
+     */
+    const MAPPING_COMPLETE_CALLBACK_KEY = 'completeCallback';
+
+    /**
      * Export helper
      *
      * @var ExportHelper
@@ -375,6 +382,14 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             foreach ($mapping[self::MAPPING_ADDITIONAL_COLUMNS_KEY] as $additionalColumn) {
                 $item[$additionalColumn[self::MAPPING_COLUMN_NAME_KEY]] = $additionalColumn['value'];
             }
+        }
+
+        // Complete item with export helper if necessary
+        if (
+            isset($mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
+            && method_exists($this->exportHelper, $mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
+        ) {
+            $item = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($item);
         }
 
         return $item;
