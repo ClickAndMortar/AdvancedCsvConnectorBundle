@@ -244,7 +244,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $headers      = $this->fileIterator->getHeaders();
         $countHeaders = count($headers);
         $countData    = count($data);
-        $this->checkColumnNumber($countHeaders, $countData, $data, $this->currentFilePath);
+
+        // Remove cells without headers
+        if ($countHeaders < $countData) {
+            array_splice($data, $countHeaders, $countData);
+        }
+
+        // Fill empty cells if necessary
         if ($countHeaders > $countData) {
             $missingValuesCount = $countHeaders - $countData;
             $missingValues      = array_fill(0, $missingValuesCount, '');
