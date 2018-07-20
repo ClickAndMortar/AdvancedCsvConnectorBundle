@@ -101,6 +101,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_LOCALES_KEY = 'locales';
 
     /**
+     * Max length mapping key
+     */
+    const MAPPING_MAX_LENGTH_KEY = 'maxLength';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -346,6 +351,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                         $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
                         $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
                         $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
+                    }
+
+                    // Check if we have max length for value
+                    if (isset($attributeMapping[self::MAPPING_MAX_LENGTH_KEY])) {
+                        $value = substr($value, 0, $attributeMapping[self::MAPPING_MAX_LENGTH_KEY]);
                     }
 
                     $newItem[$attributesCode] = $value;
