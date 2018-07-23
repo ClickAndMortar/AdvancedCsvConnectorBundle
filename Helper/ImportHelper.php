@@ -33,6 +33,20 @@ class ImportHelper
     const MAX_LINES_PER_FILE = 1000;
 
     /**
+     * Product visual prefix for URL download
+     *
+     * @var string
+     */
+    const PRODUCT_VISUAL_PREFIX = 'downloaded-visual-';
+
+    /**
+     * exif_imagetype throws "Read error!" if file is too small (for image download)
+     *
+     * @var int
+     */
+    const EXIF_IMAGETYPE_FILE_MIN_SIZE = 12;
+
+    /**
      * Logger
      *
      * @var Logger
@@ -64,6 +78,16 @@ class ImportHelper
      * @var AttributeRepository
      */
     protected $attributeRepository;
+
+    /**
+     * Valid HTTP codes on visual download from URL
+     *
+     * @var array
+     */
+    protected $downloadVisualValidCodes = [
+        '200',
+        '304',
+    ];
 
     /**
      * ImportHelper constructor.
@@ -203,6 +227,59 @@ class ImportHelper
         }
 
         return $defaultValue;
+    }
+
+    /**
+     * Download visual from URL and return path
+     *
+     * @param string $attributeValue
+     * @param string $attributeCode
+     *
+     * @return null|string
+     * @throws Exception
+     */
+    public function downloadVisualFromUrl($attributeValue, $attributeCode)
+    {
+        $visualPath = null;
+        if (empty($attributeValue)) {
+            return $visualPath;
+        }
+
+        $curlRequest = curl_init($attributeValue);
+        curl_setopt($curlRequest, CURLOPT_HEADER, true);
+        curl_setopt($curlRequest, CURLOPT_NOBODY, true);
+        curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlRequest, CURLOPT_TIMEOUT, 5);
+        curl_exec($curlRequest);
+        $responseCode = curl_getinfo($curlRequest, CURLINFO_HTTP_CODE);
+        curl_close($curlRequest);
+
+        if (in_array($responseCode, $this->downloadVisualValidCodes)) {
+            // Check for upload directory
+            $uploadDirectory = sprintf('%s/../app/uploads/downloaded_visuals', $this->kernelRootDirectory);
+            if (!is_dir($uploadDirectory)) {
+                if (!mkdir($uploadDirectory, 664, true)) {
+                    return $visualPath;
+                }
+            }
+
+            $extension  = pathinfo($attributeValue, PATHINFO_EXTENSION);
+            $visualPath = sprintf(
+                '%s/%s.%s',
+                $uploadDirectory,
+                uniqid(self::PRODUCT_VISUAL_PREFIX),
+                $extension
+            );
+            file_put_contents($visualPath, file_get_contents($attributeValue));
+
+            // Check visual
+            if (filesize($visualPath) < self::EXIF_IMAGETYPE_FILE_MIN_SIZE || exif_imagetype($visualPath) === false) {
+                $errorMessage = sprintf('Visual not valid for url %s', $attributeValue);
+                throw new \Exception($errorMessage);
+            }
+        }
+
+        return $visualPath;
     }
 
     /**
