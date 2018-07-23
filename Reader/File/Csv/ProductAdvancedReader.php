@@ -371,7 +371,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             isset($this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
             && method_exists($this->importHelper, $this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
         ) {
-            $newItem = $this->importHelper->{$this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $isNewProduct);
+            $newItem = $this->importHelper->{$this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $isNewProduct, $item);
         }
 
         return $newItem;
