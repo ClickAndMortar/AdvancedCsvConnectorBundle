@@ -219,6 +219,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $flatItems        = [];
         $directory        = $this->stepExecution->getJobExecution()->getExecutionContext()
                                                 ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
+        $localesToExport = $parameters->get('filters')['structure']['locales'];
 
         // Check for additional headers line
         if (isset($mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY]) && !$this->additionalHeadersLineAdded) {
@@ -231,7 +232,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                 $item = $this->resolveMediaPaths($item, $directory);
             }
             $flatItem    = $this->arrayConverter->convert($item, $converterOptions);
-            $flatItem    = $this->updateItemByMapping($flatItem, $mapping);
+            $flatItem    = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
             $flatItems[] = $flatItem;
         }
         $this->flatRowBuffer->write($flatItems, ['withHeader' => $parameters->get('withHeader')]);
@@ -284,10 +285,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      *
      * @param array $item
      * @param array $mapping
+     * @param array $localesToExport
      *
      * @return array
      */
-    protected function updateItemByMapping(array $item, array $mapping)
+    protected function updateItemByMapping(array $item, array $mapping, $localesToExport = [])
     {
         if (isset($mapping[self::MAPPING_COLUMNS_KEY])) {
             $originalItem = $item;
@@ -359,6 +361,12 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         if (isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])) {
                             $keepCurrentAttribute                                = false;
                             $item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]] = $attributeValue;
+                        }
+
+                        if (isset($columnMapping[self::MAPPING_LOCALE_KEY])
+                            && !in_array($columnMapping[self::MAPPING_LOCALE_KEY], $localesToExport)
+                        ) {
+                            unset($item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]]);
                         }
                     }
 
