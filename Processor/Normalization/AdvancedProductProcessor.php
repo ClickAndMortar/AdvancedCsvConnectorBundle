@@ -4,7 +4,9 @@ namespace ClickAndMortar\AdvancedCsvConnectorBundle\Processor\Normalization;
 
 use Akeneo\Component\Batch\Job\JobInterface;
 use Akeneo\Component\StorageUtils\Cache\CacheClearerInterface;
+use Akeneo\Component\StorageUtils\Cache\EntityManagerClearerInterface;
 use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
+use Akeneo\Component\StorageUtils\Repository\IdentifiableObjectRepositoryInterface;
 use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
 use Pim\Component\Catalog\ValuesFiller\EntityWithFamilyValuesFillerInterface;
 use Pim\Component\Connector\Processor\BulkMediaFetcher;
@@ -28,27 +30,27 @@ class AdvancedProductProcessor extends ProductProcessor
     protected $mediaUrlPrefix;
 
     /**
+     * AdvancedProductProcessor constructor.
+     *
      * @param NormalizerInterface                   $normalizer
-     * @param ChannelRepositoryInterface            $channelRepository
+     * @param IdentifiableObjectRepositoryInterface $channelRepository
      * @param AttributeRepositoryInterface          $attributeRepository
-     * @param ObjectDetacherInterface               $detacher
      * @param BulkMediaFetcher                      $mediaFetcher
      * @param EntityWithFamilyValuesFillerInterface $productValuesFiller
-     * @param CacheClearerInterface                 $cacheClearer
+     * @param EntityManagerClearerInterface         $cacheClearer
      * @param string                                $mediaUrlPrefix
      */
     public function __construct(
         NormalizerInterface $normalizer,
-        ChannelRepositoryInterface $channelRepository,
+        IdentifiableObjectRepositoryInterface $channelRepository,
         AttributeRepositoryInterface $attributeRepository,
-        ObjectDetacherInterface $detacher,
         BulkMediaFetcher $mediaFetcher,
         EntityWithFamilyValuesFillerInterface $productValuesFiller,
-        CacheClearerInterface $cacheClearer = null,
+        EntityManagerClearerInterface $cacheClearer,
         $mediaUrlPrefix
     )
     {
-        parent::__construct($normalizer, $channelRepository, $attributeRepository, $detacher, $mediaFetcher, $productValuesFiller, $cacheClearer);
+        parent::__construct($normalizer, $channelRepository, $attributeRepository, $mediaFetcher, $productValuesFiller, $cacheClearer);
         $this->mediaUrlPrefix = $mediaUrlPrefix;
     }
 

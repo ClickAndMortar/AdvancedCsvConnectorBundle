@@ -8,7 +8,7 @@ Made by :heart: by C&M
 
 Add package with composer:
 ```bash
-composer require clickandmortar/advanced-csv-connector-bundle "^1.0"
+composer require clickandmortar/advanced-csv-connector-bundle "1.4.*"
 ```
 
 Add bundle in your **`app/AppKernel.php`** file:
