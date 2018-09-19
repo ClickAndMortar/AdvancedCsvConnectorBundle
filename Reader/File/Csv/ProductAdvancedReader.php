@@ -355,7 +355,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
                     // Check if we have max length for value
                     if (isset($attributeMapping[self::MAPPING_MAX_LENGTH_KEY])) {
-                        $value = substr($value, 0, $attributeMapping[self::MAPPING_MAX_LENGTH_KEY]);
+                        $value = mb_substr($value, 0, $attributeMapping[self::MAPPING_MAX_LENGTH_KEY]);
                     }
 
                     $newItem[$attributesCode] = $value;
