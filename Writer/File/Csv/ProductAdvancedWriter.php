@@ -150,6 +150,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_COMPLETE_CALLBACK_KEY = 'completeCallback';
 
     /**
+     * Default value key in mapping
+     *
+     * @var string
+     */
+    const MAPPING_DEFAULT_VALUE_KEY = 'defaultValue';
+
+    /**
      * Export helper
      *
      * @var ExportHelper
@@ -219,7 +226,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $flatItems        = [];
         $directory        = $this->stepExecution->getJobExecution()->getExecutionContext()
                                                 ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
-        $localesToExport = $parameters->get('filters')['structure']['locales'];
+        $localesToExport  = $parameters->get('filters')['structure']['locales'];
 
         // Check for additional headers line
         if (isset($mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY]) && !$this->additionalHeadersLineAdded) {
@@ -355,6 +362,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         // Shorten value if necessary
                         if (isset($columnMapping[self::MAPPING_MAX_LENGTH_KEY]) && strlen($attributeValue) > $columnMapping[self::MAPPING_MAX_LENGTH_KEY]) {
                             $attributeValue = substr($attributeValue, 0, $columnMapping[self::MAPPING_MAX_LENGTH_KEY]);
+                        }
+
+                        // Set default value if necessary
+                        if (isset($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY]) && empty($attributeValue)) {
+                            $attributeValue = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
                         }
 
                         // Update column name if necessary

@@ -157,6 +157,11 @@ Export mapping example:
             "attributeCode": "label",
             "columnName": "Libellé",
             "maxLength": 50
+        },
+        {
+            "attributeCode": "price-EUR",
+            "columnName": "Prix (EUR)",
+            "defaultValue": "0.00"
         }
     ],
     "normalizers": [
@@ -209,6 +214,7 @@ Mapping explanation:
   * `locale`: Select a specific locale for the label to export from the **useLabel** and **useReferenceLabel** methods
   * `capitalized`: Capitalize the value
   * `maxLength`: Integer use to shorten attribute value if necessary
+  * `defaultValue`: Default value for column if empty attribute value
 * `normalizers`: List of available normalizers used in mapping
 * `replacements`: Replace **values** by **newValue** in all columns
 * `additionalColumns`: Force static columns in CSV exported file
