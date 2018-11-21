@@ -14,6 +14,7 @@ use Pim\Component\Connector\Exception\DataArrayConversionException;
 use Pim\Component\Connector\Reader\File\Csv\ProductReader;
 use Pim\Component\Connector\Reader\File\FileIteratorFactory;
 use Pim\Component\Connector\Reader\File\MediaPathTransformer;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
 
 /**
  * Product advanced reader
@@ -21,7 +22,7 @@ use Pim\Component\Connector\Reader\File\MediaPathTransformer;
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv
  */
-class ProductAdvancedReader extends ProductReader implements InitializableInterface
+class ProductAdvancedReader extends ProductReader implements InitializableInterface, MultiFilesReaderInterface
 {
     /**
      * Mapping base attributes key
