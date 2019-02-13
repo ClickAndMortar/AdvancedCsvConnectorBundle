@@ -102,8 +102,17 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
     /**
      * Max length mapping key
+     *
+     * @var string
      */
     const MAPPING_MAX_LENGTH_KEY = 'maxLength';
+
+    /**
+     * Delete if null key
+     *
+     * @var string
+     */
+    const MAPPING_DELETE_IF_NULL = 'deleteIfNull';
 
     /**
      * Import helper
@@ -356,6 +365,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                     // Check if we have max length for value
                     if (isset($attributeMapping[self::MAPPING_MAX_LENGTH_KEY])) {
                         $value = mb_substr($value, 0, $attributeMapping[self::MAPPING_MAX_LENGTH_KEY]);
+                    }
+
+                    // Don't add value if value is null
+                    if (
+                        isset($attributeMapping[self::MAPPING_DELETE_IF_NULL])
+                        && $attributeMapping[self::MAPPING_DELETE_IF_NULL] === true
+                        && $value === null
+                    ) {
+                        continue;
                     }
 
                     $newItem[$attributesCode] = $value;

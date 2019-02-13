@@ -274,8 +274,7 @@ class ImportHelper
 
             // Check visual
             if (filesize($visualPath) < self::EXIF_IMAGETYPE_FILE_MIN_SIZE || exif_imagetype($visualPath) === false) {
-                $errorMessage = sprintf('Visual not valid for url %s', $attributeValue);
-                throw new \Exception($errorMessage);
+                return null;
             }
         }
 

@@ -39,7 +39,8 @@ Import mapping example:
         {
             "attributeCode": "lens_height",
             "dataCode": "hauteurVerre",
-            "callback": "setMetricUnitAsSuffix"
+            "callback": "setMetricUnitAsSuffix",
+            "deleteIfNull": true
         },
         {
             "attributeCode": "universe",
@@ -106,6 +107,7 @@ Mapping explanation:
 * `onlyOnCreation`: Set attribute value only if product is new (checked with `identifier` attribute)
 * `locales`: Used to set same attribute value for different locales
 * `completeCallback`: Used to add some more fields with **ImportHelper**
+* `deleteIfNull': Remove key from item mapping if value is null
 
 ### Export
 
