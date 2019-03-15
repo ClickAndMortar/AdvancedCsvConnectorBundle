@@ -38,6 +38,12 @@ class AppKernel extends Kernel
 }
 ```
 
+### Configuration
+
+You need to add some parameters to your `app/config/parameters.yml` file:
+
+* `media_url_prefix`: This parameter is used in advanced export processor to generate clean url's from PIM visuals (value example: `https://www.my-pim.com/files/catalog/`)
+
 ## Usage
 
 ### Import
@@ -127,7 +133,7 @@ Mapping explanation:
 * `onlyOnCreation`: Set attribute value only if product is new (checked with `identifier` attribute)
 * `locales`: Used to set same attribute value for different locales
 * `completeCallback`: Used to add some more fields with **ImportHelper**
-* `deleteIfNull': Remove key from item mapping if value is null
+* `deleteIfNull`: Remove key from item mapping if value is null
 
 ### Export
 
