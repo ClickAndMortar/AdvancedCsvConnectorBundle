@@ -68,13 +68,6 @@ class ImportHelper
     protected $kernelRootDirectory;
 
     /**
-     * Data in directory
-     *
-     * @var string
-     */
-    protected $dataInDirectory;
-
-    /**
      * @var AttributeRepository
      */
     protected $attributeRepository;
@@ -95,14 +88,12 @@ class ImportHelper
      * @param Logger        $logger
      * @param EntityManager $entityManager
      * @param string        $kernelRootDirectory
-     * @param string        $dataInDirectory
      */
-    public function __construct(Logger $logger, EntityManager $entityManager, $kernelRootDirectory, $dataInDirectory)
+    public function __construct(Logger $logger, EntityManager $entityManager, $kernelRootDirectory)
     {
         $this->logger              = $logger;
         $this->entityManager       = $entityManager;
         $this->kernelRootDirectory = $kernelRootDirectory;
-        $this->dataInDirectory     = $dataInDirectory;
 
         $this->loadRepositories();
     }
@@ -121,6 +112,7 @@ class ImportHelper
         $prefixFilename            = str_replace('*', '', pathinfo($filePath, PATHINFO_FILENAME));
         $prefixFilename            = str_replace(' ', '-', $prefixFilename);
         $currentFilePaths          = glob($filePath);
+        $directoryPath             = pathinfo($filePath, PATHINFO_DIRNAME);
 
         foreach ($currentFilePaths as $index => $currentFilePath) {
             // Remove spaces from filename
@@ -142,7 +134,7 @@ class ImportHelper
                     $this->kernelRootDirectory,
                     $currentFilePath,
                     self::MAX_LINES_PER_FILE,
-                    $this->dataInDirectory,
+                    $directoryPath,
                     $prefixFilename . $index . '_'
                 );
                 $process                   = new Process($bashCommand);
@@ -153,7 +145,7 @@ class ImportHelper
         if ($hasAtLeastOneSplittedFile) {
             $filePaths = glob(sprintf(
                 '%s/%s*.csv',
-                $this->dataInDirectory,
+                $directoryPath,
                 $prefixFilename
             ));
         } else {
