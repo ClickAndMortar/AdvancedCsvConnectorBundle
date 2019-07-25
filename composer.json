@@ -10,8 +10,8 @@
         }
     ],
     "require": {
-        "akeneo/pim-community-dev": "^2.1.0",
-        "clickandmortar/advanced-enrich-bundle": "^1.0"
+        "akeneo/pim-community-dev": "^3.1.0",
+        "clickandmortar/advanced-enrich-bundle": "dev-1.1"
     },
     "repositories": [
         {
