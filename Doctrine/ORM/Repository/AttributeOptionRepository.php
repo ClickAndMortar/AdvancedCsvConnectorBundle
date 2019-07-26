@@ -2,7 +2,7 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository;
 
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeOptionRepository as baseRepository;
+use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeOptionRepository as baseRepository;
 
 /**
  * Class AttributeOptionRepository
@@ -39,7 +39,7 @@ class AttributeOptionRepository extends baseRepository
     {
         return $this->createQueryBuilder('o')
             ->innerJoin('o.attribute', 'a')
-            ->innerJoin('PimCatalogBundle:AttributeOptionValue', 'v','WITH','v.option = o.id')
+            ->innerJoin('o.optionValues', 'v')
             ->where('a.code = :attribute_code')
             ->andWhere('v.value = :attribute_value')
             ->setParameters([

@@ -1,6 +1,6 @@
 services:
     candm_advanced_csv_connector.provider.form.job_instance:
-        class: '%pim_enrich.provider.form.job_instance.class%'
+        class: 'Akeneo\Platform\Bundle\ImportExportBundle\Provider\Form\JobInstanceFormProvider'
         arguments:
             -
                 csv_advanced_product_import: pim-job-instance-csv-advanced-product-import

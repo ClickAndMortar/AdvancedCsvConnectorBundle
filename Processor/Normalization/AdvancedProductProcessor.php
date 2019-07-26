@@ -2,17 +2,17 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Processor\Normalization;
 
-use Akeneo\Component\Batch\Job\JobInterface;
-use Akeneo\Component\StorageUtils\Cache\CacheClearerInterface;
-use Akeneo\Component\StorageUtils\Cache\EntityManagerClearerInterface;
-use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
-use Akeneo\Component\StorageUtils\Repository\IdentifiableObjectRepositoryInterface;
-use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
-use Pim\Component\Catalog\ValuesFiller\EntityWithFamilyValuesFillerInterface;
-use Pim\Component\Connector\Processor\BulkMediaFetcher;
-use Pim\Component\Connector\Processor\Normalization\ProductProcessor;
+use Akeneo\Tool\Component\Batch\Job\JobInterface;
+use Akeneo\Tool\Component\StorageUtils\Cache\CacheClearerInterface;
+use Akeneo\Tool\Component\StorageUtils\Cache\EntityManagerClearerInterface;
+use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
+use Akeneo\Tool\Component\StorageUtils\Repository\IdentifiableObjectRepositoryInterface;
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\ValuesFiller\EntityWithFamilyValuesFillerInterface;
+use Akeneo\Tool\Component\Connector\Processor\BulkMediaFetcher;
+use Akeneo\Pim\Enrichment\Component\Product\Connector\Processor\Normalization\ProductProcessor;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Pim\Component\Catalog\Repository\ChannelRepositoryInterface;
+use Akeneo\Channel\Component\Repository\ChannelRepositoryInterface;
 
 /**
  * Extension of classic ProductProcessor to allow write file urls as serialized product data
@@ -101,9 +101,6 @@ class AdvancedProductProcessor extends ProductProcessor
 
         if (null !== $this->cacheClearer) {
             $this->cacheClearer->clear();
-        } else {
-            // TODO Remove $this->detacher, the upper condition and update the constructor on merge to master
-            $this->detacher->detach($product);
         }
 
         return $productStandard;

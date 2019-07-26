@@ -2,8 +2,8 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Job\JobParameters\DefaultValuesProvider;
 
-use Akeneo\Component\Batch\Job\JobInterface;
-use Akeneo\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
+use Akeneo\Tool\Component\Batch\Job\JobInterface;
+use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface;
 
 /**
  * Default values provider for product CSV export

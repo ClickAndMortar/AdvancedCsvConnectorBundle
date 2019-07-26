@@ -2,8 +2,8 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
+use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 use Doctrine\ORM\EntityManager;
-use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 
 /**
  * Export helper
@@ -32,11 +32,10 @@ class ExportHelper
      *
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, AttributeOptionRepository $attributeOptionRepository)
     {
-        $this->entityManager = $entityManager;
-
-        $this->loadRepositories();
+        $this->entityManager             = $entityManager;
+        $this->attributeOptionRepository = $attributeOptionRepository;
     }
 
     /**
@@ -58,15 +57,5 @@ class ExportHelper
         $option[0]->setLocale($locale)->getTranslation();
 
         return $option[0]->getOptionValue()->getLabel();
-    }
-
-    /**
-     * Load repositories from entity manager if necessary
-     *
-     * @return void
-     */
-    protected function loadRepositories()
-    {
-        $this->attributeOptionRepository = $this->entityManager->getRepository('PimCatalogBundle:AttributeOption');
     }
 }

@@ -2,20 +2,20 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\Csv;
 
-use Akeneo\Component\Batch\Item\ItemWriterInterface;
-use Akeneo\Component\Batch\Job\JobInterface;
-use Akeneo\Component\Batch\Job\JobParameters;
-use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
-use Akeneo\Component\Buffer\BufferFactory;
+use Akeneo\Tool\Component\Batch\Item\ItemWriterInterface;
+use Akeneo\Tool\Component\Batch\Job\JobInterface;
+use Akeneo\Tool\Component\Batch\Job\JobParameters;
+use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
+use Akeneo\Tool\Component\Buffer\BufferFactory;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
-use Pim\Component\Catalog\Repository\AttributeRepositoryInterface;
-use Pim\Component\Connector\ArrayConverter\ArrayConverterInterface;
-use Pim\Component\Connector\Writer\File\AbstractItemMediaWriter;
-use Pim\Component\Connector\Writer\File\ArchivableWriterInterface;
-use Pim\Component\Connector\Writer\File\FileExporterPathGeneratorInterface;
-use Pim\Component\Connector\Writer\File\FlatItemBufferFlusher;
-use Pim\Bundle\CatalogBundle\Entity\AttributeOption;
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
+use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
+use Akeneo\Tool\Component\Connector\Writer\File\AbstractItemMediaWriter;
+use Akeneo\Tool\Component\Connector\Writer\File\ArchivableWriterInterface;
+use Akeneo\Tool\Component\Connector\Writer\File\FileExporterPathGeneratorInterface;
+use Akeneo\Tool\Component\Connector\Writer\File\FlatItemBufferFlusher;
+use Akeneo\Pim\Structure\Component\Model\AttributeOption;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ExportHelper;
 use Doctrine\ORM\EntityManager;
 
@@ -203,7 +203,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         AttributeRepositoryInterface $attributeRepository,
         FileExporterPathGeneratorInterface $fileExporterPath,
         array $mediaAttributeTypes,
-        string $jobParamFilePath = self::DEFAULT_FILE_PATH,
+        $jobParamFilePath = self::DEFAULT_FILE_PATH,
         ExportHelper $exportHelper,
         EntityManager $entityManager,
         string $defaultLocale
