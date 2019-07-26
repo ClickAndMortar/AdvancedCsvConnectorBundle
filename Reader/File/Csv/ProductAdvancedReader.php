@@ -2,18 +2,18 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv;
 
-use Akeneo\Component\Batch\Item\FileInvalidItem;
-use Akeneo\Component\Batch\Item\InitializableInterface;
-use Akeneo\Component\Batch\Item\InvalidItemException;
-use Akeneo\Component\Batch\Job\BatchStatus;
-use Akeneo\Component\Batch\Job\ExitStatus;
+use Akeneo\Tool\Component\Batch\Item\FileInvalidItem;
+use Akeneo\Tool\Component\Batch\Item\InitializableInterface;
+use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
+use Akeneo\Tool\Component\Batch\Job\BatchStatus;
+use Akeneo\Tool\Component\Batch\Job\ExitStatus;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
-use Pim\Component\Connector\ArrayConverter\ArrayConverterInterface;
-use Pim\Component\Connector\Exception\DataArrayConversionException;
-use Pim\Component\Connector\Reader\File\Csv\ProductReader;
-use Pim\Component\Connector\Reader\File\FileIteratorFactory;
-use Pim\Component\Connector\Reader\File\MediaPathTransformer;
+use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Repository\ProductRepository;
+use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
+use Akeneo\Tool\Component\Connector\Exception\DataArrayConversionException;
+use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\File\Csv\ProductReader;
+use Akeneo\Tool\Component\Connector\Reader\File\FileIteratorFactory;
+use Akeneo\Tool\Component\Connector\Reader\File\MediaPathTransformer;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
 
 /**

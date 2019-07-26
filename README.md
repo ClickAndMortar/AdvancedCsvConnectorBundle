@@ -4,6 +4,14 @@ Advanced CSV Connector is an extension of classic Akeneo CSV Connector. It allow
 
 Made with :blue_heart: by C&M
 
+## Versions
+
+| **Bundle version**  | **Akeneo version** |
+| ------------- | ------------- |
+| v1.5.*  | v3.1.*  |
+| v1.4.*  | v2.3.*  |
+| v1.3.*  | v2.1.*  |
+
 ## Installation
 
 ### Download the Bundle

@@ -2,9 +2,9 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Archiver;
 
-use Akeneo\Component\Batch\Model\JobExecution;
-use Akeneo\Component\Batch\Step\ItemStep;
-use Pim\Component\Connector\Archiver\FileReaderArchiver;
+use Akeneo\Tool\Component\Batch\Model\JobExecution;
+use Akeneo\Tool\Component\Batch\Step\ItemStep;
+use Akeneo\Tool\Component\Connector\Archiver\FileReaderArchiver;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
 
 /**

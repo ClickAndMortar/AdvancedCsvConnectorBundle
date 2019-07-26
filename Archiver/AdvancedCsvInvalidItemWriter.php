@@ -2,10 +2,10 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Archiver;
 
-use Akeneo\Component\Batch\Item\InvalidItemInterface;
-use Akeneo\Component\Batch\Model\JobExecution;
+use Akeneo\Tool\Component\Batch\Item\InvalidItemInterface;
+use Akeneo\Tool\Component\Batch\Model\JobExecution;
 use Doctrine\Common\Collections\ArrayCollection;
-use Pim\Component\Connector\Archiver\CsvInvalidItemWriter;
+use Akeneo\Tool\Component\Connector\Archiver\CsvInvalidItemWriter;
 
 /**
  * Extends default CsvInvalidItemWriter to disable creation of CSV file with errors for CSV import with mapping

@@ -5,9 +5,9 @@ namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Monolog\Logger;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\AttributeRepository;
-use Pim\Bundle\CatalogBundle\Entity\Attribute;
-use Pim\Component\Catalog\AttributeTypes;
+use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeRepository;
+use Akeneo\Pim\Structure\Component\Model\Attribute;
+use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Symfony\Component\Process\Process;
 
 /**
@@ -88,14 +88,14 @@ class ImportHelper
      * @param Logger        $logger
      * @param EntityManager $entityManager
      * @param string        $kernelRootDirectory
+     * @param AttributeRepository
      */
-    public function __construct(Logger $logger, EntityManager $entityManager, $kernelRootDirectory)
+    public function __construct(Logger $logger, EntityManager $entityManager, $kernelRootDirectory, AttributeRepository $attributeRepository)
     {
         $this->logger              = $logger;
         $this->entityManager       = $entityManager;
         $this->kernelRootDirectory = $kernelRootDirectory;
-
-        $this->loadRepositories();
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -336,15 +336,5 @@ class ImportHelper
         fclose($file);
 
         return $linesNumber;
-    }
-
-    /**
-     * Load repositories from entity manager
-     *
-     * @return void
-     */
-    protected function loadRepositories()
-    {
-        $this->attributeRepository = $this->entityManager->getRepository('PimCatalogBundle:Attribute');
     }
 }

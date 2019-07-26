@@ -30,7 +30,7 @@ class LoadClassMetadataSubscriber implements EventSubscriber
          * @var \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
          */
         $classMetadata = $eventArgs->getClassMetadata();
-        if ($classMetadata->getName() !== 'Pim\Bundle\CatalogBundle\Entity\AttributeOption') {
+        if ($classMetadata->getName() !== 'Akeneo\Pim\Structure\Component\Model\AttributeOption') {
             return;
         }
 

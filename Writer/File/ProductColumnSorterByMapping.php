@@ -2,8 +2,8 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File;
 
-use Pim\Component\Connector\Writer\File\ColumnSorterInterface;
-use Pim\Component\Connector\Writer\File\ProductColumnSorter;
+use Akeneo\Tool\Component\Connector\Writer\File\ColumnSorterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Connector\ProductColumnSorter;
 
 /**
  * Product column sorter by mapping
