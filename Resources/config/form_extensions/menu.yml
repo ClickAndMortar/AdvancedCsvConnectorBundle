@@ -1,0 +1,10 @@
+extensions:
+    candm_advanced_csv_connector-menu-reference_data-item-mapping:
+        module: pim/menu/item
+        parent: pim-menu-reference_data-navigation-block
+        position: 10
+        config:
+            title: candm_advanced_csv_connector.menu.item.reference_data.mapping
+            to: pim_customentity_index
+            routeParams:
+                customEntityName: mapping

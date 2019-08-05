@@ -15,3 +15,81 @@ batch_jobs:
                 label: Mapping des données
         export:
             label: Export des produits
+
+# Custom entity
+pim_menu:
+    tab.reference_data: Référenciel
+    item.reference_data: Référenciel
+    navigation.reference_data: Référenciel
+
+pim_custom_entity:
+    index_title: Vue générale
+    create_popin.title: Créer
+    form:
+        field.label.label: Libellé
+        field.label.code: Code
+        tab:
+            history.title: Historique
+            properties:
+                title: Propriétés
+                section:
+                    common: Général
+                    label_translations: Libellés
+    button:
+        create: Créer
+    message:
+        created: Créé avec succès
+        removed: Supprimé avec succès
+        delete: Supprimer l'élément ?
+    error:
+        removing: Ce référenciel ne peut être supprimé
+    export.csv.entity_name:
+        label: Nom du référenciel
+        help: Le nom du référenciel que vous souhaitez exporter
+        no_reference_data: Aucun référenciel disponible
+    import.csv.entity_name:
+        label: Nom du référenciel
+        help: Le nom du référenciel que vous souhaitez importer
+        no_reference_data: Aucun référenciel disponible
+
+pim_enrich:
+    form.attribute.tab.properties.label:
+        name: Nom
+
+page_title:
+    pim_customentity_index: 'Référenciel - Vue générale'
+    pim_customentity_rest_create: 'Référenciel - Créer'
+    pim_customentity_massedit: 'Référenciel'
+    pim_customentity_quickexport: 'Référenciel'
+    pim_customentity_rest_delete: 'Référenciel'
+    pim_customentity_rest_list: 'Référenciel'
+
+# Custom
+candm_advanced_csv_connector:
+    mapping:
+        index_title: "] -Inf, 1] {{ count }} mapping|] 1, Inf [{{ count }} mappings"
+        selected: mapping(s) sélectionné(s)
+
+        field:
+            label:
+                label: Libellé
+                code: Code
+                mapping: Attributs
+
+    menu.item.reference_data:
+        mapping: Mappings
+
+    acl:
+        mapping:
+            index: Lister les mappings
+            create: Créer un mapping
+            edit: Éditer un mapping
+            delete: Supprimer un mapping
+
+confirmation:
+    remove:
+        mapping: mapping
+
+flash:
+    mapping:
+        removed: Mapping supprimé

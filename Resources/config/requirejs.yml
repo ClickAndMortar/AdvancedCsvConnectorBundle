@@ -1,0 +1,7 @@
+config:
+    paths:
+        tabulator: clickandmortaradvancedcsvconnector/js/lib/tabulator
+
+        # Mapping field
+        pim/form/common/fields/mapping: clickandmortaradvancedcsvconnector/js/form/common/fields/mapping
+        pim/template/form/common/fields/mapping: clickandmortaradvancedcsvconnector/templates/form/common/fields/mapping.html

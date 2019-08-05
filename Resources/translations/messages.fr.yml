@@ -8,3 +8,25 @@ batch_jobs:
                 mapping_attributes_error: Le mapping est incorrect. La clé "attributes" est manquante.
                 mapping_no_attribute_code: Le mapping est incorrect. La clé "attributeCode" est manquante pour un attribut.
                 mapping_no_identifier: Le mapping est incorrect. la clé "identifier" est manquante sur au moins un attribut.
+
+# Custom entity
+mapping:
+    this:
+        edit: Éditer le mapping
+        show: Afficher le mapping
+        delete: Supprimer le mapping
+
+pim_custom_entity:
+    form:
+        field:
+            label:
+                label: Libellé
+                code: Code
+
+candm_advanced_csv_connector:
+    acl:
+        mapping:
+            index: Lister les mapping
+            create: Créer un mapping
+            edit: Éditer un mapping
+            delete: Supprimer un mapping

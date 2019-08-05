@@ -1,0 +1,6 @@
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\Mapping:
+    properties:
+        label:
+        - NotBlank: ~
+        code:
+        - NotBlank: ~
