@@ -50,10 +50,10 @@ define([
                     {id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
                     {id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
                 ];
-                var table = new Tabulator("#example-table", {
-                    height:205,
+                var table = new Tabulator("#mapping-table", {
                     data:tabledata,
                     layout:"fitColumns",
+                    responsiveLayout:true,
                     columns:[
                         {title:"Name", field:"name", width:150},
                         {title:"Age", field:"age", align:"left", formatter:"progress"},

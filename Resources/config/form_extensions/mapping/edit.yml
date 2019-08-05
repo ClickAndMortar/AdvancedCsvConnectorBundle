@@ -115,7 +115,7 @@ extensions:
         targetZone: accordion
         position: 100
         config:
-            template: pim/template/form/tab/section
+            template: pim/template/form/tab/section-large
             templateParams:
                 sectionTitle: pim_custom_entity.form.tab.properties.section.common
                 dropZone: content
@@ -146,5 +146,5 @@ extensions:
         targetZone: content
         position: 110
         config:
-            fieldName: code
+            fieldName: mappingAsJson
             label: candm_advanced_csv_connector.mapping.field.label.mapping
