@@ -1,5 +1,5 @@
 extensions:
-    pim-mapping-index:
+    pim-importMapping-index:
         module: pim/common/simple-view
         config:
             template: pim/template/common/default-template
@@ -7,78 +7,78 @@ extensions:
             grid_load:start: grid_load:start
             grid_load:complete: grid_load:complete
 
-    pim-mapping-index-grid-container:
+    pim-importMapping-index-grid-container:
         module: pim/common/simple-view
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: content
         config:
             template: pim/template/form/index/index
 
-    pim-mapping-index-user-navigation:
+    pim-importMapping-index-user-navigation:
         module: pim/menu/user-navigation
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: user-menu
         config:
             userAccount: pim_menu.user.user_account
             logout: pim_menu.user.logout
 
-    pim-mapping-index-grid-title:
+    pim-importMapping-index-grid-title:
         module: pim/common/grid-title
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: title
         config:
-            title: candm_advanced_csv_connector.mapping.index_title
+            title: candm_advanced_csv_connector.importMapping.index_title
 
-    pim-mapping-index-breadcrumbs:
+    pim-importMapping-index-breadcrumbs:
         module: pim/common/breadcrumbs
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: breadcrumbs
         config:
             tab: pim-menu-reference_data
-            item: candm_advanced_csv_connector-menu-reference_data-item-mapping
+            item: candm_advanced_csv_connector-menu-reference_data-item-importMapping
 
-    pim-mapping-index-grid-filters-list:
+    pim-importMapping-index-grid-filters-list:
         module: oro/datafilter/filters-list
-        parent: pim-mapping-index-grid-container
+        parent: pim-importMapping-index-grid-container
         targetZone: filters
 
-    pim-mapping-index-grid-filters-manage:
+    pim-importMapping-index-grid-filters-manage:
         module: oro/datafilter/filters-button
-        parent: pim-mapping-index-grid-container
+        parent: pim-importMapping-index-grid-container
         targetZone: filters
 
-    pim-mapping-index-mass-actions:
+    pim-importMapping-index-mass-actions:
         module: pim/grid/mass-actions
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: bottom-panel
         config:
-            label: candm_advanced_csv_connector.mapping.selected
+            label: candm_advanced_csv_connector.importMapping.selected
 
-    pim-mapping-index-actions-panel:
+    pim-importMapping-index-actions-panel:
         module: oro/datagrid/actions-panel
-        parent: pim-mapping-index-mass-actions
+        parent: pim-importMapping-index-mass-actions
         targetZone: actions-panel
 
-    pim-mapping-index-pagination:
+    pim-importMapping-index-pagination:
         module: oro/datagrid/pagination-input
-        parent: pim-mapping-index-grid-container
+        parent: pim-importMapping-index-grid-container
         targetZone: toolbar
         config:
-            gridName: mapping
+            gridName: importMapping
 
-    pim-mapping-index-grid:
+    pim-importMapping-index-grid:
         module: pim/form/common/index/grid
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: content
         position: 1000
         config:
-            alias: mapping
+            alias: importMapping
 
-    pim-mapping-index-create-button:
+    pim-importMapping-index-create-button:
         module: pim/form/common/index/create-button
-        parent: pim-mapping-index
+        parent: pim-importMapping-index
         targetZone: buttons
         aclResourceId: pim_enrich_product_create
         config:
             title:     pim_custom_entity.button.create
-            modalForm: pim-mapping-create-modal
+            modalForm: pim-importMapping-create-modal

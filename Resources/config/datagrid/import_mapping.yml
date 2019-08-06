@@ -1,11 +1,11 @@
 datagrid:
-    mapping:
+    importMapping:
         options:
-            entityHint: brand
+            entityHint: importMapping
             manageFilters: false
         source:
             type: pim_datasource_default
-            entity: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\Mapping
+            entity: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping
             repository_method: createDatagridQueryBuilder
         columns:
             label:
@@ -29,15 +29,15 @@ datagrid:
         actions:
             edit:
                 type:      navigate
-                acl_resource: candm_advanced_csv_connector_mapping_edit
-                label:     mapping.this.edit
+                acl_resource: candm_advanced_csv_connector_importMapping_edit
+                label:     importMapping.this.edit
                 icon:      edit
                 link:      edit_link
                 rowAction: true
             delete:
                 type:  delete
-                acl_resource: candm_advanced_csv_connector_mapping_delete
-                label: mapping.this.delete
+                acl_resource: candm_advanced_csv_connector_importMapping_delete
+                label: importMapping.this.delete
                 icon:  trash
                 link:  delete_link
         filters:

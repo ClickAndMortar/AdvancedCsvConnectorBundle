@@ -6,7 +6,7 @@ define([
         'oro/translator',
         'tabulator',
         'pim/form/common/fields/field',
-        'pim/template/form/common/fields/mapping'
+        'pim/template/form/common/fields/import-mapping'
     ],
     function (
         $,
@@ -20,8 +20,8 @@ define([
             template: _.template(template),
 
             callbacks: {
-                'setMetricUnitAsSuffix': __('candm_advanced_csv_connector.mapping.callbacks.metric_unit_as_suffix'),
-                'downloadVisualFromUrl': __('candm_advanced_csv_connector.mapping.callbacks.download_visual_from_url'),
+                'setMetricUnitAsSuffix': __('candm_advanced_csv_connector.importMapping.callbacks.metric_unit_as_suffix'),
+                'downloadVisualFromUrl': __('candm_advanced_csv_connector.importMapping.callbacks.download_visual_from_url'),
             },
 
             yesNoValues: {
@@ -70,19 +70,19 @@ define([
                     addRowPos: 'bottom',
                     columns: [
                         {
-                            title: __('candm_advanced_csv_connector.mapping.columns.attribute_code'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.attribute_code'),
                             field: 'attributeCode',
                             headerSort: false,
                             editor: 'input'
                         },
                         {
-                            title: __('candm_advanced_csv_connector.mapping.columns.column_name'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.column_name'),
                             field: 'dataCode',
                             headerSort: false,
                             editor: 'input'
                         },
                         {
-                            title: __('candm_advanced_csv_connector.mapping.columns.native_callback'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.native_callback'),
                             field: 'callback',
                             headerSort: false,
                             editor: 'select',
@@ -94,7 +94,7 @@ define([
                             }
                         },
                         {
-                            title: __('candm_advanced_csv_connector.mapping.columns.default_value'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.default_value'),
                             field: 'defaultValue',
                             headerSort: false,
                             editor: 'input',
@@ -103,7 +103,7 @@ define([
                             },
                         },
                         {
-                            title: __('candm_advanced_csv_connector.mapping.columns.only_on_creation'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.only_on_creation'),
                             field: 'onlyOnCreation',
                             headerSort: false,
                             editor: 'select',
@@ -115,7 +115,7 @@ define([
                             }
                         },
                         {
-                            title: __('candm_advanced_csv_connector.mapping.columns.delete_if_null'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.delete_if_null'),
                             field: 'deleteIfNull',
                             headerSort: false,
                             editor: 'select',
@@ -127,7 +127,7 @@ define([
                             }
                         },
                         {
-                            title: __('candm_advanced_csv_connector.mapping.actions.delete_row'),
+                            title: __('candm_advanced_csv_connector.importMapping.actions.delete_row'),
                             field: 'delete',
                             formatter: 'tickCross',
                             headerSort: false,

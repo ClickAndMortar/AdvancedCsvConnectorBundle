@@ -1,7 +1,7 @@
 # Normalizers
 services:
-    pim_custom_entity.normalizer.standard.mapping:
+    pim_custom_entity.normalizer.standard.importMapping:
         public: false
-        class: ClickAndMortar\AdvancedCsvConnectorBundle\Normalizer\Standard\MappingNormalizer
+        class: ClickAndMortar\AdvancedCsvConnectorBundle\Normalizer\Standard\ImportMappingNormalizer
         tags:
         - { name: pim_serializer.normalizer, priority: 200 }

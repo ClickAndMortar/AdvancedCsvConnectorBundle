@@ -5,12 +5,12 @@ namespace ClickAndMortar\AdvancedCsvConnectorBundle\Entity;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 
 /**
- * Mapping
+ * Import mapping
  *
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package ClickAndMortar\AdvancedCsvConnectorBundle\Entity
  */
-class Mapping extends AbstractCustomEntity
+class ImportMapping extends AbstractCustomEntity
 {
     /**
      * Label
@@ -86,7 +86,7 @@ class Mapping extends AbstractCustomEntity
      */
     public function getCustomEntityName(): string
     {
-        return 'mapping';
+        return 'importMapping';
     }
 
     /**

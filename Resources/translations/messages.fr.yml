@@ -10,11 +10,11 @@ batch_jobs:
                 mapping_no_identifier: Le mapping est incorrect. la clé "identifier" est manquante sur au moins un attribut.
 
 # Custom entity
-mapping:
+importMapping:
     this:
-        edit: Éditer le mapping
-        show: Afficher le mapping
-        delete: Supprimer le mapping
+        edit: Éditer le mapping d'import
+        show: Afficher le mapping d'import
+        delete: Supprimer le mapping d'import
 
 pim_custom_entity:
     form:
@@ -25,8 +25,8 @@ pim_custom_entity:
 
 candm_advanced_csv_connector:
     acl:
-        mapping:
-            index: Lister les mapping
-            create: Créer un mapping
-            edit: Éditer un mapping
-            delete: Supprimer un mapping
+        importMapping:
+            index: Lister les mappings d'import
+            create: Créer un mapping d'import
+            edit: Éditer un mapping d'import
+            delete: Supprimer un mapping d'import

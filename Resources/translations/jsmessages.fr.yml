@@ -66,15 +66,15 @@ page_title:
 
 # Custom
 candm_advanced_csv_connector:
-    mapping:
-        index_title: "] -Inf, 1] {{ count }} mapping|] 1, Inf [{{ count }} mappings"
-        selected: mapping(s) sélectionné(s)
+    importMapping:
+        index_title: "] -Inf, 1] {{ count }} mapping d'import|] 1, Inf [{{ count }} mappings d'import"
+        selected: mapping(s) d'import sélectionné(s)
 
         field:
             label:
                 label: Libellé
                 code: Code
-                mapping: Mapping des attributs
+                mapping: Mapping attributs / colonnes
 
         columns:
             attribute_code: Attribut
@@ -91,19 +91,19 @@ candm_advanced_csv_connector:
             download_visual_from_url: Télécharger l'image
 
     menu.item.reference_data:
-        mapping: Mappings
+        importMapping: Mappings d'import
 
     acl:
-        mapping:
-            index: Lister les mappings
-            create: Créer un mapping
-            edit: Éditer un mapping
-            delete: Supprimer un mapping
+        importMapping:
+            index: Lister les mappings d'import
+            create: Créer un mapping d'import
+            edit: Éditer un mapping d'import
+            delete: Supprimer un mapping d'import
 
 confirmation:
     remove:
-        mapping: mapping
+        importMapping: mapping d'import
 
 flash:
-    mapping:
-        removed: Mapping supprimé
+    importMapping:
+        removed: Mapping d'import supprimé

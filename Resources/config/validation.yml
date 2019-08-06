@@ -1,4 +1,4 @@
-ClickAndMortar\AdvancedCsvConnectorBundle\Entity\Mapping:
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
     properties:
         label:
         - NotBlank: ~

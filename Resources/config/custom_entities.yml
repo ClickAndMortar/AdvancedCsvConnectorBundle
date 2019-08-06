@@ -1,5 +1,5 @@
 custom_entities:
-    mapping:
-        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\Mapping
+    importMapping:
+        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping
         options:
-            edit_form_extension: pim-mapping-edit-form
+            edit_form_extension: pim-importMapping-edit-form

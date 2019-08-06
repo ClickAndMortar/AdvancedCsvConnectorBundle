@@ -2,16 +2,16 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Normalizer\Standard;
 
-use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\Mapping;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Mapping normalizer
+ * Import mapping normalizer
  *
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package ClickAndMortar\AdvancedCsvConnectorBundle\Normalizer\Standard
  */
-class MappingNormalizer implements NormalizerInterface
+class ImportMappingNormalizer implements NormalizerInterface
 {
     /**
      * @var string[]
@@ -19,18 +19,19 @@ class MappingNormalizer implements NormalizerInterface
     protected $supportedFormats = ['standard'];
 
     /**
-     * @param Mapping $entity
-     * @param null    $format
-     * @param array   $context
+     * @param ImportMapping $entity
+     * @param null          $format
+     * @param array         $context
      *
      * @return array
      */
     public function normalize($entity, $format = null, array $context = [])
     {
         $mapping = [
-            'id'    => $entity->getId(),
-            'label' => $entity->getLabel(),
-            'code'  => $entity->getCode(),
+            'id'            => $entity->getId(),
+            'label'         => $entity->getLabel(),
+            'code'          => $entity->getCode(),
+            'mappingAsJson' => $entity->getMappingAsJson(),
         ];
 
         return $mapping;
@@ -44,6 +45,6 @@ class MappingNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof Mapping && in_array($format, $this->supportedFormats);
+        return $data instanceof ImportMapping && in_array($format, $this->supportedFormats);
     }
 }

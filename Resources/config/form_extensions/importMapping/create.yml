@@ -1,30 +1,30 @@
 extensions:
-    pim-mapping-create-modal:
+    pim-importMapping-create-modal:
         module: custom_entity/form/creation/modal
         config:
             labels:
                 title: pim_custom_entity.create_popin.title
-                subTitle: candm_advanced_csv_connector.menu.item.reference_data.mapping
+                subTitle: candm_advanced_csv_connector.menu.item.reference_data.importMapping
             picture: illustrations/User.svg
             successMessage: pim_custom_entity.message.created
             editRoute: pim_customentity_rest_get
             postUrl:
                 route: pim_customentity_rest_create
                 parameters:
-                    customEntityName: mapping
+                    customEntityName: importMapping
 
-    pim-mapping-create-label:
+    pim-importMapping-create-label:
         module: pim/form/common/creation/field
-        parent: pim-mapping-create-modal
+        parent: pim-importMapping-create-modal
         targetZone: fields
         position: 10
         config:
             identifier: label
             label: pim_custom_entity.form.field.label.label
 
-    pim-mapping-create-code:
+    pim-importMapping-create-code:
         module: pim/form/common/creation/field
-        parent: pim-mapping-create-modal
+        parent: pim-importMapping-create-modal
         targetZone: fields
         position: 20
         config:

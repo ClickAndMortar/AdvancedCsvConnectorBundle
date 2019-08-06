@@ -1,21 +1,21 @@
 # Reference data
-## Mapping
-candm_advanced_csv_connector_mapping_index:
+## Import Mapping
+candm_advanced_csv_connector_importMapping_index:
     type: action
-    label: candm_advanced_csv_connector.acl.mapping.index
+    label: candm_advanced_csv_connector.acl.importMapping.index
     group_name: pim_custom_entity.acl_group.reference_data
 
-candm_advanced_csv_connector_mapping_create:
+candm_advanced_csv_connector_importMapping_create:
     type: action
-    label: candm_advanced_csv_connector.acl.mapping.create
+    label: candm_advanced_csv_connector.acl.importMapping.create
     group_name: pim_custom_entity.acl_group.reference_data
 
-candm_advanced_csv_connector_mapping_edit:
+candm_advanced_csv_connector_importMapping_edit:
     type: action
-    label: candm_advanced_csv_connector.acl.mapping.edit
+    label: candm_advanced_csv_connector.acl.importMapping.edit
     group_name: pim_custom_entity.acl_group.reference_data
 
-candm_advanced_csv_connector_mapping_delete:
+candm_advanced_csv_connector_importMapping_delete:
     type: action
-    label: candm_advanced_csv_connector.acl.mapping.delete
+    label: candm_advanced_csv_connector.acl.importMapping.delete
     group_name: pim_custom_entity.acl_group.reference_data
