@@ -3,6 +3,7 @@
 define([
         'jquery',
         'underscore',
+        'oro/translator',
         'tabulator',
         'pim/form/common/fields/field',
         'pim/template/form/common/fields/mapping'
@@ -10,17 +11,22 @@ define([
     function (
         $,
         _,
+        __,
         Tabulator,
         BaseField,
         template
     ) {
         return BaseField.extend({
             template: _.template(template),
-            events: {
-                'keyup input': function (event) {
-                    this.errors = [];
-                    this.updateModel(this.getFieldValue(event.target));
-                }
+
+            callbacks: {
+                'setMetricUnitAsSuffix': __('candm_advanced_csv_connector.mapping.callbacks.metric_unit_as_suffix'),
+                'downloadVisualFromUrl': __('candm_advanced_csv_connector.mapping.callbacks.download_visual_from_url'),
+            },
+
+            yesNoValues: {
+                'true': __('pim_common.yes'),
+                'false': __('pim_common.no'),
             },
 
             /**
@@ -44,25 +50,98 @@ define([
              */
             postRender: function () {
                 var tabledata = [
-                    {id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
-                    {id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
-                    {id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
-                    {id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
-                    {id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
-                ];
-                var table = new Tabulator("#mapping-table", {
-                    data:tabledata,
-                    layout:"fitColumns",
-                    responsiveLayout:true,
-                    columns:[
-                        {title:"Name", field:"name", width:150},
-                        {title:"Age", field:"age", align:"left", formatter:"progress"},
-                        {title:"Favourite Color", field:"col"},
-                        {title:"Date Of Birth", field:"dob", sorter:"date", align:"center"},
-                    ],
-                    rowClick:function(e, row){ //trigger an alert message when the row is clicked
-                        alert("Row " + row.getData().id + " Clicked!!!!");
+                    {
+                        id: 1,
+                        attributeCode: "Oli Bob",
+                        field: "12",
+                        callback: "red",
+                        defaultValue: "coucou",
+                        onlyOnCreation: 'false',
+                        deleteIfNull: 'true',
+                        delete: false
                     },
+                ];
+                var self = this;
+                var table = new Tabulator("#mapping-table", {
+                    data: tabledata,
+                    layout: "fitColumns",
+                    responsiveLayout: true,
+                    columnHeaderSortMulti: false,
+                    addRowPos: 'bottom',
+                    columns: [
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.columns.attribute_code'),
+                            field: 'attributeCode',
+                            headerSort: false,
+                            editor: 'input'
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.columns.column_name'),
+                            field: 'dataCode',
+                            headerSort: false,
+                            editor: 'input'
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.columns.native_callback'),
+                            field: 'callback',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.callbacks
+                            },
+                            formatter: function (cell, formaterParams, onRendered) {
+                                return _.has(self.callbacks, cell.getValue()) ? self.callbacks[cell.getValue()] : cell.getValue();
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.columns.default_value'),
+                            field: 'defaultValue',
+                            headerSort: false,
+                            editor: 'input',
+                            editorParams: {
+                                values: self.callbacks
+                            },
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.columns.only_on_creation'),
+                            field: 'onlyOnCreation',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.yesNoValues
+                            },
+                            formatter: function (cell, formaterParams, onRendered) {
+                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.columns.delete_if_null'),
+                            field: 'deleteIfNull',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.yesNoValues
+                            },
+                            formatter: function (cell, formaterParams, onRendered) {
+                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.mapping.actions.delete_row'),
+                            field: 'delete',
+                            formatter: 'tickCross',
+                            headerSort: false,
+                            cellClick: function (e, cell) {
+                                console.log(cell._cell);
+                                cell._cell.row.delete();
+                            },
+                        }
+                    ]
+                });
+
+                // Manage clicks
+                $("#add-row").click(function () {
+                    table.addRow({});
                 });
             },
         });

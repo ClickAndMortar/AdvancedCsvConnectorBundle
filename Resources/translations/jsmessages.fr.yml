@@ -74,7 +74,21 @@ candm_advanced_csv_connector:
             label:
                 label: Libellé
                 code: Code
-                mapping: Attributs
+                mapping: Mapping des attributs
+
+        columns:
+            attribute_code: Attribut
+            column_name: Nom de la colonne
+            native_callback: Transformation simple
+            default_value: Valeur par défaut
+            only_on_creation: Uniquement à la création
+            delete_if_null: Effacer si nul
+        actions:
+            add_row: Ajouter une ligne
+            delete_row: Supprimer
+        callbacks:
+            metric_unit_as_suffix: Unité métrique en tant que suffixe
+            download_visual_from_url: Télécharger l'image
 
     menu.item.reference_data:
         mapping: Mappings
