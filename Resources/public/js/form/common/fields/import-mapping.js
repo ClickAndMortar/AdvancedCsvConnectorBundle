@@ -69,15 +69,15 @@ define([
                             editor: 'input'
                         },
                         {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.native_callback'),
+                            title: __('candm_advanced_csv_connector.importMapping.columns.callback'),
                             field: 'callback',
                             headerSort: false,
-                            editor: 'select',
+                            editor: 'autocomplete',
                             editorParams: {
+                                showListOnEmpty: true,
+                                freetext: true,
+                                allowEmpty: true,
                                 values: self.callbacks
-                            },
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.callbacks, cell.getValue()) ? self.callbacks[cell.getValue()] : cell.getValue();
                             }
                         },
                         {

@@ -80,7 +80,7 @@ candm_advanced_csv_connector:
         columns:
             attribute_code: Attribut
             column_name: Nom de la colonne
-            native_callback: Transformation simple
+            callback: Transformation
             default_value: Valeur par défaut
             only_on_creation: Uniquement à la création
             delete_if_null: Effacer si nul
