@@ -51,9 +51,10 @@ define([
                     columnHeaderSortMulti: false,
                     addRowPos: 'bottom',
                     cellEdited: function (cell) {
-                        var mappingAsJson = cell._cell.table.getData();
-                        var mappingAsString = JSON.stringify(mappingAsJson);
-                        self.updateModel(mappingAsString);
+                        self.updateModelValue(cell._cell.table.getData());
+                    },
+                    rowDeleted: function (row) {
+                        self.updateModelValue(row._row.table.getData());
                     },
                     columns: [
                         {
@@ -144,6 +145,16 @@ define([
              */
             booleanAccessor: function (value, data, type, params, column) {
                 return value === 'true';
+            },
+
+            /**
+             * Update model data
+             *
+             * @param data
+             */
+            updateModelValue: function(data) {
+                var dataAsString = JSON.stringify(data);
+                this.updateModel(dataAsString);
             }
         });
     });
