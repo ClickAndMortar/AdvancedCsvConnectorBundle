@@ -43,7 +43,8 @@ define([
              */
             postRender: function () {
                 var self = this;
-                var tabledata = JSON.parse(self.getModelValue());
+                var modelValueAsString = !_.isUndefined(self.getModelValue()) ? self.getModelValue() : '[]';
+                var tabledata = JSON.parse(modelValueAsString);
                 var table = new Tabulator("#mapping-table", {
                     data: tabledata,
                     layout: "fitColumns",
@@ -89,6 +90,19 @@ define([
                             editorParams: {
                                 values: self.callbacks
                             },
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.importMapping.columns.identifier'),
+                            field: 'identifier',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.yesNoValues
+                            },
+                            accessor: self.booleanAccessor,
+                            formatter: function (cell, formaterParams, onRendered) {
+                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
+                            }
                         },
                         {
                             title: __('candm_advanced_csv_connector.importMapping.columns.only_on_creation'),
