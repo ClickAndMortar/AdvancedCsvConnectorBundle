@@ -27,6 +27,13 @@ class ImportMapping extends AbstractCustomEntity
     protected $mappingAsJson;
 
     /**
+     * Complete callback
+     *
+     * @var string
+     */
+    protected $completeCallback;
+
+    /**
      * Get label
      *
      * @return string
@@ -66,6 +73,26 @@ class ImportMapping extends AbstractCustomEntity
     public function setMappingAsJson($mappingAsJson)
     {
         $this->mappingAsJson = $mappingAsJson;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompleteCallback(): string
+    {
+        return $this->completeCallback;
+    }
+
+    /**
+     * @param string $completeCallback
+     *
+     * @return ImportMapping
+     */
+    public function setCompleteCallback(string $completeCallback): ImportMapping
+    {
+        $this->completeCallback = $completeCallback;
 
         return $this;
     }

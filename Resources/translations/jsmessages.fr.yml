@@ -75,6 +75,7 @@ candm_advanced_csv_connector:
                 label: Libellé
                 code: Code
                 mapping: Mapping attributs / colonnes
+                complete_callback: Méthode de transformation après mapping
 
         columns:
             attribute_code: Attribut

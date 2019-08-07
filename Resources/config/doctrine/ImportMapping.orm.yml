@@ -19,6 +19,10 @@ ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
         mappingAsJson:
             type: text
             nullable: true
+        completeCallback:
+            type: string
+            length: 255
+            nullable: true
         sortOrder:
             type: integer
         created:

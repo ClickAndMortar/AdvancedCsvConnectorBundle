@@ -148,3 +148,12 @@ extensions:
         config:
             fieldName: mappingAsJson
             label: candm_advanced_csv_connector.importMapping.field.label.mapping
+
+    pim-importMapping-edit-form-properties-complete-callback:
+        module: pim/form/common/fields/text
+        parent: pim-importMapping-edit-form-properties-common
+        targetZone: content
+        position: 120
+        config:
+            fieldName: completeCallback
+            label: candm_advanced_csv_connector.importMapping.field.label.complete_callback
