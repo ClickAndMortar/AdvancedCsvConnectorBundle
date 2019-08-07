@@ -80,7 +80,7 @@ class ImportMapping extends AbstractCustomEntity
     /**
      * @return string
      */
-    public function getCompleteCallback(): string
+    public function getCompleteCallback()
     {
         return $this->completeCallback;
     }
@@ -90,7 +90,7 @@ class ImportMapping extends AbstractCustomEntity
      *
      * @return ImportMapping
      */
-    public function setCompleteCallback(string $completeCallback): ImportMapping
+    public function setCompleteCallback($completeCallback)
     {
         $this->completeCallback = $completeCallback;
 

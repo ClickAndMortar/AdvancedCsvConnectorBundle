@@ -41,33 +41,20 @@ define([
             /**
              * {@inheritdoc}
              */
-            getFieldValue: function (field) {
-                return $(field).val();
-            },
-
-            /**
-             * {@inheritdoc}
-             */
             postRender: function () {
-                var tabledata = [
-                    {
-                        id: 1,
-                        attributeCode: "Oli Bob",
-                        field: "12",
-                        callback: "red",
-                        defaultValue: "coucou",
-                        onlyOnCreation: 'false',
-                        deleteIfNull: 'true',
-                        delete: false
-                    },
-                ];
                 var self = this;
+                var tabledata = JSON.parse(self.getModelValue());
                 var table = new Tabulator("#mapping-table", {
                     data: tabledata,
                     layout: "fitColumns",
                     responsiveLayout: true,
                     columnHeaderSortMulti: false,
                     addRowPos: 'bottom',
+                    cellEdited: function (cell) {
+                        var mappingAsJson = cell._cell.table.getData();
+                        var mappingAsString = JSON.stringify(mappingAsJson);
+                        self.updateModel(mappingAsString);
+                    },
                     columns: [
                         {
                             title: __('candm_advanced_csv_connector.importMapping.columns.attribute_code'),
@@ -110,6 +97,7 @@ define([
                             editorParams: {
                                 values: self.yesNoValues
                             },
+                            accessor: self.booleanAccessor,
                             formatter: function (cell, formaterParams, onRendered) {
                                 return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
                             }
@@ -122,6 +110,7 @@ define([
                             editorParams: {
                                 values: self.yesNoValues
                             },
+                            accessor: self.booleanAccessor,
                             formatter: function (cell, formaterParams, onRendered) {
                                 return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
                             }
@@ -132,7 +121,6 @@ define([
                             formatter: 'tickCross',
                             headerSort: false,
                             cellClick: function (e, cell) {
-                                console.log(cell._cell);
                                 cell._cell.row.delete();
                             },
                         }
@@ -144,5 +132,18 @@ define([
                     table.addRow({});
                 });
             },
+
+            /**
+             * Accessor used to convert string value to boolean
+             *
+             * @param value
+             * @param data
+             * @param type
+             * @param params
+             * @param column
+             */
+            booleanAccessor: function (value, data, type, params, column) {
+                return value === 'true';
+            }
         });
     });
