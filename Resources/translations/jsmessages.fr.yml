@@ -52,10 +52,6 @@ pim_custom_entity:
         help: Le nom du référenciel que vous souhaitez importer
         no_reference_data: Aucun référenciel disponible
 
-pim_enrich:
-    form.attribute.tab.properties.label:
-        name: Nom
-
 page_title:
     pim_customentity_index: 'Référenciel - Vue générale'
     pim_customentity_rest_create: 'Référenciel - Créer'
@@ -135,13 +131,29 @@ candm_advanced_csv_connector:
             edit: Éditer un mapping d'export
             delete: Supprimer un mapping d'export
 
-confirmation:
-    remove:
-        importMapping: mapping d'import
-        exportMapping: mapping d'export
-
-flash:
-    importMapping:
-        removed: Mapping d'import supprimé
-    exportMapping:
-        removed: Mapping d'export supprimé
+pim_enrich:
+    form.attribute.tab.properties.label:
+        name: Nom
+    entity:
+        importmapping:
+            flash:
+                delete:
+                    success: Mapping supprimé avec succès !
+            module:
+                delete:
+                    confirm: Êtes-vous sûr de vouloir supprimer ce mapping d'import ?
+        importMapping:
+            flash:
+                delete:
+                    fail: Impossible de supprimer ce mapping d'import
+        exportmapping:
+            flash:
+                delete:
+                    success: Mapping supprimé avec succès !
+            module:
+                delete:
+                    confirm: Êtes-vous sûr de vouloir supprimer ce mapping d'export ?
+        exportMapping:
+            flash:
+                delete:
+                    fail: Impossible de supprimer ce mapping d'export
