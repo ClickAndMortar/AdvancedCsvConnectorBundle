@@ -37,7 +37,6 @@ class AppKernel extends Kernel
         $bundles = [
             // ...
             new Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
-            new ClickAndMortar\AdvancedEnrichBundle\ClickAndMortarAdvancedEnrichBundle(),
             new ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
         ];
 
