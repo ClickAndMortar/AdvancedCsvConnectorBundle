@@ -97,13 +97,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_IDENTIFIER_KEY = 'identifier';
 
     /**
-     * Locales mapping key
-     *
-     * @var string
-     */
-    const MAPPING_LOCALES_KEY = 'locales';
-
-    /**
      * Max length mapping key
      */
     const MAPPING_MAX_LENGTH_KEY = 'maxLength';
@@ -324,15 +317,8 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $isNewProduct = null;
 
         foreach ($this->mapping[self::MAPPING_BASE_ATTRIBUTES_KEY] as $attributeMapping) {
-            // Get attributes codes with locales if necessary
-            $attributesCodes = [];
-            if (!isset($attributeMapping[self::MAPPING_LOCALES_KEY])) {
-                $attributesCodes[] = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
-            } else {
-                foreach ($attributeMapping[self::MAPPING_LOCALES_KEY] as $locale) {
-                    $attributesCodes[] = sprintf('%s-%s', $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY], $locale);
-                }
-            }
+            $attributesCodes   = [];
+            $attributesCodes[] = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
 
             foreach ($attributesCodes as $attributesCode) {
                 $value = null;
