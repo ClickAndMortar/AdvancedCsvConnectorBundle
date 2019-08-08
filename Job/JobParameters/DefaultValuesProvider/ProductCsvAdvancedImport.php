@@ -14,13 +14,6 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters\DefaultValuesProviderInterface
 class ProductCsvAdvancedImport implements DefaultValuesProviderInterface
 {
     /**
-     * Default mapping value
-     *
-     * @var string
-     */
-    const DEFAULT_MAPPING = '{\'your-json-mapping-key\': \'your-json-mapping-value\'}';
-
-    /**
      * @var DefaultValuesProviderInterface
      */
     protected $baseDefaultValuesProvider;
@@ -46,7 +39,7 @@ class ProductCsvAdvancedImport implements DefaultValuesProviderInterface
     public function getDefaultValues()
     {
         return array_merge($this->baseDefaultValuesProvider->getDefaultValues(), [
-            'mapping' => self::DEFAULT_MAPPING,
+            'mapping' => null,
         ]);
     }
 

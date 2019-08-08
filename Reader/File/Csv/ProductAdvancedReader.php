@@ -7,6 +7,7 @@ use Akeneo\Tool\Component\Batch\Item\InitializableInterface;
 use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Job\BatchStatus;
 use Akeneo\Tool\Component\Batch\Job\ExitStatus;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Repository\ProductRepository;
 use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
@@ -15,6 +16,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\File\Csv\ProductRea
 use Akeneo\Tool\Component\Connector\Reader\File\FileIteratorFactory;
 use Akeneo\Tool\Component\Connector\Reader\File\MediaPathTransformer;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
+use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 
 /**
  * Product advanced reader
@@ -128,6 +130,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $productRepository;
 
     /**
+     * Import mapping repository
+     *
+     * @var ImportMappingRepository
+     */
+    protected $importMappingRepository;
+
+    /**
      * All CSV file paths
      *
      * @var array
@@ -171,6 +180,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param array                   $options
      * @param ImportHelper            $importHelper
      * @param ProductRepository       $productRepository
+     * @param ImportMappingRepository $importMappingRepository
      */
     public function __construct(
         FileIteratorFactory $fileIteratorFactory,
@@ -178,13 +188,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         MediaPathTransformer $mediaPathTransformer,
         array $options = [],
         ImportHelper $importHelper,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        CustomEntityRepository $importMappingRepository
     )
     {
         parent::__construct($fileIteratorFactory, $converter, $mediaPathTransformer, $options);
 
-        $this->importHelper      = $importHelper;
-        $this->productRepository = $productRepository;
+        $this->importHelper            = $importHelper;
+        $this->productRepository       = $productRepository;
+        $this->importMappingRepository = $importMappingRepository;
     }
 
     /**
@@ -202,8 +214,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         if (empty($this->mapping)) {
-            $mappingAsJson = $jobParameters->get('mapping');
-            $this->mapping = json_decode($mappingAsJson, true);
+            $mappingCode = $jobParameters->get('mapping');
+            /** @var ImportMapping $importMapping */
+            $importMapping = $this->importMappingRepository->findOneBy(['code' => $mappingCode]);
+            if ($importMapping === null) {
+                $this->stopStepExecution('batch_jobs.csv_advanced_product_import.import.errors.no_mapping');
+
+                return;
+            }
+            $this->mapping = $importMapping->getMappingAsArray();
             $this->validateMapping();
         }
 
@@ -339,14 +358,21 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                 }
 
                 // Default value
-                if (empty($value) && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])) {
+                if (
+                    empty($value)
+                    && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                    && !empty($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                ) {
                     $value = $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY];
                 }
 
                 // Add value in new item
                 if ($value !== null) {
                     // Update value by callback method if necessary
-                    if (isset($attributeMapping[self::MAPPING_CALLBACK_KEY])) {
+                    if (
+                        isset($attributeMapping[self::MAPPING_CALLBACK_KEY])
+                        && !empty($attributeMapping[self::MAPPING_CALLBACK_KEY])
+                    ) {
                         if (method_exists($this->importHelper, $attributeMapping[self::MAPPING_CALLBACK_KEY])) {
                             $value = $this->importHelper->{$attributeMapping[self::MAPPING_CALLBACK_KEY]}($value, $attributesCode);
                         } else {

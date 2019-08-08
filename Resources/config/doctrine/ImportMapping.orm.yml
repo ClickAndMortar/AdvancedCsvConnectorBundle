@@ -1,5 +1,5 @@
 ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
-    repositoryClass: Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository
+    repositoryClass: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ImportMappingRepository
     type: entity
     table: candm_reference_data_importmapping
     changeTrackingPolicy: DEFERRED_EXPLICIT

@@ -125,4 +125,26 @@ class ImportMapping extends AbstractCustomEntity
     {
         return $this->getCode();
     }
+
+    /**
+     * Get complete mapping
+     *
+     * @return string
+     */
+    public function getMappingAsArray()
+    {
+        // Get attributes mapping
+        $attributesMapping = !empty($this->getMappingAsJson()) ? $this->getMappingAsJson() : '[]';
+
+        $mapping = [
+            'attributes' => json_decode($attributesMapping, true),
+        ];
+
+        // And complete callback if necessary
+        if (!empty($this->getCompleteCallback())) {
+            $mapping['completeCallback'] = $this->getCompleteCallback();
+        }
+
+        return $mapping;
+    }
 }

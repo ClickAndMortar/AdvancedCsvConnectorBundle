@@ -31,5 +31,6 @@ class ClickAndMortarAdvancedCsvConnectorExtension extends Extension
         $loader->load('subscribers.yml');
         $loader->load('normalizers.yml');
         $loader->load('entities.yml');
+        $loader->load('repositories.yml');
     }
 }

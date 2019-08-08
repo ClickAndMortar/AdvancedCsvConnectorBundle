@@ -5,6 +5,7 @@ batch_jobs:
             warnings:
                 no_callback_method: La méthode "%callbackMethod%" n'existe pas sur le helper.
             errors:
+                no_mapping: Aucun mapping trouvé. Merci de réessayer.
                 mapping_attributes_error: Le mapping est incorrect. La clé "attributes" est manquante.
                 mapping_no_attribute_code: Le mapping est incorrect. La clé "attributeCode" est manquante pour un attribut.
                 mapping_no_identifier: Le mapping est incorrect. la clé "identifier" est manquante sur au moins un attribut.
