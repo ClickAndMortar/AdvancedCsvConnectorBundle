@@ -298,7 +298,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
             return [];
         }
-        dump($exportMapping->getMappingAsArray());
 
         return $exportMapping->getMappingAsArray();
     }
