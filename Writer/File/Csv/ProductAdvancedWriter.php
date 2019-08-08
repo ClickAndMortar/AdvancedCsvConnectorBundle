@@ -43,13 +43,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_COLUMN_NAME_KEY = 'columnName';
 
     /**
-     * Replacements key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_REPLACEMENTS_KEY = 'replacements';
-
-    /**
      * Callback key in mapping
      *
      * @var string
@@ -332,14 +325,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         if (!empty($columnMapping[self::MAPPING_CALLBACK_KEY]) && method_exists($this->exportHelper, $columnMapping[self::MAPPING_CALLBACK_KEY])) {
                             $attributeValue      = $this->exportHelper->{$columnMapping[self::MAPPING_CALLBACK_KEY]}($attributeValue, $originalItem);
                             $item[$attributeKey] = $attributeValue;
-                        }
-
-                        // Replace specific characters if necessary
-                        if (!empty($mapping[self::MAPPING_REPLACEMENTS_KEY])) {
-                            foreach ($mapping[self::MAPPING_REPLACEMENTS_KEY] as $replacement) {
-                                $attributeValue      = str_replace($replacement['values'], $replacement['newValue'], $attributeValue);
-                                $item[$attributeKey] = $attributeValue;
-                            }
                         }
 
                         // Set locale if necessary
