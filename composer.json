@@ -11,7 +11,8 @@
     ],
     "require": {
         "akeneo/pim-community-dev": "^3.1.0",
-        "clickandmortar/advanced-enrich-bundle": "^1.1"
+        "clickandmortar/advanced-enrich-bundle": "^1.1",
+        "akeneo-labs/custom-entity-bundle": "3.0.*"
     },
     "repositories": [
         {
