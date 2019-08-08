@@ -120,13 +120,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_LOCALE_KEY = 'locale';
 
     /**
-     * Additional headers line key
-     *
-     * @var string
-     */
-    const MAPPING_ADDITIONAL_HEADERS_LINE_KEY = 'additionalHeadersLine';
-
-    /**
      * Capitalized option key
      *
      * @var string
@@ -190,13 +183,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $defaultLocale;
 
     /**
-     * Additional headers line (optional) added?
-     *
-     * @var bool
-     */
-    protected $additionalHeadersLineAdded = false;
-
-    /**
      * Loaded attributes
      *
      * @var Attribute[]
@@ -252,19 +238,12 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $directory        = $this->stepExecution->getJobExecution()->getExecutionContext()
                                                 ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
         $localesToExport  = $parameters->get('filters')['structure']['locales'];
-
-        // Check for additional headers line
-        if (isset($mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY]) && !$this->additionalHeadersLineAdded) {
-            $flatItems[]                      = $mapping[self::MAPPING_ADDITIONAL_HEADERS_LINE_KEY];
-            $this->additionalHeadersLineAdded = true;
-        }
-
         foreach ($items as $item) {
             if ($parameters->has('with_media') && $parameters->get('with_media')) {
                 $item = $this->resolveMediaPaths($item, $directory);
             }
-            $flatItem = $this->arrayConverter->convert($item, $converterOptions);
-            $flatItem = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
+            $flatItem    = $this->arrayConverter->convert($item, $converterOptions);
+            $flatItem    = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
             $flatItems[] = $flatItem;
         }
         $this->flatRowBuffer->write($flatItems, ['withHeader' => $parameters->get('withHeader')]);
