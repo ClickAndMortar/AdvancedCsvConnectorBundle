@@ -5,6 +5,7 @@ define([
         'underscore',
         'oro/translator',
         'tabulator',
+        'pim/fetcher-registry',
         'pim/form/common/fields/field',
         'pim/template/form/common/fields/export-mapping'
     ],
@@ -13,6 +14,7 @@ define([
         _,
         __,
         Tabulator,
+        FetcherRegistry,
         BaseField,
         template
     ) {
@@ -29,10 +31,7 @@ define([
                 'toUppercase': __('candm_advanced_csv_connector.exportMapping.callbacks.to_uppercase'),
             },
 
-            localesValues: {
-                'fr_FR': 'fr_FR',
-                'en_GB': 'en_GB',
-            },
+            localesValues: {},
 
             /**
              * {@inheritdoc}
@@ -41,6 +40,20 @@ define([
                 return this.template(_.extend(templateContext, {
                     value: this.getModelValue()
                 }));
+            },
+
+            /**
+             * {@inheritdoc}
+             */
+            configure() {
+                return $.when(
+                    this.fetchLocales().then(locales => {
+                        var self = this;
+                        _.each(locales, function (locale) {
+                            self.localesValues[locale.code] = locale.code;
+                        });
+                    }),
+                );
             },
 
             /**
@@ -176,6 +189,17 @@ define([
             updateModelValue: function (data) {
                 var dataAsString = JSON.stringify(data);
                 this.updateModel(dataAsString);
-            }
+            },
+
+            /**
+             * Get activated locales
+             *
+             * @returns {*|Promise}
+             */
+            fetchLocales() {
+                const localeFetcher = FetcherRegistry.getFetcher('locale');
+
+                return localeFetcher.fetchActivated();
+            },
         });
     });
