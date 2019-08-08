@@ -8,3 +8,13 @@ extensions:
             to: pim_customentity_index
             routeParams:
                 customEntityName: importMapping
+
+    candm_advanced_csv_connector-menu-reference_data-item-exportMapping:
+        module: pim/menu/item
+        parent: pim-menu-reference_data-navigation-block
+        position: 20
+        config:
+            title: candm_advanced_csv_connector.menu.item.reference_data.exportMapping
+            to: pim_customentity_index
+            routeParams:
+                customEntityName: exportMapping

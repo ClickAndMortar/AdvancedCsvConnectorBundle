@@ -1,2 +1,3 @@
 parameters:
     pim_custom_entity.entity.importMapping.class:  ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping
+    pim_custom_entity.entity.exportMapping.class:  ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping

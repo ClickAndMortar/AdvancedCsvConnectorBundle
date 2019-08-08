@@ -3,3 +3,8 @@ custom_entities:
         entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping
         options:
             edit_form_extension: pim-importMapping-edit-form
+
+    exportMapping:
+        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping
+        options:
+            edit_form_extension: pim-exportMapping-edit-form

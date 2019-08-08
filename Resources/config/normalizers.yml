@@ -5,3 +5,9 @@ services:
         class: ClickAndMortar\AdvancedCsvConnectorBundle\Normalizer\Standard\ImportMappingNormalizer
         tags:
         - { name: pim_serializer.normalizer, priority: 200 }
+
+    pim_custom_entity.normalizer.standard.exportMapping:
+        public: false
+        class: ClickAndMortar\AdvancedCsvConnectorBundle\Normalizer\Standard\ExportMappingNormalizer
+        tags:
+        - { name: pim_serializer.normalizer, priority: 200 }

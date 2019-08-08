@@ -92,8 +92,35 @@ candm_advanced_csv_connector:
             metric_unit_as_suffix: Unité métrique en tant que suffixe
             download_visual_from_url: Télécharger l'image
 
+    exportMapping:
+        index_title: "] -Inf, 1] {{ count }} mapping d'export|] 1, Inf [{{ count }} mappings d'export"
+        selected: mapping(s) d'export sélectionné(s)
+
+        field:
+            label:
+                label: Libellé
+                code: Code
+                mapping: Mapping attributs / colonnes
+                complete_callback: Méthode de transformation après mapping
+
+        columns:
+            attribute_code: Attribut
+            column_name: Nom de la colonne
+            callback: Transformation
+            default_value: Valeur par défaut
+            identifier: Identifiant
+            only_on_creation: Uniquement à la création
+            delete_if_null: Effacer si nul
+        actions:
+            add_row: Ajouter une ligne
+            delete_row: Supprimer
+        callbacks:
+            metric_unit_as_suffix: Unité métrique en tant que suffixe
+            download_visual_from_url: Télécharger l'image
+
     menu.item.reference_data:
         importMapping: Mappings d'import
+        exportMapping: Mappings d'export
 
     acl:
         importMapping:
@@ -101,11 +128,19 @@ candm_advanced_csv_connector:
             create: Créer un mapping d'import
             edit: Éditer un mapping d'import
             delete: Supprimer un mapping d'import
+        exportMapping:
+            index: Lister les mappings d'export
+            create: Créer un mapping d'export
+            edit: Éditer un mapping d'export
+            delete: Supprimer un mapping d'export
 
 confirmation:
     remove:
         importMapping: mapping d'import
+        exportMapping: mapping d'export
 
 flash:
     importMapping:
         removed: Mapping d'import supprimé
+    exportMapping:
+        removed: Mapping d'export supprimé

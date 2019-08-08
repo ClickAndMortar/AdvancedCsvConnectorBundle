@@ -17,6 +17,12 @@ importMapping:
         show: Afficher le mapping d'import
         delete: Supprimer le mapping d'import
 
+exportMapping:
+    this:
+        edit: Éditer le mapping d'export
+        show: Afficher le mapping d'export
+        delete: Supprimer le mapping d'export
+
 pim_custom_entity:
     form:
         field:
@@ -31,3 +37,8 @@ candm_advanced_csv_connector:
             create: Créer un mapping d'import
             edit: Éditer un mapping d'import
             delete: Supprimer un mapping d'import
+        exportMapping:
+            index: Lister les mappings d'export
+            create: Créer un mapping d'export
+            edit: Éditer un mapping d'export
+            delete: Supprimer un mapping d'export

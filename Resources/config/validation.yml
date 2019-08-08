@@ -4,3 +4,10 @@ ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
         - NotBlank: ~
         code:
         - NotBlank: ~
+
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping:
+    properties:
+        label:
+        - NotBlank: ~
+        code:
+        - NotBlank: ~

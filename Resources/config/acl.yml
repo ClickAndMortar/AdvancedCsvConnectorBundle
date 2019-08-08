@@ -19,3 +19,24 @@ candm_advanced_csv_connector_importMapping_delete:
     type: action
     label: candm_advanced_csv_connector.acl.importMapping.delete
     group_name: pim_custom_entity.acl_group.reference_data
+
+## Export Mapping
+candm_advanced_csv_connector_exportMapping_index:
+    type: action
+    label: candm_advanced_csv_connector.acl.exportMapping.index
+    group_name: pim_custom_entity.acl_group.reference_data
+
+candm_advanced_csv_connector_exportMapping_create:
+    type: action
+    label: candm_advanced_csv_connector.acl.exportMapping.create
+    group_name: pim_custom_entity.acl_group.reference_data
+
+candm_advanced_csv_connector_exportMapping_edit:
+    type: action
+    label: candm_advanced_csv_connector.acl.exportMapping.edit
+    group_name: pim_custom_entity.acl_group.reference_data
+
+candm_advanced_csv_connector_exportMapping_delete:
+    type: action
+    label: candm_advanced_csv_connector.acl.exportMapping.delete
+    group_name: pim_custom_entity.acl_group.reference_data
