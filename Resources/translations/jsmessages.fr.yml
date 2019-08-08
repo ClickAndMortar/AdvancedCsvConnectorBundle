@@ -106,17 +106,19 @@ candm_advanced_csv_connector:
         columns:
             attribute_code: Attribut
             column_name: Nom de la colonne
+            forced_value: Valeur forcée
             callback: Transformation
+            use_label: Utiliser le libellé
+            use_reference_label: Chemin de l'entité
+            locale: Langue
+            max_length: Longueur max.
             default_value: Valeur par défaut
-            identifier: Identifiant
-            only_on_creation: Uniquement à la création
-            delete_if_null: Effacer si nul
         actions:
             add_row: Ajouter une ligne
             delete_row: Supprimer
         callbacks:
-            metric_unit_as_suffix: Unité métrique en tant que suffixe
-            download_visual_from_url: Télécharger l'image
+            to_lowercase: En minuscule
+            to_uppercase: En majuscule
 
     menu.item.reference_data:
         importMapping: Mappings d'import

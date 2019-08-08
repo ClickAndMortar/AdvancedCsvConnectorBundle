@@ -58,4 +58,32 @@ class ExportHelper
 
         return $option[0]->getOptionValue()->getLabel();
     }
+
+    /**
+     * Update value to uppercase
+     *
+     * @param string $attributeKey
+     * @param string $attributeValue
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function toUppercase($attributeKey, $attributeValue, $locale)
+    {
+        return strtoupper($attributeValue);
+    }
+
+    /**
+     * Update value to lowercase
+     *
+     * @param string $attributeKey
+     * @param string $attributeValue
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function toLowercase($attributeKey, $attributeValue, $locale)
+    {
+        return strtolower($attributeValue);
+    }
 }

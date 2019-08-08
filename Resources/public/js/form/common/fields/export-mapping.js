@@ -19,14 +19,19 @@ define([
         return BaseField.extend({
             template: _.template(template),
 
-            callbacks: {
-                'setMetricUnitAsSuffix': __('candm_advanced_csv_connector.importMapping.callbacks.metric_unit_as_suffix'),
-                'downloadVisualFromUrl': __('candm_advanced_csv_connector.importMapping.callbacks.download_visual_from_url'),
-            },
-
             yesNoValues: {
                 'true': __('pim_common.yes'),
                 'false': __('pim_common.no'),
+            },
+
+            callbacks: {
+                'toLowercase': __('candm_advanced_csv_connector.exportMapping.callbacks.to_lowercase'),
+                'toUppercase': __('candm_advanced_csv_connector.exportMapping.callbacks.to_uppercase'),
+            },
+
+            localesValues: {
+                'fr_FR': 'fr_FR',
+                'en_GB': 'en_GB',
             },
 
             /**
@@ -59,19 +64,25 @@ define([
                     },
                     columns: [
                         {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.attribute_code'),
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.attribute_code'),
                             field: 'attributeCode',
                             headerSort: false,
                             editor: 'input'
                         },
                         {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.column_name'),
-                            field: 'dataCode',
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.column_name'),
+                            field: 'columnName',
                             headerSort: false,
                             editor: 'input'
                         },
                         {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.callback'),
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.forced_value'),
+                            field: 'forcedValue',
+                            headerSort: false,
+                            editor: 'input'
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.callback'),
                             field: 'callback',
                             headerSort: false,
                             editor: 'autocomplete',
@@ -83,52 +94,44 @@ define([
                             }
                         },
                         {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.default_value'),
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.use_label'),
+                            field: 'useLabel',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.yesNoValues
+                            },
+                            accessor: self.booleanAccessor,
+                            formatter: function (cell, formaterParams, onRendered) {
+                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.use_reference_label'),
+                            field: 'useReferenceLabel',
+                            headerSort: false,
+                            editor: 'input'
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.locale'),
+                            field: 'locale',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.localesValues
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.max_length'),
+                            field: 'maxLength',
+                            headerSort: false,
+                            editor: 'input'
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.default_value'),
                             field: 'defaultValue',
                             headerSort: false,
-                            editor: 'input',
-                            editorParams: {
-                                values: self.callbacks
-                            },
-                        },
-                        {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.identifier'),
-                            field: 'identifier',
-                            headerSort: false,
-                            editor: 'select',
-                            editorParams: {
-                                values: self.yesNoValues
-                            },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
-                        },
-                        {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.only_on_creation'),
-                            field: 'onlyOnCreation',
-                            headerSort: false,
-                            editor: 'select',
-                            editorParams: {
-                                values: self.yesNoValues
-                            },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
-                        },
-                        {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.delete_if_null'),
-                            field: 'deleteIfNull',
-                            headerSort: false,
-                            editor: 'select',
-                            editorParams: {
-                                values: self.yesNoValues
-                            },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
+                            editor: 'input'
                         },
                         {
                             title: __('candm_advanced_csv_connector.importMapping.actions.delete_row'),
@@ -166,7 +169,7 @@ define([
              *
              * @param data
              */
-            updateModelValue: function(data) {
+            updateModelValue: function (data) {
                 var dataAsString = JSON.stringify(data);
                 this.updateModel(dataAsString);
             }
