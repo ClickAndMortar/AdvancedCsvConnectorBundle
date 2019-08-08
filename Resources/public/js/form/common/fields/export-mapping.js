@@ -101,10 +101,9 @@ define([
                             editorParams: {
                                 values: self.yesNoValues
                             },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
+                            accessorData: self.booleanAccessor,
+                            formatter: self.booleanFormatter,
+                            formatterParams: {self: self}
                         },
                         {
                             title: __('candm_advanced_csv_connector.exportMapping.columns.locale'),
@@ -146,7 +145,7 @@ define([
             },
 
             /**
-             * Accessor used to convert string value to boolean
+             * Accessor data used to convert string value to boolean
              *
              * @param value
              * @param data
@@ -156,6 +155,17 @@ define([
              */
             booleanAccessor: function (value, data, type, params, column) {
                 return value === 'true';
+            },
+
+            /**
+             * Boolean formatter
+             *
+             * @param cell
+             * @param formaterParams
+             * @param onRendered
+             */
+            booleanFormatter: function (cell, formaterParams, onRendered) {
+                return _.has(formaterParams.self.yesNoValues, cell.getValue()) ? formaterParams.self.yesNoValues[cell.getValue()] : __('pim_common.no');
             },
 
             /**

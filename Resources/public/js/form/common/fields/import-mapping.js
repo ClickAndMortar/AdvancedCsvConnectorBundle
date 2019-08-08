@@ -99,10 +99,9 @@ define([
                             editorParams: {
                                 values: self.yesNoValues
                             },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
+                            accessorData: self.booleanAccessor,
+                            formatter: self.booleanFormatter,
+                            formatterParams: {self: self}
                         },
                         {
                             title: __('candm_advanced_csv_connector.importMapping.columns.only_on_creation'),
@@ -112,10 +111,9 @@ define([
                             editorParams: {
                                 values: self.yesNoValues
                             },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
+                            accessorData: self.booleanAccessor,
+                            formatter: self.booleanFormatter,
+                            formatterParams: {self: self}
                         },
                         {
                             title: __('candm_advanced_csv_connector.importMapping.columns.delete_if_null'),
@@ -125,10 +123,9 @@ define([
                             editorParams: {
                                 values: self.yesNoValues
                             },
-                            accessor: self.booleanAccessor,
-                            formatter: function (cell, formaterParams, onRendered) {
-                                return _.has(self.yesNoValues, cell.getValue()) ? self.yesNoValues[cell.getValue()] : cell.getValue();
-                            }
+                            accessorData: self.booleanAccessor,
+                            formatter: self.booleanFormatter,
+                            formatterParams: {self: self}
                         },
                         {
                             title: __('candm_advanced_csv_connector.importMapping.actions.delete_row'),
@@ -149,7 +146,7 @@ define([
             },
 
             /**
-             * Accessor used to convert string value to boolean
+             * Accessor data used to convert string value to boolean
              *
              * @param value
              * @param data
@@ -162,11 +159,22 @@ define([
             },
 
             /**
+             * Boolean formatter
+             *
+             * @param cell
+             * @param formaterParams
+             * @param onRendered
+             */
+            booleanFormatter: function (cell, formaterParams, onRendered) {
+                return _.has(formaterParams.self.yesNoValues, cell.getValue()) ? formaterParams.self.yesNoValues[cell.getValue()] : __('pim_common.no');
+            },
+
+            /**
              * Update model data
              *
              * @param data
              */
-            updateModelValue: function(data) {
+            updateModelValue: function (data) {
                 var dataAsString = JSON.stringify(data);
                 this.updateModel(dataAsString);
             }
