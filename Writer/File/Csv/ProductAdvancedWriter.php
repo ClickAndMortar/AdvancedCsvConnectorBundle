@@ -36,13 +36,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     ArchivableWriterInterface
 {
     /**
-     * Additional columns key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_ADDITIONAL_COLUMNS_KEY = 'additionalColumns';
-
-    /**
      * Column name key in mapping
      *
      * @var string
@@ -435,13 +428,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                 if (!$keepCurrentAttribute) {
                     unset($item[$attributeKey]);
                 }
-            }
-        }
-
-        // Add additional columns
-        if (!empty($mapping[self::MAPPING_ADDITIONAL_COLUMNS_KEY])) {
-            foreach ($mapping[self::MAPPING_ADDITIONAL_COLUMNS_KEY] as $additionalColumn) {
-                $item[$additionalColumn[self::MAPPING_COLUMN_NAME_KEY]] = $additionalColumn['value'];
             }
         }
 
