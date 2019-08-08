@@ -2,6 +2,7 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\Csv;
 
+use Akeneo\Pim\Structure\Component\Model\Attribute;
 use Akeneo\Tool\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
@@ -21,6 +22,7 @@ use Akeneo\Pim\Structure\Component\Model\AttributeOption;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ExportHelper;
 use Doctrine\ORM\EntityManager;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Write product data into a csv file by reading JSON mapping
@@ -181,6 +183,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $exportMappingRepository;
 
     /**
+     * Service container
+     *
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * Default locale
      *
      * @var string
@@ -195,6 +204,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $additionalHeadersLineAdded = false;
 
     /**
+     * Loaded attributes
+     *
+     * @var Attribute[]
+     */
+    protected $attributes = [];
+
+    /**
      * @param ArrayConverterInterface            $arrayConverter
      * @param BufferFactory                      $bufferFactory
      * @param FlatItemBufferFlusher              $flusher
@@ -205,6 +221,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      * @param ExportHelper                       $exportHelper
      * @param EntityManager                      $entityManager
      * @param CustomEntityRepository             $exportMappingRepository
+     * @param Container                          $container
      * @param string                             $defaultLocale
      */
     public function __construct(
@@ -218,6 +235,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         ExportHelper $exportHelper,
         EntityManager $entityManager,
         CustomEntityRepository $exportMappingRepository,
+        Container $container,
         string $defaultLocale
     )
     {
@@ -225,6 +243,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $this->exportHelper            = $exportHelper;
         $this->entityManager           = $entityManager;
         $this->exportMappingRepository = $exportMappingRepository;
+        $this->container               = $container;
         $this->defaultLocale           = $defaultLocale;
     }
 
@@ -251,8 +270,8 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             if ($parameters->has('with_media') && $parameters->get('with_media')) {
                 $item = $this->resolveMediaPaths($item, $directory);
             }
-            $flatItem    = $this->arrayConverter->convert($item, $converterOptions);
-            $flatItem    = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
+            $flatItem = $this->arrayConverter->convert($item, $converterOptions);
+            $flatItem = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
             $flatItems[] = $flatItem;
         }
         $this->flatRowBuffer->write($flatItems, ['withHeader' => $parameters->get('withHeader')]);
@@ -360,12 +379,19 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         if (!empty($columnMapping[self::MAPPING_USE_LABEL_KEY]) && $columnMapping[self::MAPPING_USE_LABEL_KEY] == true) {
                             $attributeValue      = $this->exportHelper->getValueFromCode($attributeKey, $attributeValue, $locale);
                             $item[$attributeKey] = $attributeValue;
-                        }
 
-                        // Use reference label instead of code in reference data cases
-                        if (!empty($columnMapping[self::MAPPING_USE_REFERENCE_LABEL_KEY])) {
-                            $attributeValue      = $this->getReferenceValueFromCode($attributeValue, $locale, $columnMapping[self::MAPPING_USE_REFERENCE_LABEL_KEY]);
-                            $item[$attributeKey] = $attributeValue;
+                            // Load attribute to check if we have custom entity linked
+                            if (!array_key_exists($attributeKey, $this->attributes)) {
+                                $this->attributes[$attributeKey] = $this->attributeRepository->findOneByIdentifier($attributeKey);
+                            }
+                            if (!empty($this->attributes[$attributeKey]) && !empty($this->attributes[$attributeKey]->getReferenceDataName())) {
+                                $customEntityClassParameter = sprintf('pim_custom_entity.entity.%s.class', $this->attributes[$attributeKey]->getReferenceDataName());
+                                if ($this->container->hasParameter($customEntityClassParameter)) {
+                                    $customEntityClass   = $this->container->getParameter($customEntityClassParameter);
+                                    $attributeValue      = $this->getReferenceValueFromCode($attributeBaseValue, $locale, $customEntityClass);
+                                    $item[$attributeKey] = $attributeValue;
+                                }
+                            }
                         }
 
                         // Capitalize value if necessary
@@ -476,14 +502,14 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     /**
      * @param string $attributeValue
      * @param string $locale
-     * @param string $entity
+     * @param string $customEntityClass
      *
      * @return string
      */
-    protected function getReferenceValueFromCode($attributeValue, $locale, $entity)
+    protected function getReferenceValueFromCode($attributeValue, $locale, $customEntityClass)
     {
         $label      = '';
-        $repository = $this->entityManager->getRepository($entity);
+        $repository = $this->entityManager->getRepository($customEntityClass);
 
         /** @var AbstractTranslatableCustomEntity | AbstractCustomEntity $entity */
         $entity = $repository->findOneBy(array('code' => $attributeValue));

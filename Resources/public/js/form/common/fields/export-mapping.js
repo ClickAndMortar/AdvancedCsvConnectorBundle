@@ -107,12 +107,6 @@ define([
                             }
                         },
                         {
-                            title: __('candm_advanced_csv_connector.exportMapping.columns.use_reference_label'),
-                            field: 'useReferenceLabel',
-                            headerSort: false,
-                            editor: 'input'
-                        },
-                        {
                             title: __('candm_advanced_csv_connector.exportMapping.columns.locale'),
                             field: 'locale',
                             headerSort: false,

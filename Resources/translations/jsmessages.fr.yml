@@ -109,7 +109,6 @@ candm_advanced_csv_connector:
             forced_value: Valeur forcée
             callback: Transformation
             use_label: Utiliser le libellé
-            use_reference_label: Chemin de l'entité
             locale: Langue
             max_length: Longueur max.
             default_value: Valeur par défaut
