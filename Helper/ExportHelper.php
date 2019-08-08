@@ -62,13 +62,12 @@ class ExportHelper
     /**
      * Update value to uppercase
      *
-     * @param string $attributeKey
      * @param string $attributeValue
-     * @param string $locale
+     * @param array $originalItem
      *
      * @return string
      */
-    public function toUppercase($attributeKey, $attributeValue, $locale)
+    public function toUppercase($attributeValue, $originalItem)
     {
         return strtoupper($attributeValue);
     }
@@ -76,13 +75,12 @@ class ExportHelper
     /**
      * Update value to lowercase
      *
-     * @param string $attributeKey
      * @param string $attributeValue
-     * @param string $locale
+     * @param array $originalItem
      *
      * @return string
      */
-    public function toLowercase($attributeKey, $attributeValue, $locale)
+    public function toLowercase($attributeValue, $originalItem)
     {
         return strtolower($attributeValue);
     }
