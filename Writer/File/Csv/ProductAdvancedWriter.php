@@ -9,7 +9,9 @@ use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\Buffer\BufferFactory;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ExportMappingRepository;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\LuaUpdaterRepository;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
@@ -141,6 +143,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_DEFAULT_VALUE_KEY = 'defaultValue';
 
     /**
+     * Lua updater code
+     *
+     * @var string
+     */
+    const MAPPING_LUA_UPDATER = 'luaUpdater';
+
+    /**
      * Export helper
      *
      * @var ExportHelper
@@ -169,6 +178,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $container;
 
     /**
+     * Lua updater repository
+     *
+     * @var LuaUpdaterRepository
+     */
+    protected $luaUpdaterRepository;
+
+    /**
      * Default locale
      *
      * @var string
@@ -183,6 +199,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $attributes = [];
 
     /**
+     * Loaded LUA updaters
+     *
+     * @var LuaUpdater[]
+     */
+    protected $luaUpdaters = [];
+
+    /**
      * @param ArrayConverterInterface            $arrayConverter
      * @param BufferFactory                      $bufferFactory
      * @param FlatItemBufferFlusher              $flusher
@@ -194,6 +217,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      * @param EntityManager                      $entityManager
      * @param CustomEntityRepository             $exportMappingRepository
      * @param Container                          $container
+     * @param CustomEntityRepository             $luaUpdaterRepository
      * @param string                             $defaultLocale
      */
     public function __construct(
@@ -208,6 +232,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         EntityManager $entityManager,
         CustomEntityRepository $exportMappingRepository,
         Container $container,
+        CustomEntityRepository $luaUpdaterRepository,
         string $defaultLocale
     )
     {
@@ -216,6 +241,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $this->entityManager           = $entityManager;
         $this->exportMappingRepository = $exportMappingRepository;
         $this->container               = $container;
+        $this->luaUpdaterRepository    = $luaUpdaterRepository;
         $this->defaultLocale           = $defaultLocale;
     }
 
@@ -325,6 +351,24 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         if (!empty($columnMapping[self::MAPPING_CALLBACK_KEY]) && method_exists($this->exportHelper, $columnMapping[self::MAPPING_CALLBACK_KEY])) {
                             $attributeValue      = $this->exportHelper->{$columnMapping[self::MAPPING_CALLBACK_KEY]}($attributeValue, $originalItem);
                             $item[$attributeKey] = $attributeValue;
+                        }
+
+                        // Update value with LUA script if necessary
+                        if (!empty($columnMapping[self::MAPPING_LUA_UPDATER])) {
+                            // Get linked custom entity if necessary
+                            $luaUpdaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
+                            if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
+                                $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
+                            }
+
+                            // Apply LUA script on value
+                            if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
+                                $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
+                                $lua        = new \Lua();
+                                $lua->assign('attributeValue', $attributeValue);
+                                $attributeValue      = $lua->eval($luaUpdater->getScript());
+                                $item[$attributeKey] = $attributeValue;
+                            }
                         }
 
                         // Set locale if necessary
