@@ -5,6 +5,7 @@ define([
         'underscore',
         'oro/translator',
         'tabulator',
+        'pim/fetcher-registry',
         'pim/form/common/fields/field',
         'pim/template/form/common/fields/import-mapping'
     ],
@@ -13,6 +14,7 @@ define([
         _,
         __,
         Tabulator,
+        FetcherRegistry,
         BaseField,
         template
     ) {
@@ -31,6 +33,8 @@ define([
                 'false': __('pim_common.no'),
             },
 
+            luaUpdaters: {},
+
             /**
              * {@inheritdoc}
              */
@@ -38,6 +42,20 @@ define([
                 return this.template(_.extend(templateContext, {
                     value: this.getModelValue()
                 }));
+            },
+
+            /**
+             * {@inherit}
+             */
+            configure() {
+                return $.when(
+                    this.fetchLuaUpdaters().then(luaUpdaters => {
+                        var self = this;
+                        _.each(luaUpdaters, function (luaUpdater) {
+                            self.luaUpdaters[luaUpdater.code] = luaUpdater.label;
+                        });
+                    }),
+                );
             },
 
             /**
@@ -82,6 +100,15 @@ define([
                                 freetext: true,
                                 allowEmpty: true,
                                 values: self.callbacks
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.importMapping.columns.lua_updater'),
+                            field: 'luaUpdater',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.luaUpdaters
                             }
                         },
                         {
@@ -179,6 +206,17 @@ define([
             updateModelValue: function (data) {
                 var dataAsString = JSON.stringify(data);
                 this.updateModel(dataAsString);
-            }
+            },
+
+            /**
+             * Get LUA scripts
+             *
+             * @returns {*|Promise}
+             */
+            fetchLuaUpdaters() {
+                const fetcher = FetcherRegistry.getFetcher('custom_entity');
+
+                return fetcher.fetchAllByType('luaUpdater');
+            },
         });
     });

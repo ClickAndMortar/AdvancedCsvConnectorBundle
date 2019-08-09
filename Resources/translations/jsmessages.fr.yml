@@ -81,6 +81,7 @@ candm_advanced_csv_connector:
             identifier: Identifiant
             only_on_creation: Uniquement à la création
             delete_if_null: Effacer si nul
+            lua_updater: Script LUA
         actions:
             add_row: Ajouter une ligne
             delete_row: Supprimer
