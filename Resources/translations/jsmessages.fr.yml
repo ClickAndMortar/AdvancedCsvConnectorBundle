@@ -85,6 +85,8 @@ candm_advanced_csv_connector:
             add_row: Ajouter une ligne
             delete_row: Supprimer
         callbacks:
+            to_lowercase: En minuscule
+            to_uppercase: En majuscule
             metric_unit_as_suffix: Unité métrique en tant que suffixe
             download_visual_from_url: Télécharger l'image
 

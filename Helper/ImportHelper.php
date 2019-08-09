@@ -278,6 +278,32 @@ class ImportHelper
     }
 
     /**
+     * Update value to uppercase
+     *
+     * @param string $attributeValue
+     * @param string $attributeCode
+     *
+     * @return string
+     */
+    public function toUppercase($attributeValue, $attributeCode)
+    {
+        return strtoupper($attributeValue);
+    }
+
+    /**
+     * Update value to lowercase
+     *
+     * @param string $attributeValue
+     * @param array  $attributeCode
+     *
+     * @return string
+     */
+    public function toLowercase($attributeValue, $attributeCode)
+    {
+        return strtolower($attributeValue);
+    }
+
+    /**
      * Check and encode file to UTF-8 if necessary
      *
      * @param string $filePath

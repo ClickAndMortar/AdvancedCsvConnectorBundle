@@ -20,6 +20,8 @@ define([
             template: _.template(template),
 
             callbacks: {
+                'toLowercase': __('candm_advanced_csv_connector.importMapping.callbacks.to_lowercase'),
+                'toUppercase': __('candm_advanced_csv_connector.importMapping.callbacks.to_uppercase'),
                 'setMetricUnitAsSuffix': __('candm_advanced_csv_connector.importMapping.callbacks.metric_unit_as_suffix'),
                 'downloadVisualFromUrl': __('candm_advanced_csv_connector.importMapping.callbacks.download_visual_from_url'),
             },
