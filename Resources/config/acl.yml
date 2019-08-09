@@ -40,3 +40,24 @@ candm_advanced_csv_connector_exportMapping_delete:
     type: action
     label: candm_advanced_csv_connector.acl.exportMapping.delete
     group_name: pim_custom_entity.acl_group.reference_data
+
+## Lua Updater
+candm_advanced_csv_connector_luaUpdater_index:
+    type: action
+    label: candm_advanced_csv_connector.acl.luaUpdater.index
+    group_name: pim_custom_entity.acl_group.reference_data
+
+candm_advanced_csv_connector_luaUpdater_create:
+    type: action
+    label: candm_advanced_csv_connector.acl.luaUpdater.create
+    group_name: pim_custom_entity.acl_group.reference_data
+
+candm_advanced_csv_connector_luaUpdater_edit:
+    type: action
+    label: candm_advanced_csv_connector.acl.luaUpdater.edit
+    group_name: pim_custom_entity.acl_group.reference_data
+
+candm_advanced_csv_connector_luaUpdater_delete:
+    type: action
+    label: candm_advanced_csv_connector.acl.luaUpdater.delete
+    group_name: pim_custom_entity.acl_group.reference_data

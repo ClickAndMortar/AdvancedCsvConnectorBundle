@@ -11,3 +11,10 @@ ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping:
         - NotBlank: ~
         code:
         - NotBlank: ~
+
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater:
+    properties:
+        label:
+        - NotBlank: ~
+        code:
+        - NotBlank: ~

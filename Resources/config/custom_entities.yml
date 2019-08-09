@@ -8,3 +8,8 @@ custom_entities:
         entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping
         options:
             edit_form_extension: pim-exportMapping-edit-form
+
+    luaUpdater:
+        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater
+        options:
+            edit_form_extension: pim-luaUpdater-edit-form

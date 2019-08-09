@@ -27,6 +27,12 @@ exportMapping:
         show: Afficher le mapping d'export
         delete: Supprimer le mapping d'export
 
+luaUpdater:
+    this:
+        edit: Éditer le script LUA
+        show: Afficher le script LUA
+        delete: Supprimer le script LUA
+
 pim_custom_entity:
     form:
         field:
@@ -46,3 +52,8 @@ candm_advanced_csv_connector:
             create: Créer un mapping d'export
             edit: Éditer un mapping d'export
             delete: Supprimer un mapping d'export
+        luaUpdater:
+            index: Lister les scripts LUA
+            create: Créer un script LUA
+            edit: Éditer un script LUA
+            delete: Supprimer un script LUA

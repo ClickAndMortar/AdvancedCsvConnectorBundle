@@ -115,9 +115,19 @@ candm_advanced_csv_connector:
             to_lowercase: En minuscule
             to_uppercase: En majuscule
 
+    luaUpdater:
+        index_title: "] -Inf, 1] {{ count }} script LUA|] 1, Inf [{{ count }} scripts LUA"
+        selected: script(s) LUA sélectionné(s)
+        field:
+            label:
+                label: Libellé
+                code: Code
+                script: Script
+
     menu.item.reference_data:
         importMapping: Mappings d'import
         exportMapping: Mappings d'export
+        luaUpdater: Scripts LUA
 
     acl:
         importMapping:
@@ -130,6 +140,11 @@ candm_advanced_csv_connector:
             create: Créer un mapping d'export
             edit: Éditer un mapping d'export
             delete: Supprimer un mapping d'export
+        luaUpdater:
+            index: Lister les scripts LUA
+            create: Créer un script LUA
+            edit: Éditer un script LUA
+            delete: Supprimer un script LUA
 
 pim_enrich:
     form.attribute.tab.properties.label:
@@ -157,3 +172,14 @@ pim_enrich:
             flash:
                 delete:
                     fail: Impossible de supprimer ce mapping d'export
+        luaupdater:
+            flash:
+                delete:
+                    success: Script LUA supprimé avec succès !
+            module:
+                delete:
+                    confirm: Êtes-vous sûr de vouloir supprimer ce script LUA ?
+        luaUpdater:
+            flash:
+                delete:
+                    fail: Impossible de supprimer ce script LUA

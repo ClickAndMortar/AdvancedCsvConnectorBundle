@@ -1,0 +1,34 @@
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater:
+    repositoryClass: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\LuaUpdaterRepository
+    type: entity
+    table: candm_reference_data_luaupdater
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        label:
+            type: string
+            length: 255
+        code:
+            type: string
+            length: 255
+            unique: true
+        script:
+            type: text
+            nullable: true
+        sortOrder:
+            type: integer
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    lifecycleCallbacks: {  }

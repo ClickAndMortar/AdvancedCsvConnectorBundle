@@ -2,6 +2,7 @@ parameters:
     candm_advanced_csv_connector.repository.attribute_option.class: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\AttributeOptionRepository
     candm_advanced_csv_connector.repository.import_mapping.class: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ImportMappingRepository
     candm_advanced_csv_connector.repository.export_mapping.class: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ExportMappingRepository
+    candm_advanced_csv_connector.repository.lua_updater.class: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\LuaUpdaterRepository
 
 services:
     candm_advanced_csv_connector.repository.import_mapping:
@@ -15,5 +16,12 @@ services:
         class: '%candm_advanced_csv_connector.repository.export_mapping.class%'
         factory: 'doctrine.orm.entity_manager:getRepository'
         arguments: ['%pim_custom_entity.entity.exportMapping.class%']
+        tags:
+        - { name: 'pim_repository' }
+
+    candm_advanced_csv_connector.repository.lua_updater:
+        class: '%candm_advanced_csv_connector.repository.lua_updater.class%'
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments: ['%pim_custom_entity.entity.luaUpdater.class%']
         tags:
         - { name: 'pim_repository' }
