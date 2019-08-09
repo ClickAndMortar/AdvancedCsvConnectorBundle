@@ -111,6 +111,7 @@ candm_advanced_csv_connector:
             locale: Langue
             max_length: Longueur max.
             default_value: Valeur par défaut
+            lua_updater: Script LUA
         actions:
             add_row: Ajouter une ligne
             delete_row: Supprimer

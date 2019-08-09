@@ -33,6 +33,8 @@ define([
 
             localesValues: {},
 
+            luaUpdaters: {},
+
             /**
              * {@inheritdoc}
              */
@@ -51,6 +53,12 @@ define([
                         var self = this;
                         _.each(locales, function (locale) {
                             self.localesValues[locale.code] = locale.code;
+                        });
+                    }),
+                    this.fetchLuaUpdaters().then(luaUpdaters => {
+                        var self = this;
+                        _.each(luaUpdaters, function (luaUpdater) {
+                            self.luaUpdaters[luaUpdater.code] = luaUpdater.label;
                         });
                     }),
                 );
@@ -104,6 +112,15 @@ define([
                                 freetext: true,
                                 allowEmpty: true,
                                 values: self.callbacks
+                            }
+                        },
+                        {
+                            title: __('candm_advanced_csv_connector.exportMapping.columns.lua_updater'),
+                            field: 'luaUpdater',
+                            headerSort: false,
+                            editor: 'select',
+                            editorParams: {
+                                values: self.luaUpdaters
                             }
                         },
                         {
@@ -200,6 +217,17 @@ define([
                 const localeFetcher = FetcherRegistry.getFetcher('locale');
 
                 return localeFetcher.fetchActivated();
+            },
+
+            /**
+             * Get LUA scripts
+             *
+             * @returns {*|Promise}
+             */
+            fetchLuaUpdaters() {
+                const fetcher = FetcherRegistry.getFetcher('custom_entity');
+
+                return fetcher.fetchAllByType('luaUpdater');
             },
         });
     });
