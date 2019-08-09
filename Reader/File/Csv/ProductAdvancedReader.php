@@ -109,6 +109,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_DELETE_IF_NULL = 'deleteIfNull';
 
     /**
+     * Lua updater code
+     *
+     * @var string
+     */
+    const MAPPING_LUA_UPDATER = 'luaUpdater';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -128,6 +135,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @var ImportMappingRepository
      */
     protected $importMappingRepository;
+
+    /**
+     * Lua updater repository
+     *
+     * @var LuaUpdaterRepository
+     */
+    protected $luaUpdaterRepository;
 
     /**
      * All CSV file paths
@@ -165,6 +179,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $identifierCode = null;
 
     /**
+     * Loaded LUA updaters
+     *
+     * @var LuaUpdater[]
+     */
+    protected $luaUpdaters = [];
+
+    /**
      * Product advanced reader constructor.
      *
      * @param FileIteratorFactory     $fileIteratorFactory
@@ -174,6 +195,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param ImportHelper            $importHelper
      * @param ProductRepository       $productRepository
      * @param ImportMappingRepository $importMappingRepository
+     * @param ImportMappingRepository $luaUpdaterRepository
      */
     public function __construct(
         FileIteratorFactory $fileIteratorFactory,
@@ -182,7 +204,8 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         array $options = [],
         ImportHelper $importHelper,
         ProductRepository $productRepository,
-        CustomEntityRepository $importMappingRepository
+        CustomEntityRepository $importMappingRepository,
+        CustomEntityRepository $luaUpdaterRepository
     )
     {
         parent::__construct($fileIteratorFactory, $converter, $mediaPathTransformer, $options);
@@ -190,6 +213,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $this->importHelper            = $importHelper;
         $this->productRepository       = $productRepository;
         $this->importMappingRepository = $importMappingRepository;
+        $this->luaUpdaterRepository    = $luaUpdaterRepository;
     }
 
     /**
@@ -283,6 +307,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
         $item = array_combine($this->fileIterator->getHeaders(), $data);
         $item = $this->updateByMapping($item);
+        dump($item);
 
         try {
             $item = $this->converter->convert($item, $this->getArrayConverterOptions());
@@ -371,6 +396,23 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                         $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
                         $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
                         $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
+                    }
+
+                    // Update value with LUA script if necessary
+                    if (!empty($attributeMapping[self::MAPPING_LUA_UPDATER])) {
+                        // Get linked custom entity if necessary
+                        $luaUpdaterCode = $attributeMapping[self::MAPPING_LUA_UPDATER];
+                        if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
+                            $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
+                        }
+
+                        // Apply LUA script on value
+                        if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
+                            $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
+                            $lua        = new \Lua();
+                            $lua->assign('attributeValue', $value);
+                            $value = $lua->eval($luaUpdater->getScript());
+                        }
                     }
 
                     // Check if we have max length for value

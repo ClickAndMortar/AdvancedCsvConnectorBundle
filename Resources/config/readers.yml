@@ -12,3 +12,4 @@ services:
             - '@candm_advanced_csv_connector.helper.import'
             - '@pim_catalog.repository.product'
             - '@candm_advanced_csv_connector.repository.import_mapping'
+            - '@candm_advanced_csv_connector.repository.lua_updater'
