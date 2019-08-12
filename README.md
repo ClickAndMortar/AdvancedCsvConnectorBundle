@@ -78,7 +78,7 @@ Some explanations for table columns:
 
 * `Attribut` (mandatory): Attribute code in your Akeneo project (you can use suffixes like `-fr_FR` or `-EUR` for locales, channels, currencies, ...)
 * `Nom de la colonne` (mandatory): Column name in your file to import
-* `Transformation`: Method name (can be a custom method in your extended `ImportHelper`) to update value after mapping. Example: Uppercase, lowercase, ...
+* `Transformation`: LUA script name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
 * `Valeur par défaut`: Default value for attribute if empty data in file
 * `Identifiant` (mandatory):  Used to defined main identifier attribute of product
 * `Uniquement à la création`: Set attribute value only if product is new (checked with `identifier` attribute)
@@ -98,7 +98,7 @@ Some explanations for table columns:
 * `Attribut` (mandatory): Attribute code in your Akeneo project (you can use suffixes like `-fr_FR` or `-EUR` for locales, channels, currencies, ...)
 * `Nom de la colonne` (mandatory): Column name in your file to export
 * `Valeur forcée`: Force a value (erase given attribute value from Akeneo)
-* `Transformation`: Method name (can be a custom method in your extended `ExportHelper`) to update value after mapping. Example: Uppercase, lowercase, ...
+* `Transformation`: LUA script name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
 * `Utiliser le libellé`: Boolean to get the label associated to the code given (for attribute options or custom entities)
 * `Langue`: Select a specific locale for the label to export (linked to `Utiliser le libellé` column)
 * `Longueur max.`: Integer use to shorten attribute value if necessary
