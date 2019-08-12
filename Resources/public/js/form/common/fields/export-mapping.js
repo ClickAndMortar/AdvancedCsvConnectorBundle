@@ -26,11 +26,6 @@ define([
                 'false': __('pim_common.no'),
             },
 
-            callbacks: {
-                'toLowercase': __('candm_advanced_csv_connector.exportMapping.callbacks.to_lowercase'),
-                'toUppercase': __('candm_advanced_csv_connector.exportMapping.callbacks.to_uppercase'),
-            },
-
             localesValues: {},
 
             luaUpdaters: {},
@@ -101,18 +96,6 @@ define([
                             field: 'forcedValue',
                             headerSort: false,
                             editor: 'input'
-                        },
-                        {
-                            title: __('candm_advanced_csv_connector.exportMapping.columns.callback'),
-                            field: 'callback',
-                            headerSort: false,
-                            editor: 'autocomplete',
-                            editorParams: {
-                                showListOnEmpty: true,
-                                freetext: true,
-                                allowEmpty: true,
-                                values: self.callbacks
-                            }
                         },
                         {
                             title: __('candm_advanced_csv_connector.exportMapping.columns.lua_updater'),

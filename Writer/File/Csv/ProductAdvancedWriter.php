@@ -45,13 +45,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     const MAPPING_COLUMN_NAME_KEY = 'columnName';
 
     /**
-     * Callback key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_CALLBACK_KEY = 'callback';
-
-    /**
      * Forced value key in mapping
      *
      * @var string
@@ -64,13 +57,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      * @var string
      */
     const MAPPING_NORMALIZERS_KEY = 'normalizers';
-
-    /**
-     * Normalizer callback key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_NORMALIZER_CALLBACK_KEY = 'normalizerCallback';
 
     /**
      * Columns key in mapping
@@ -340,19 +326,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                             $item[$attributeKey] = $attributeValue;
                         }
 
-                        // Normalize value if necessary
-                        if (!empty($columnMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
-                            $normalizedValues    = $this->getNormalizedValuesByCode($mapping[self::MAPPING_NORMALIZERS_KEY], $columnMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
-                            $attributeValue      = $this->getNormalizedValue($attributeValue, $normalizedValues);
-                            $item[$attributeKey] = $attributeValue;
-                        }
-
-                        // Update value if necessary
-                        if (!empty($columnMapping[self::MAPPING_CALLBACK_KEY]) && method_exists($this->exportHelper, $columnMapping[self::MAPPING_CALLBACK_KEY])) {
-                            $attributeValue      = $this->exportHelper->{$columnMapping[self::MAPPING_CALLBACK_KEY]}($attributeValue, $originalItem);
-                            $item[$attributeKey] = $attributeValue;
-                        }
-
                         // Update value with LUA script if necessary
                         if (!empty($columnMapping[self::MAPPING_LUA_UPDATER])) {
                             // Get linked custom entity if necessary
@@ -448,49 +421,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         return $item;
-    }
-
-    /**
-     * Get normalized values by normalizer code
-     *
-     * @param array  $normalizers
-     * @param string $normalizerCode
-     *
-     * @return array
-     */
-    protected function getNormalizedValuesByCode($normalizers, $normalizerCode)
-    {
-        foreach ($normalizers as $normalizer) {
-            if (
-                isset($normalizer['code'])
-                && isset($normalizer['values'])
-                && $normalizer['code'] === $normalizerCode
-            ) {
-                return $normalizer['values'];
-            }
-        }
-
-        return [];
-    }
-
-
-    /**
-     * Get normalized value from values
-     *
-     * @param string $value
-     * @param array  $normalizedValues
-     *
-     * @return string
-     */
-    protected function getNormalizedValue($value, $normalizedValues)
-    {
-        foreach ($normalizedValues as $normalizedValue) {
-            if (in_array($value, $normalizedValue['originalValues'])) {
-                return $normalizedValue['normalizedValue'];
-            }
-        }
-
-        return $value;
     }
 
     /**

@@ -108,9 +108,6 @@ candm_advanced_csv_connector:
         actions:
             add_row: Ajouter une ligne
             delete_row: Supprimer
-        callbacks:
-            to_lowercase: En minuscule
-            to_uppercase: En majuscule
 
     luaUpdater:
         index_title: "] -Inf, 1] {{ count }} script LUA|] 1, Inf [{{ count }} scripts LUA"
