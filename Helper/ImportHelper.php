@@ -198,30 +198,6 @@ class ImportHelper
     }
 
     /**
-     * Get normalized value
-     *
-     * @param string        $value
-     * @param array         $normalizedValuesArray
-     * @param string | null $defaultValue
-     *
-     * @return string
-     */
-    public function getNormalizedValue($value, $normalizedValuesArray, $defaultValue = null)
-    {
-        foreach ($normalizedValuesArray as $normalizedValueArray) {
-            if (
-                isset($normalizedValueArray['originalValues'])
-                && isset($normalizedValueArray['normalizedValue'])
-                && in_array($value, $normalizedValueArray['originalValues'])
-            ) {
-                return $normalizedValueArray['normalizedValue'];
-            }
-        }
-
-        return $defaultValue;
-    }
-
-    /**
      * Download visual from URL and return path
      *
      * @param string $attributeValue
@@ -275,32 +251,6 @@ class ImportHelper
         }
 
         return $visualPath;
-    }
-
-    /**
-     * Update value to uppercase
-     *
-     * @param string $attributeValue
-     * @param string $attributeCode
-     *
-     * @return string
-     */
-    public function toUppercase($attributeValue, $attributeCode)
-    {
-        return strtoupper($attributeValue);
-    }
-
-    /**
-     * Update value to lowercase
-     *
-     * @param string $attributeValue
-     * @param array  $attributeCode
-     *
-     * @return string
-     */
-    public function toLowercase($attributeValue, $attributeCode)
-    {
-        return strtolower($attributeValue);
     }
 
     /**

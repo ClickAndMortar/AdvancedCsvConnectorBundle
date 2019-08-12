@@ -76,20 +76,14 @@ candm_advanced_csv_connector:
         columns:
             attribute_code: Attribut
             column_name: Nom de la colonne
-            callback: Transformation
             default_value: Valeur par défaut
             identifier: Identifiant
             only_on_creation: Uniquement à la création
             delete_if_null: Effacer si nul
-            lua_updater: Script LUA
+            lua_updater: Transformation
         actions:
             add_row: Ajouter une ligne
             delete_row: Supprimer
-        callbacks:
-            to_lowercase: En minuscule
-            to_uppercase: En majuscule
-            metric_unit_as_suffix: Unité métrique en tant que suffixe
-            download_visual_from_url: Télécharger l'image
 
     exportMapping:
         index_title: "] -Inf, 1] {{ count }} mapping d'export|] 1, Inf [{{ count }} mappings d'export"
@@ -106,12 +100,11 @@ candm_advanced_csv_connector:
             attribute_code: Attribut
             column_name: Nom de la colonne
             forced_value: Valeur forcée
-            callback: Transformation
             use_label: Utiliser le libellé
             locale: Langue
             max_length: Longueur max.
             default_value: Valeur par défaut
-            lua_updater: Script LUA
+            lua_updater: Transformation
         actions:
             add_row: Ajouter une ligne
             delete_row: Supprimer

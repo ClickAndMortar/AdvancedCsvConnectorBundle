@@ -21,13 +21,6 @@ define([
         return BaseField.extend({
             template: _.template(template),
 
-            callbacks: {
-                'toLowercase': __('candm_advanced_csv_connector.importMapping.callbacks.to_lowercase'),
-                'toUppercase': __('candm_advanced_csv_connector.importMapping.callbacks.to_uppercase'),
-                'setMetricUnitAsSuffix': __('candm_advanced_csv_connector.importMapping.callbacks.metric_unit_as_suffix'),
-                'downloadVisualFromUrl': __('candm_advanced_csv_connector.importMapping.callbacks.download_visual_from_url'),
-            },
-
             yesNoValues: {
                 'true': __('pim_common.yes'),
                 'false': __('pim_common.no'),
@@ -91,18 +84,6 @@ define([
                             editor: 'input'
                         },
                         {
-                            title: __('candm_advanced_csv_connector.importMapping.columns.callback'),
-                            field: 'callback',
-                            headerSort: false,
-                            editor: 'autocomplete',
-                            editorParams: {
-                                showListOnEmpty: true,
-                                freetext: true,
-                                allowEmpty: true,
-                                values: self.callbacks
-                            }
-                        },
-                        {
                             title: __('candm_advanced_csv_connector.importMapping.columns.lua_updater'),
                             field: 'luaUpdater',
                             headerSort: false,
@@ -115,10 +96,7 @@ define([
                             title: __('candm_advanced_csv_connector.importMapping.columns.default_value'),
                             field: 'defaultValue',
                             headerSort: false,
-                            editor: 'input',
-                            editorParams: {
-                                values: self.callbacks
-                            },
+                            editor: 'input'
                         },
                         {
                             title: __('candm_advanced_csv_connector.importMapping.columns.identifier'),

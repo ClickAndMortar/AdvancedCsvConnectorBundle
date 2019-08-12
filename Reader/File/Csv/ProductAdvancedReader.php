@@ -48,25 +48,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_DATA_CODE_KEY = 'dataCode';
 
     /**
-     * Callback key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_CALLBACK_KEY = 'callback';
-
-    /**
      * Default value key in mapping
      *
      * @var string
      */
     const MAPPING_DEFAULT_VALUE_KEY = 'defaultValue';
-
-    /**
-     * Normalizer callback key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_NORMALIZER_CALLBACK_KEY = 'normalizerCallback';
 
     /**
      * Normalizers key in mapping
@@ -379,25 +365,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
                 // Add value in new item
                 if ($value !== null) {
-                    // Update value by callback method if necessary
-                    if (
-                        isset($attributeMapping[self::MAPPING_CALLBACK_KEY])
-                        && !empty($attributeMapping[self::MAPPING_CALLBACK_KEY])
-                    ) {
-                        if (method_exists($this->importHelper, $attributeMapping[self::MAPPING_CALLBACK_KEY])) {
-                            $value = $this->importHelper->{$attributeMapping[self::MAPPING_CALLBACK_KEY]}($value, $attributesCode);
-                        } else {
-                            $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.no_callback_method', ['%callbackMethod%' => $attributeMapping[self::MAPPING_CALLBACK_KEY]]);
-                        }
-                    }
-
-                    // Update value with callback normalizer
-                    if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
-                        $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
-                        $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
-                        $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
-                    }
-
                     // Update value with LUA script if necessary
                     if (!empty($attributeMapping[self::MAPPING_LUA_UPDATER])) {
                         // Get linked custom entity if necessary
@@ -484,30 +451,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         return true;
-    }
-
-    /**
-     * Get normalized values by normalizer code
-     *
-     * @param string $normalizerCode
-     *
-     * @return array
-     */
-    protected function getNormalizedValuesByCode($normalizerCode)
-    {
-        if (isset($this->mapping[self::MAPPING_NORMALIZERS_KEY])) {
-            foreach ($this->mapping[self::MAPPING_NORMALIZERS_KEY] as $normalizer) {
-                if (
-                    isset($normalizer['code'])
-                    && isset($normalizer['values'])
-                    && $normalizer['code'] === $normalizerCode
-                ) {
-                    return $normalizer['values'];
-                }
-            }
-        }
-
-        return [];
     }
 
     /**
