@@ -293,7 +293,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
         $item = array_combine($this->fileIterator->getHeaders(), $data);
         $item = $this->updateByMapping($item);
-        dump($item);
 
         try {
             $item = $this->converter->convert($item, $this->getArrayConverterOptions());
