@@ -1,6 +1,6 @@
 # Advanced CSV Connector - C&M
 
-Advanced CSV Connector is an extension of classic Akeneo CSV Connector. It allows to customize columns mapping on import or export with JSON as job parameter.
+Advanced CSV Connector is an extension of classic Akeneo CSV Connector. It allows to customize columns mapping on import or export.
 
 Made with :blue_heart: by C&M
 
@@ -36,7 +36,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             // ...
-            new ClickAndMortar\AdvancedEnrichBundle\ClickAndMortarAdvancedEnrichBundle(),
+            new Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
             new ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
         ];
 
@@ -45,6 +45,20 @@ class AppKernel extends Kernel
 
     // ...
 }
+```
+
+Update your `app/config/routing.yml` file to enable custom entities:
+
+```
+pim_customentity:
+        prefix: /reference-data
+        resource: "@PimCustomEntityBundle/Resources/config/routing.yml"
+```
+
+And finally update your database:
+
+```
+php bin/console doctrine:schema:update --force
 ```
 
 ### Configuration
@@ -57,203 +71,39 @@ You need to add some parameters to your `app/config/parameters.yml` file:
 
 ### Import
 
-To create a new import job based on Advanced CSV connector, go to `Imports` part and create a new job with type `Import des produits avancé (CSV)`.
+To create a new import mapping, go to `Référenciel / Mappings d'import` and click on `Create` top right button.
+You can add as many mapping lines as you want by clicking on `Ajouter une ligne`.
+
+Some explanations for table columns:
+
+* `Attribut` (mandatory): Attribute code in your Akeneo project (you can use suffixes like `-fr_FR` or `-EUR` for locales, channels, currencies, ...)
+* `Nom de la colonne` (mandatory): Column name in your file to import
+* `Transformation`: LUA script name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
+* `Valeur par défaut`: Default value for attribute if empty data in file
+* `Identifiant` (mandatory):  Used to defined main identifier attribute of product
+* `Uniquement à la création`: Set attribute value only if product is new (checked with `identifier` attribute)
+* `Effacer si null`: Remove key from item mapping if value is null
+* `Supprimer`: Click on this cell to delete mapping line
+
+Once mapping is saved, go to `Imports` part and create a new job with type `Import des produits avancé (CSV)`.
 After job creation, go to edition mode and update `Mapping` parameter in global parameters tab.
-
-Import mapping example:
-
-```json
-{
-    "attributes": [
-        {
-            "attributeCode": "ean_code",
-            "dataCode": "codeEan",
-            "identifier": true
-        },
-        {
-            "attributeCode": "lens_height",
-            "dataCode": "hauteurVerre",
-            "callback": "setMetricUnitAsSuffix",
-            "deleteIfNull": true
-        },
-        {
-            "attributeCode": "universe",
-            "dataCode": "style",
-            "onlyOnCreation": true,
-            "locales": [
-                "fr_FR",
-                "en_GB"
-            ]
-        },
-        {
-            "attributeCode": "age_range",
-            "dataCode": "trancheAge",
-            "normalizerCallback": "getAgeRange"
-        },
-        {
-            "attributeCode": "life_cycle",
-            "dataCode": "idCycleVie",
-            "defaultValue": "1"
-        },
-        {
-            "attributeCode": "price-EUR",
-            "dataCode": "prix"
-        }
-    ],
-    "normalizers": [
-            {
-                "code": "getAgeRange",
-                "values": [
-                    {
-                        "normalizedValue": "0-18",
-                        "originalValues": [
-                            "5",
-                            "12"
-                        ]
-                    },
-                    {
-                        "normalizedValue": "18-35",
-                        "originalValues": [
-                            "19",
-                            "26"
-                        ]
-                    },
-                    {
-                        "normalizedValue": "35-50",
-                        "originalValues": [
-                            "38"
-                        ]
-                    }
-                ]
-            }
-        ],
-    "completeCallback": "completeProductItem"
-}
-```
-
-Mapping explanation:
-
-* `identifier` (mandatory): Used to defined main identifier attribute of product
-* `attributes` (mandatory): This is the default key that must contain mapping for all output/input attributes
-* `attributeCode` (mandatory): The attribute code in your Akeneo project
-* `dataCode` (mandatory): The column name in your file
-* `callback`: The method name in your import helper to transform data from CSV file
-* `defaultValue`: Default value for attribute if empty data in file
-* `onlyOnCreation`: Set attribute value only if product is new (checked with `identifier` attribute)
-* `locales`: Used to set same attribute value for different locales
-* `completeCallback`: Used to add some more fields with **ImportHelper**
-* `deleteIfNull`: Remove key from item mapping if value is null
 
 ### Export
 
-To create a new export job based on Advanced CSV connector, go to `Exports` part and create a new job with type `Export des produits avancé (CSV)`.
+To create a new export mapping, go to `Référenciel / Mappings d'export` and click on `Create` top right button.
+You can add as many mapping lines as you want by clicking on `Ajouter une ligne`.
+
+Some explanations for table columns:
+
+* `Attribut` (mandatory): Attribute code in your Akeneo project (you can use suffixes like `-fr_FR` or `-EUR` for locales, channels, currencies, ...)
+* `Nom de la colonne` (mandatory): Column name in your file to export
+* `Valeur forcée`: Force a value (erase given attribute value from Akeneo)
+* `Transformation`: LUA script name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
+* `Utiliser le libellé`: Boolean to get the label associated to the code given (for attribute options or custom entities)
+* `Langue`: Select a specific locale for the label to export (linked to `Utiliser le libellé` column)
+* `Longueur max.`: Integer use to shorten attribute value if necessary
+* `Valeur par défaut`: Default value for column if empty attribute value
+* `Supprimer`: Click on this cell to delete mapping line
+
+Once mapping is saved, go to `Exports` part and create a new job with type `Export des produits avancé (CSV)`.
 After job creation, go to edition mode and update `Mapping` parameter in global parameters tab.
-
-Export mapping example:
-
-```json
-{
-    "columns": [
-        {
-            "attributeCode": "sku",
-            "columnName": "Code reference"
-        },
-        {
-            "attributeCode": "ean_code",
-            "columnName": "EAN Code",
-            "forcedValue": "Same code"
-        },
-        {
-            "attributeCode": "family_code",
-            "columnName": "Family code",
-            "normalizerCallback": "getNormalizedFamily"
-        },
-        {
-            "attributeCode": "age_range",
-            "columnName": "Age",
-            "callback": "completeAgeRange"
-        },
-        {
-            "attributeCode": "color",
-            "columnName": "Couleur",
-            "useLabel": true,
-            "locale": "fr_FR"
-        },
-        {
-            "attributeCode": "type",
-            "columnName": "Type",
-            "useReferenceLabel": "ClickAndMortarTypeBundle:Type",
-            "locale": "fr_FR"
-        },
-        {
-            "attributeCode": "brand",
-            "columnName": "Marque",
-            "capitalized": true
-        },
-        {
-            "attributeCode": "label",
-            "columnName": "Libellé",
-            "maxLength": 50
-        },
-        {
-            "attributeCode": "price-EUR",
-            "columnName": "Prix (EUR)",
-            "defaultValue": "0.00"
-        }
-    ],
-    "normalizers": [
-        {
-            "code": "getNormalizedFamily",
-            "values": [
-                {
-                    "normalizedValue": "Man",
-                    "originalValues": [
-                        "12",
-                        "121",
-                        "122"
-                    ]
-                }
-            ]
-        }
-    ],
-    "replacements": [
-        {
-            "values": [
-                "!"
-            ],
-            "newValue": "!!!"
-        }
-    ],
-    "additionalColumns": [
-        {
-            "columnName": "Additional column",
-            "value": "Same content"
-        }
-    ],
-    "additionalHeadersLine": {
-        "Code reference": "My code reference",
-        "EAN Code": "EAN technical code"
-    },
-    "completeCallback": "completeProductColumns"
-}
-```
-
-Mapping explanation:
-
-* `columns` (mandatory): Contains all columns mapping for export
-  * `attributeCode` (mandatory): Attribute code in Akeneo for column mapping
-  * `columnName`: Custom column name in CSV exported file
-  * `forcedValue`: Force a value
-  * `normalizerCallback`: Normalizer code to update value from Akeneo
-  * `callback`: Method name in **ExportHelper** to update value from Akeneo
-  * `useLabel`: Boolean to get the label associated to the code given
-  * `useReferenceLabel`: Takes the entity path of a customed entity to get the label associated to the code given
-  * `locale`: Select a specific locale for the label to export from the **useLabel** and **useReferenceLabel** methods
-  * `capitalized`: Capitalize the value
-  * `maxLength`: Integer use to shorten attribute value if necessary
-  * `defaultValue`: Default value for column if empty attribute value
-* `normalizers`: List of available normalizers used in mapping
-* `replacements`: Replace **values** by **newValue** in all columns
-* `additionalColumns`: Force static columns in CSV exported file
-* `additionalHeadersLine`: Allow to add second headers line with mapping of original headers line
-* `completeCallback`: Complete product item with callback method defined in **ExportHelper**

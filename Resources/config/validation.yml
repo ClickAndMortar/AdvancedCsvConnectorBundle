@@ -1,0 +1,20 @@
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
+    properties:
+        label:
+        - NotBlank: ~
+        code:
+        - NotBlank: ~
+
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping:
+    properties:
+        label:
+        - NotBlank: ~
+        code:
+        - NotBlank: ~
+
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater:
+    properties:
+        label:
+        - NotBlank: ~
+        code:
+        - NotBlank: ~

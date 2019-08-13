@@ -2,9 +2,56 @@
 batch_jobs:
     csv_advanced_product_import:
         import:
-            warnings:
-                no_callback_method: La méthode "%callbackMethod%" n'existe pas sur le helper.
             errors:
+                no_mapping: Aucun mapping trouvé. Merci de réessayer.
                 mapping_attributes_error: Le mapping est incorrect. La clé "attributes" est manquante.
                 mapping_no_attribute_code: Le mapping est incorrect. La clé "attributeCode" est manquante pour un attribut.
                 mapping_no_identifier: Le mapping est incorrect. la clé "identifier" est manquante sur au moins un attribut.
+    csv_advanced_product_export:
+        export:
+            errors:
+                no_mapping: Aucun mapping trouvé. Merci de réessayer.
+
+# Custom entity
+importMapping:
+    this:
+        edit: Éditer le mapping d'import
+        show: Afficher le mapping d'import
+        delete: Supprimer le mapping d'import
+
+exportMapping:
+    this:
+        edit: Éditer le mapping d'export
+        show: Afficher le mapping d'export
+        delete: Supprimer le mapping d'export
+
+luaUpdater:
+    this:
+        edit: Éditer le script LUA
+        show: Afficher le script LUA
+        delete: Supprimer le script LUA
+
+pim_custom_entity:
+    form:
+        field:
+            label:
+                label: Libellé
+                code: Code
+
+candm_advanced_csv_connector:
+    acl:
+        importMapping:
+            index: Lister les mappings d'import
+            create: Créer un mapping d'import
+            edit: Éditer un mapping d'import
+            delete: Supprimer un mapping d'import
+        exportMapping:
+            index: Lister les mappings d'export
+            create: Créer un mapping d'export
+            edit: Éditer un mapping d'export
+            delete: Supprimer un mapping d'export
+        luaUpdater:
+            index: Lister les scripts LUA
+            create: Créer un script LUA
+            edit: Éditer un script LUA
+            delete: Supprimer un script LUA

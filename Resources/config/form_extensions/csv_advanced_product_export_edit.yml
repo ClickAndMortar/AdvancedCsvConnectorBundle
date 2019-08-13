@@ -174,14 +174,18 @@ extensions:
             tooltip: pim_import_export.form.job_instance.tab.properties.with_media.help
 
     pim-job-instance-csv-advanced-product-export-edit-properties-mapping:
-        module: pim/job/common/edit/field/textarea
+        module: custom_entity/field/custom-entity-select
         parent: pim-job-instance-csv-advanced-product-export-edit-global
         position: 190
         targetZone: properties
         config:
-            fieldCode: configuration.mapping
-            readOnly: false
+            fieldName: configuration.mapping
             label: batch_jobs.csv_advanced_product_export.fields.mapping.label
+            choiceNameField: code
+            choiceValueField: label
+            isCustomEntity: true
+            entityName: exportMapping
+            required: false
 
     pim-job-instance-csv-advanced-product-export-edit-content-structure:
         module: pim/job/product/edit/content/structure

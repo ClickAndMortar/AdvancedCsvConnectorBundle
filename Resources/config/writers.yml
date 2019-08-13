@@ -28,4 +28,7 @@ services:
             - 'filePath'
             - '@candm_advanced_csv_connector.helper.export'
             - '@doctrine.orm.entity_manager'
+            - '@candm_advanced_csv_connector.repository.export_mapping'
+            - '@service_container'
+            - '@candm_advanced_csv_connector.repository.lua_updater'
             - 'fr_FR'

@@ -1,0 +1,84 @@
+extensions:
+    pim-luaUpdater-index:
+        module: pim/common/simple-view
+        config:
+            template: pim/template/common/default-template
+        forwarded-events:
+            grid_load:start: grid_load:start
+            grid_load:complete: grid_load:complete
+
+    pim-luaUpdater-index-grid-container:
+        module: pim/common/simple-view
+        parent: pim-luaUpdater-index
+        targetZone: content
+        config:
+            template: pim/template/form/index/index
+
+    pim-luaUpdater-index-user-navigation:
+        module: pim/menu/user-navigation
+        parent: pim-luaUpdater-index
+        targetZone: user-menu
+        config:
+            userAccount: pim_menu.user.user_account
+            logout: pim_menu.user.logout
+
+    pim-luaUpdater-index-grid-title:
+        module: pim/common/grid-title
+        parent: pim-luaUpdater-index
+        targetZone: title
+        config:
+            title: candm_advanced_csv_connector.luaUpdater.index_title
+
+    pim-luaUpdater-index-breadcrumbs:
+        module: pim/common/breadcrumbs
+        parent: pim-luaUpdater-index
+        targetZone: breadcrumbs
+        config:
+            tab: pim-menu-reference_data
+            item: candm_advanced_csv_connector-menu-reference_data-item-luaUpdater
+
+    pim-luaUpdater-index-grid-filters-list:
+        module: oro/datafilter/filters-list
+        parent: pim-luaUpdater-index-grid-container
+        targetZone: filters
+
+    pim-luaUpdater-index-grid-filters-manage:
+        module: oro/datafilter/filters-button
+        parent: pim-luaUpdater-index-grid-container
+        targetZone: filters
+
+    pim-luaUpdater-index-mass-actions:
+        module: pim/grid/mass-actions
+        parent: pim-luaUpdater-index
+        targetZone: bottom-panel
+        config:
+            label: candm_advanced_csv_connector.luaUpdater.selected
+
+    pim-luaUpdater-index-actions-panel:
+        module: oro/datagrid/actions-panel
+        parent: pim-luaUpdater-index-mass-actions
+        targetZone: actions-panel
+
+    pim-luaUpdater-index-pagination:
+        module: oro/datagrid/pagination-input
+        parent: pim-luaUpdater-index-grid-container
+        targetZone: toolbar
+        config:
+            gridName: luaUpdater
+
+    pim-luaUpdater-index-grid:
+        module: pim/form/common/index/grid
+        parent: pim-luaUpdater-index
+        targetZone: content
+        position: 1000
+        config:
+            alias: luaUpdater
+
+    pim-luaUpdater-index-create-button:
+        module: pim/form/common/index/create-button
+        parent: pim-luaUpdater-index
+        targetZone: buttons
+        aclResourceId: pim_enrich_product_create
+        config:
+            title:     pim_custom_entity.button.create
+            modalForm: pim-luaUpdater-create-modal

@@ -1,0 +1,15 @@
+custom_entities:
+    importMapping:
+        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping
+        options:
+            edit_form_extension: pim-importMapping-edit-form
+
+    exportMapping:
+        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping
+        options:
+            edit_form_extension: pim-exportMapping-edit-form
+
+    luaUpdater:
+        entity_class: ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater
+        options:
+            edit_form_extension: pim-luaUpdater-edit-form

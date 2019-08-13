@@ -1,0 +1,38 @@
+ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
+    repositoryClass: ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ImportMappingRepository
+    type: entity
+    table: candm_reference_data_importmapping
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        label:
+            type: string
+            length: 255
+        code:
+            type: string
+            length: 255
+            unique: true
+        mappingAsJson:
+            type: text
+            nullable: true
+        completeCallback:
+            type: string
+            length: 255
+            nullable: true
+        sortOrder:
+            type: integer
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    lifecycleCallbacks: {  }

@@ -37,7 +37,6 @@ class AdvancedProductProcessor extends ProductProcessor
      * @param AttributeRepositoryInterface          $attributeRepository
      * @param BulkMediaFetcher                      $mediaFetcher
      * @param EntityWithFamilyValuesFillerInterface $productValuesFiller
-     * @param EntityManagerClearerInterface         $cacheClearer
      * @param string                                $mediaUrlPrefix
      */
     public function __construct(
@@ -46,11 +45,10 @@ class AdvancedProductProcessor extends ProductProcessor
         AttributeRepositoryInterface $attributeRepository,
         BulkMediaFetcher $mediaFetcher,
         EntityWithFamilyValuesFillerInterface $productValuesFiller,
-        EntityManagerClearerInterface $cacheClearer,
         $mediaUrlPrefix
     )
     {
-        parent::__construct($normalizer, $channelRepository, $attributeRepository, $mediaFetcher, $productValuesFiller, $cacheClearer);
+        parent::__construct($normalizer, $channelRepository, $attributeRepository, $mediaFetcher, $productValuesFiller);
         $this->mediaUrlPrefix = $mediaUrlPrefix;
     }
 
@@ -97,10 +95,6 @@ class AdvancedProductProcessor extends ProductProcessor
                     }
                 }
             }
-        }
-
-        if (null !== $this->cacheClearer) {
-            $this->cacheClearer->clear();
         }
 
         return $productStandard;

@@ -7,6 +7,7 @@ use Akeneo\Tool\Component\Batch\Item\InitializableInterface;
 use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
 use Akeneo\Tool\Component\Batch\Job\BatchStatus;
 use Akeneo\Tool\Component\Batch\Job\ExitStatus;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
 use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Repository\ProductRepository;
 use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
@@ -15,6 +16,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\File\Csv\ProductRea
 use Akeneo\Tool\Component\Connector\Reader\File\FileIteratorFactory;
 use Akeneo\Tool\Component\Connector\Reader\File\MediaPathTransformer;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
+use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 
 /**
  * Product advanced reader
@@ -46,25 +48,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_DATA_CODE_KEY = 'dataCode';
 
     /**
-     * Callback key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_CALLBACK_KEY = 'callback';
-
-    /**
      * Default value key in mapping
      *
      * @var string
      */
     const MAPPING_DEFAULT_VALUE_KEY = 'defaultValue';
-
-    /**
-     * Normalizer callback key in mapping
-     *
-     * @var string
-     */
-    const MAPPING_NORMALIZER_CALLBACK_KEY = 'normalizerCallback';
 
     /**
      * Normalizers key in mapping
@@ -95,13 +83,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_IDENTIFIER_KEY = 'identifier';
 
     /**
-     * Locales mapping key
-     *
-     * @var string
-     */
-    const MAPPING_LOCALES_KEY = 'locales';
-
-    /**
      * Max length mapping key
      */
     const MAPPING_MAX_LENGTH_KEY = 'maxLength';
@@ -112,6 +93,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @var string
      */
     const MAPPING_DELETE_IF_NULL = 'deleteIfNull';
+
+    /**
+     * Lua updater code
+     *
+     * @var string
+     */
+    const MAPPING_LUA_UPDATER = 'luaUpdater';
 
     /**
      * Import helper
@@ -126,6 +114,20 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @var ProductRepository
      */
     protected $productRepository;
+
+    /**
+     * Import mapping repository
+     *
+     * @var ImportMappingRepository
+     */
+    protected $importMappingRepository;
+
+    /**
+     * Lua updater repository
+     *
+     * @var LuaUpdaterRepository
+     */
+    protected $luaUpdaterRepository;
 
     /**
      * All CSV file paths
@@ -163,6 +165,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $identifierCode = null;
 
     /**
+     * Loaded LUA updaters
+     *
+     * @var LuaUpdater[]
+     */
+    protected $luaUpdaters = [];
+
+    /**
      * Product advanced reader constructor.
      *
      * @param FileIteratorFactory     $fileIteratorFactory
@@ -171,6 +180,8 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param array                   $options
      * @param ImportHelper            $importHelper
      * @param ProductRepository       $productRepository
+     * @param ImportMappingRepository $importMappingRepository
+     * @param ImportMappingRepository $luaUpdaterRepository
      */
     public function __construct(
         FileIteratorFactory $fileIteratorFactory,
@@ -178,13 +189,17 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         MediaPathTransformer $mediaPathTransformer,
         array $options = [],
         ImportHelper $importHelper,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        CustomEntityRepository $importMappingRepository,
+        CustomEntityRepository $luaUpdaterRepository
     )
     {
         parent::__construct($fileIteratorFactory, $converter, $mediaPathTransformer, $options);
 
-        $this->importHelper      = $importHelper;
-        $this->productRepository = $productRepository;
+        $this->importHelper            = $importHelper;
+        $this->productRepository       = $productRepository;
+        $this->importMappingRepository = $importMappingRepository;
+        $this->luaUpdaterRepository    = $luaUpdaterRepository;
     }
 
     /**
@@ -202,8 +217,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         if (empty($this->mapping)) {
-            $mappingAsJson = $jobParameters->get('mapping');
-            $this->mapping = json_decode($mappingAsJson, true);
+            $mappingCode = $jobParameters->get('mapping');
+            /** @var ImportMapping $importMapping */
+            $importMapping = $this->importMappingRepository->findOneBy(['code' => $mappingCode]);
+            if ($importMapping === null) {
+                $this->stopStepExecution('batch_jobs.csv_advanced_product_import.import.errors.no_mapping');
+
+                return;
+            }
+            $this->mapping = $importMapping->getMappingAsArray();
             $this->validateMapping();
         }
 
@@ -271,6 +293,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
         $item = array_combine($this->fileIterator->getHeaders(), $data);
         $item = $this->updateByMapping($item);
+        dump($item);
 
         try {
             $item = $this->converter->convert($item, $this->getArrayConverterOptions());
@@ -305,15 +328,8 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $isNewProduct = null;
 
         foreach ($this->mapping[self::MAPPING_BASE_ATTRIBUTES_KEY] as $attributeMapping) {
-            // Get attributes codes with locales if necessary
-            $attributesCodes = [];
-            if (!isset($attributeMapping[self::MAPPING_LOCALES_KEY])) {
-                $attributesCodes[] = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
-            } else {
-                foreach ($attributeMapping[self::MAPPING_LOCALES_KEY] as $locale) {
-                    $attributesCodes[] = sprintf('%s-%s', $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY], $locale);
-                }
-            }
+            $attributesCodes   = [];
+            $attributesCodes[] = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
 
             foreach ($attributesCodes as $attributesCode) {
                 $value = null;
@@ -339,26 +355,31 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                 }
 
                 // Default value
-                if (empty($value) && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])) {
+                if (
+                    empty($value)
+                    && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                    && !empty($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                ) {
                     $value = $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY];
                 }
 
                 // Add value in new item
                 if ($value !== null) {
-                    // Update value by callback method if necessary
-                    if (isset($attributeMapping[self::MAPPING_CALLBACK_KEY])) {
-                        if (method_exists($this->importHelper, $attributeMapping[self::MAPPING_CALLBACK_KEY])) {
-                            $value = $this->importHelper->{$attributeMapping[self::MAPPING_CALLBACK_KEY]}($value, $attributesCode);
-                        } else {
-                            $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.no_callback_method', ['%callbackMethod%' => $attributeMapping[self::MAPPING_CALLBACK_KEY]]);
+                    // Update value with LUA script if necessary
+                    if (!empty($attributeMapping[self::MAPPING_LUA_UPDATER])) {
+                        // Get linked custom entity if necessary
+                        $luaUpdaterCode = $attributeMapping[self::MAPPING_LUA_UPDATER];
+                        if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
+                            $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
                         }
-                    }
 
-                    // Update value with callback normalizer
-                    if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
-                        $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
-                        $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
-                        $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
+                        // Apply LUA script on value
+                        if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
+                            $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
+                            $lua        = new \Lua();
+                            $lua->assign('attributeValue', $value);
+                            $value = $lua->eval($luaUpdater->getScript());
+                        }
                     }
 
                     // Check if we have max length for value
@@ -430,30 +451,6 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         return true;
-    }
-
-    /**
-     * Get normalized values by normalizer code
-     *
-     * @param string $normalizerCode
-     *
-     * @return array
-     */
-    protected function getNormalizedValuesByCode($normalizerCode)
-    {
-        if (isset($this->mapping[self::MAPPING_NORMALIZERS_KEY])) {
-            foreach ($this->mapping[self::MAPPING_NORMALIZERS_KEY] as $normalizer) {
-                if (
-                    isset($normalizer['code'])
-                    && isset($normalizer['values'])
-                    && $normalizer['code'] === $normalizerCode
-                ) {
-                    return $normalizer['values'];
-                }
-            }
-        }
-
-        return [];
     }
 
     /**
