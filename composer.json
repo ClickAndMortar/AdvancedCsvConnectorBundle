@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "akeneo/pim-community-dev": "^3.1.0",
+        "akeneo/pim-community-dev": "^3.2.0",
         "akeneo-labs/custom-entity-bundle": "3.0.*"
     },
     "repositories": [
