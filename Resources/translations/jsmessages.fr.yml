@@ -52,13 +52,14 @@ pim_custom_entity:
         help: Le nom du référenciel que vous souhaitez importer
         no_reference_data: Aucun référenciel disponible
 
-page_title:
+pim_title:
     pim_customentity_index: 'Référenciel - Vue générale'
     pim_customentity_rest_create: 'Référenciel - Créer'
     pim_customentity_massedit: 'Référenciel'
     pim_customentity_quickexport: 'Référenciel'
     pim_customentity_rest_delete: 'Référenciel'
     pim_customentity_rest_list: 'Référenciel'
+    pim_customentity_rest_get: 'Référenciel - Vue'
 
 # Custom
 candm_advanced_csv_connector:

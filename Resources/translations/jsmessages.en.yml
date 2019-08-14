@@ -1,0 +1,180 @@
+# Custom
+batch_jobs:
+    csv_advanced_product_import:
+        label: Advanced products import (CSV)
+        fields:
+            mapping:
+                label: Data mapping
+        import:
+            label: Products import
+
+    csv_advanced_product_export:
+        label: Advanced products export (CSV)
+        fields:
+            mapping:
+                label: Data mapping
+        export:
+            label: Products export
+
+# Custom entity
+pim_menu:
+    tab.reference_data: Referential
+    item.reference_data: Referential
+    navigation.reference_data: Referential
+
+pim_custom_entity:
+    index_title: Global view
+    create_popin.title: Create
+    form:
+        field.label.label: Label
+        field.label.code: Code
+        tab:
+            history.title: History
+            properties:
+                title: Properties
+                section:
+                    common: General
+                    label_translations: Labels
+    button:
+        create: Create
+    message:
+        created: Created with success
+        removed: Deleted with success
+        delete: Delete element?
+    error:
+        removing: This referential data can not be deleted
+    export.csv.entity_name:
+        label: Referential name
+        help: Referential name that you want to export
+        no_reference_data: No referential available
+    import.csv.entity_name:
+        label:  Referential name
+        help: Referential name that you want to import
+        no_reference_data: No referential available
+
+pim_title:
+    pim_customentity_index: 'Referential - Global view'
+    pim_customentity_rest_create: 'Referential -  Global view'
+    pim_customentity_massedit: 'Referential'
+    pim_customentity_quickexport: 'Referential'
+    pim_customentity_rest_delete: 'Referential'
+    pim_customentity_rest_list: 'Referential'
+    pim_customentity_rest_get: 'Referential - View'
+
+# Custom
+candm_advanced_csv_connector:
+    importMapping:
+        index_title: "] -Inf, 1] {{ count }} import mapping|] 1, Inf [{{ count }} import mappings"
+        selected: import mapping(s) selected
+
+        field:
+            label:
+                label: Label
+                code: Code
+                mapping: Mapping attributes / columns
+                complete_callback: Callback transform after mapping
+
+        columns:
+            attribute_code: Attribute
+            column_name: Column name
+            default_value: Default value
+            identifier: Identifier
+            only_on_creation: Only on creation
+            delete_if_null: Erase if null
+            lua_updater: Transform
+        actions:
+            add_row: Add a line
+            delete_row: Delete
+
+    exportMapping:
+        index_title: "] -Inf, 1] {{ count }} export mapping|] 1, Inf [{{ count }} export mappings"
+        selected: export mapping(s) selected
+
+        field:
+            label:
+                label: Label
+                code: Code
+                mapping: Mapping attributes / columns
+                complete_callback: Callback transform after mapping
+
+        columns:
+            attribute_code: Attribute
+            column_name: Column name
+            forced_value: Forced value
+            use_label: Use label
+            locale: Locale
+            max_length: Max length
+            default_value: Default value
+            lua_updater: Transform
+        actions:
+            add_row: Add a line
+            delete_row: Delete
+
+    luaUpdater:
+        index_title: "] -Inf, 1] {{ count }} LUA script|] 1, Inf [{{ count }} LUA scripts"
+        selected: LUA script(s) selected
+        field:
+            label:
+                label: Label
+                code: Code
+                script: Script
+
+    menu.item.reference_data:
+        importMapping: Import mappings
+        exportMapping: Export mappings
+        luaUpdater: LUA scripts
+
+    acl:
+        importMapping:
+            index: List import mappings
+            create: Create an import mapping
+            edit: Edit an import mapping
+            delete: Delete an import mapping
+        exportMapping:
+            index: List export mappings
+            create: Create an export mapping
+            edit: Edit an export mapping
+            delete: Delete an export mapping
+        luaUpdater:
+            index: List LUA scripts
+            create: Create a LUA script
+            edit: Edit a LUA script
+            delete: Delete a LUA script
+
+pim_enrich:
+    form.attribute.tab.properties.label:
+        name: Name
+    entity:
+        importmapping:
+            flash:
+                delete:
+                    success: Mapping deleted!
+            module:
+                delete:
+                    confirm: Are you sure you want to delete this import mapping?
+        importMapping:
+            flash:
+                delete:
+                    fail: Can not delete this import mapping
+        exportmapping:
+            flash:
+                delete:
+                    success: Mapping deleted!
+            module:
+                delete:
+                    confirm: Are you sure you want to delete this export mapping?
+        exportMapping:
+            flash:
+                delete:
+                    fail: Can not delete this export mapping
+        luaupdater:
+            flash:
+                delete:
+                    success: LUA script deleted!
+            module:
+                delete:
+                    confirm: Are you sure you want to delete this LUA script?
+        luaUpdater:
+            flash:
+                delete:
+                    fail: Can not delete this LUA script

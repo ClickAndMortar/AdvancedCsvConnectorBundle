@@ -1,0 +1,57 @@
+# Custom
+batch_jobs:
+    csv_advanced_product_import:
+        import:
+            errors:
+                no_mapping: No mapping found.
+                mapping_attributes_error: Incorrect mapping. Missing "attributes" key.
+                mapping_no_attribute_code: Incorrect mapping. Missing "attributeCode" key.
+                mapping_no_identifier: Incorrect mapping. Missing "identifier" key.
+    csv_advanced_product_export:
+        export:
+            errors:
+                no_mapping: No mapping found.
+
+# Custom entity
+importMapping:
+    this:
+        edit: Edit import mapping
+        show: Show import mapping
+        delete: Delete import mapping
+
+exportMapping:
+    this:
+        edit: Edit export mapping
+        show: Show export mapping
+        delete: Delete export mapping
+
+luaUpdater:
+    this:
+        edit: Edit LUA script
+        show: Show LUA script
+        delete: Delete LUA script
+
+pim_custom_entity:
+    form:
+        field:
+            label:
+                label: Label
+                code: Code
+
+candm_advanced_csv_connector:
+    acl:
+        importMapping:
+            index: List import mappings
+            create: Create an import mapping
+            edit: Edit an import mapping
+            delete: Delete an import mapping
+        exportMapping:
+            index: List export mappings
+            create: Create an export mapping
+            edit: Edit an export mapping
+            delete: Delete an export mapping
+        luaUpdater:
+            index: List LUA scripts
+            create: Create a LUA script
+            edit: Edit a LUA script
+            delete: Delete a LUA script
