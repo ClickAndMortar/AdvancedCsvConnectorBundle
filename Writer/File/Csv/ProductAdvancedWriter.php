@@ -12,6 +12,7 @@ use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ExportMapp
 use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\LuaUpdaterRepository;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductAdvancedReader;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
@@ -339,7 +340,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                                 $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
                                 $lua        = new \Lua();
                                 $lua->assign('attributeValue', $attributeValue);
-                                $attributeValue      = $lua->eval($luaUpdater->getScript());
+                                $attributeValue      = $lua->eval(sprintf(
+                                    "%s\n%s",
+                                    ProductAdvancedReader::LUA_SCRIPT_PREFIX,
+                                    $luaUpdater->getScript()
+                                ));
                                 $item[$attributeKey] = $attributeValue;
                             }
                         }

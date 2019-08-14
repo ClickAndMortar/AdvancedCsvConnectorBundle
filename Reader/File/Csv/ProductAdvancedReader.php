@@ -102,6 +102,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_LUA_UPDATER = 'luaUpdater';
 
     /**
+     * LUA script prefix used to limit functions
+     *
+     * @var string
+     */
+    const LUA_SCRIPT_PREFIX = 'local _ENV = { attributeValue = attributeValue, string = string, math = math}';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -377,7 +384,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                             $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
                             $lua        = new \Lua();
                             $lua->assign('attributeValue', $value);
-                            $value = $lua->eval($luaUpdater->getScript());
+                            $value = $lua->eval(sprintf(
+                                "%s\n%s",
+                                self::LUA_SCRIPT_PREFIX,
+                                $luaUpdater->getScript()
+                            ));
                         }
                     }
 
