@@ -101,8 +101,9 @@ define([
                             title: __('candm_advanced_csv_connector.exportMapping.columns.lua_updater'),
                             field: 'luaUpdater',
                             headerSort: false,
-                            editor: 'select',
+                            editor: 'autocomplete',
                             editorParams: {
+                                allowEmpty: true,
                                 values: self.luaUpdaters
                             }
                         },
