@@ -178,3 +178,6 @@ pim_enrich:
             flash:
                 delete:
                     fail: Can not delete this LUA script
+        attribute:
+            info:
+                update_failed: Error during entity update

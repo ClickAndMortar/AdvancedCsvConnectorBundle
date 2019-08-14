@@ -1,0 +1,6 @@
+candm_advanced_csv_connector:
+    lua_updater:
+        validation:
+            lua_script:
+                empty: LUA script can not be empty
+                error: Invalid LUA script

@@ -1,0 +1,8 @@
+parameters:
+    candm_advanced_csv_connector.validator.lua_script.class: ClickAndMortar\AdvancedCsvConnectorBundle\Validator\LuaScriptValidator
+
+services:
+    candm_advanced_csv_connector.validator.lua_script:
+        class: %candm_advanced_csv_connector.validator.lua_script.class%
+        tags:
+        - { name: validator.constraint_validator, alias: candm_advanced_csv_connector.validator.lua_script }

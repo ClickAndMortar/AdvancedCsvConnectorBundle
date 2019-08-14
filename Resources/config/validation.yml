@@ -13,6 +13,8 @@ ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping:
         - NotBlank: ~
 
 ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater:
+    constraints:
+    -   ClickAndMortar\AdvancedCsvConnectorBundle\Validator\Constraints\LuaScriptConstraint: ~
     properties:
         label:
         - NotBlank: ~
