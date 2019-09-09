@@ -33,17 +33,14 @@ in the `app/AppKernel.php` file of your project:
 // ...
 class AppKernel extends Kernel
 {
-    public function registerBundles()
+    protected function registerProjectBundles()
     {
-        $bundles = [
+        return [
             // ...
-            new Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
-            new ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
+            new \Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
+            new \ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
         ];
-
-        // ...
-    }
-
+      }
     // ...
 }
 ```
