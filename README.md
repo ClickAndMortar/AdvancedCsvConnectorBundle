@@ -8,6 +8,7 @@ Made with :blue_heart: by C&M
 
 | **Bundle version**  | **Akeneo version** |
 | ------------- | ------------- |
+| v1.7.*  | v3.2.* (EE)  |
 | v1.6.*  | v3.1.* / v3.2.*  |
 | v1.5.*  | v3.1.* / v3.2.*  |
 | v1.4.*  | v2.3.*  |

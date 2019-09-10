@@ -9,7 +9,7 @@ use Akeneo\Tool\Component\Batch\Job\BatchStatus;
 use Akeneo\Tool\Component\Batch\Job\ExitStatus;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
-use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Repository\ProductRepository;
+use Akeneo\Pim\Permission\Bundle\Persistence\ORM\EntityWithValue\ProductRepository;
 use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
 use Akeneo\Tool\Component\Connector\Exception\DataArrayConversionException;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\File\Csv\ProductReader;
