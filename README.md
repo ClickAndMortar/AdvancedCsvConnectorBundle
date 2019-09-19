@@ -19,8 +19,15 @@ Made with :blue_heart: by C&M
 ### Download the Bundle
 
 ```console
-$ composer require clickandmortar/advanced-csv-connector-bundle
+$ composer require "clickandmortar/advanced-csv-connector-bundle":"<version-wanted>.*"
 ```
+
+Example for last version:
+
+```console
+$ composer require "clickandmortar/advanced-csv-connector-bundle":"1.7.*"
+```
+
 
 ### Enable the Bundle
 
@@ -54,9 +61,12 @@ pim_customentity:
         resource: "@PimCustomEntityBundle/Resources/config/routing.yml"
 ```
 
-And finally update your database:
+And finally clear cache and update database:
 
 ```
+rm -rf var/cache/*
+php bin/console --env=prod pim:installer:assets --symlink --clean
+yarn run webpack
 php bin/console doctrine:schema:update --force
 ```
 
