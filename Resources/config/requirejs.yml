@@ -7,3 +7,7 @@ config:
         pim/template/form/common/fields/import-mapping: clickandmortaradvancedcsvconnector/templates/form/common/fields/import-mapping.html
         pim/form/common/fields/export-mapping: clickandmortaradvancedcsvconnector/js/form/common/fields/export-mapping
         pim/template/form/common/fields/export-mapping: clickandmortaradvancedcsvconnector/templates/form/common/fields/export-mapping.html
+
+        # LUA script field
+        pim/form/common/fields/lua-script: clickandmortaradvancedcsvconnector/js/form/common/fields/lua-script
+        pim/template/form/common/fields/lua-script: clickandmortaradvancedcsvconnector/templates/form/common/fields/lua-script.html

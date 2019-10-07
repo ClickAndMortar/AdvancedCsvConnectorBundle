@@ -118,6 +118,9 @@ candm_advanced_csv_connector:
                 label: Label
                 code: Code
                 script: Script
+        custom:
+            test_value: Test value
+            test_action: Test
 
     menu.item.reference_data:
         importMapping: Import mappings

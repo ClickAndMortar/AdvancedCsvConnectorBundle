@@ -30,6 +30,9 @@ luaUpdater:
         edit: Éditer le script LUA
         show: Afficher le script LUA
         delete: Supprimer le script LUA
+    validation:
+        empty_script: Votre script est vide.
+        empty_test_value: Votre valeur de test est vide.
 
 pim_custom_entity:
     form:

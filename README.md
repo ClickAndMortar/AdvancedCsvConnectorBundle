@@ -45,12 +45,16 @@ class AppKernel extends Kernel
 }
 ```
 
-Update your `app/config/routing.yml` file to enable custom entities:
+Update your `app/config/routing.yml` file:
 
 ```
 pim_customentity:
         prefix: /reference-data
         resource: "@PimCustomEntityBundle/Resources/config/routing.yml"
+        
+candm_advanced_csv_connector:
+    prefix: /candm-advanced-csv-connector
+    resource: "@ClickAndMortarAdvancedCsvConnectorBundle/Resources/config/routing.yml"
 ```
 
 And finally update your database:

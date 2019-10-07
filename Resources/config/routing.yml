@@ -1,0 +1,4 @@
+candm_advanced_csv_connector_api_luaUpdater_test:
+    path: /lupdateUpdater/test
+    defaults: { _controller: candm_advanced_csv_connector.controller.lua_updater:testAction, _format: json }
+    methods: [POST]
