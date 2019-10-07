@@ -13,6 +13,10 @@ Made with :blue_heart: by C&M
 | v1.4.*  | v2.3.*  |
 | v1.3.*  | v2.1.*  |
 
+## Requirements
+
+You need to install `php-lua` package for usage of LUA scripts to update your values dynamically during import or export.
+
 ## Installation
 
 ### Download the Bundle
