@@ -1,0 +1,17 @@
+<div class="lua-script-container" style="width: 75%;">
+    <textarea
+            id="pim_enrich_form_<%- fieldId %>"
+            class="AknTextareaField"
+            name="<%- fieldName %>"
+    <% if (readOnly) { %>readonly disabled<% } %>
+    ><%- value %></textarea>
+</div>
+<div class="lua-test-container" style="width: 25%; padding: 0 15px;">
+    <div class="AknFieldContainer-inputContainer">
+        <input class="AknTextField AknTextField--testValue" placeholder="<%- _.__('candm_advanced_csv_connector.luaUpdater.custom.test_value') %>"/>
+    </div>
+    <div class="AknButton AknButton--apply" style="margin: 10px 0 0 0;">
+        <%- _.__('candm_advanced_csv_connector.luaUpdater.custom.test_action') %>
+    </div>
+</div>
+<div class="lua-message-container"></div>

@@ -8,9 +8,7 @@ Made with :blue_heart: by C&M
 
 | **Bundle version**  | **Akeneo version** |
 | ------------- | ------------- |
-| v1.7.*  | v3.2.* (EE)  |
-| v1.6.*  | v3.1.* / v3.2.*  |
-| v1.5.*  | v3.1.* / v3.2.*  |
+| v1.5.*  | v3.1.*  |
 | v1.4.*  | v2.3.*  |
 | v1.3.*  | v2.1.*  |
 
@@ -19,15 +17,8 @@ Made with :blue_heart: by C&M
 ### Download the Bundle
 
 ```console
-$ composer require "clickandmortar/advanced-csv-connector-bundle":"<version-wanted>.*"
+$ composer require clickandmortar/advanced-csv-connector-bundle
 ```
-
-Example for last version:
-
-```console
-$ composer require "clickandmortar/advanced-csv-connector-bundle":"1.7.*"
-```
-
 
 ### Enable the Bundle
 
@@ -41,32 +32,36 @@ in the `app/AppKernel.php` file of your project:
 // ...
 class AppKernel extends Kernel
 {
-    protected function registerProjectBundles()
+    public function registerBundles()
     {
-        return [
+        $bundles = [
             // ...
-            new \Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
-            new \ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
+            new Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
+            new ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
         ];
-      }
+
+        // ...
+    }
+
     // ...
 }
 ```
 
-Update your `app/config/routing.yml` file to enable custom entities:
+Update your `app/config/routing.yml` file to enable custom entities and current bundle:
 
 ```
 pim_customentity:
         prefix: /reference-data
         resource: "@PimCustomEntityBundle/Resources/config/routing.yml"
+
+candm_advanced_csv_connector:
+    prefix: /candm-advanced-csv-connector
+    resource: "@ClickAndMortarAdvancedCsvConnectorBundle/Resources/config/routing.yml"
 ```
 
-And finally clear cache and update database:
+And finally update your database:
 
 ```
-rm -rf var/cache/*
-php bin/console --env=prod pim:installer:assets --symlink --clean
-yarn run webpack
 php bin/console doctrine:schema:update --force
 ```
 
