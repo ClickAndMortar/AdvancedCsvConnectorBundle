@@ -163,7 +163,7 @@ define([
              * @param column
              */
             booleanAccessor: function (value, data, type, params, column) {
-                return value === 'true';
+                return value == 'true' || value == true;
             },
 
             /**
