@@ -13,6 +13,13 @@ use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 class LuaUpdater extends AbstractCustomEntity
 {
     /**
+     * Default script value for creation
+     *
+     * @return string
+     */
+    const DEFAULT_SCRIPT_VALUE = 'return attributeValue;';
+
+    /**
      * Label
      *
      * @var string
@@ -24,7 +31,7 @@ class LuaUpdater extends AbstractCustomEntity
      *
      * @var string
      */
-    protected $script;
+    protected $script = self::DEFAULT_SCRIPT_VALUE;
 
     /**
      * Get label
