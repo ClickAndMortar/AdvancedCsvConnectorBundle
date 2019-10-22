@@ -20,7 +20,7 @@ class LuaScriptValidator extends ConstraintValidator
      *
      * @var string
      */
-    const ATTRIBUTE_VALUE_TEST = 'test';
+    const ATTRIBUTE_VALUE_TEST = '1';
 
     /**
      * @param LuaUpdater $luaUpdater
