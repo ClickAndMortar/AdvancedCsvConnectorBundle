@@ -4,6 +4,7 @@ batch_jobs:
         import:
             warnings:
                 no_callback_method: La méthode "%callbackMethod%" n'existe pas sur le helper.
+                unknown_product: Le produit "%identifier%" n'existe pas, il a été ignoré.
             errors:
                 mapping_attributes_error: Le mapping est incorrect. La clé "attributes" est manquante.
                 mapping_no_attribute_code: Le mapping est incorrect. La clé "attributeCode" est manquante pour un attribut.

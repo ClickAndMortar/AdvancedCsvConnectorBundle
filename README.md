@@ -119,7 +119,8 @@ Import mapping example:
                 ]
             }
         ],
-    "completeCallback": "completeProductItem"
+    "completeCallback": "completeProductItem",
+    "onlyUpdate": true
 }
 ```
 
@@ -135,6 +136,7 @@ Mapping explanation:
 * `locales`: Used to set same attribute value for different locales
 * `completeCallback`: Used to add some more fields with **ImportHelper**
 * `deleteIfNull`: Remove key from item mapping if value is null
+* `onlyUpdate`: Used to only update product (if product is new it's not created)
 
 ### Export
 

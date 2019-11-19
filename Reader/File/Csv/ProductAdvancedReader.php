@@ -114,6 +114,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_DELETE_IF_NULL = 'deleteIfNull';
 
     /**
+     * Only update mapping key
+     *
+     * @var string
+     */
+    const ONLY_UPDATE_KEY = 'onlyUpdate';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -389,6 +396,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             && method_exists($this->importHelper, $this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
         ) {
             $newItem = $this->importHelper->{$this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $isNewProduct, $item);
+        }
+
+        // Avoid creation if necessary
+        if (
+            isset($this->mapping[self::ONLY_UPDATE_KEY])
+            && $this->mapping[self::ONLY_UPDATE_KEY] === true
+            && $isNewProduct
+        ) {
+            $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.unknown_product', ['%identifier%' => $newItem[$this->identifierCode]]);
         }
 
         return $newItem;
