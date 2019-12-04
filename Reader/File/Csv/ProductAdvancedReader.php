@@ -106,7 +106,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      *
      * @var string
      */
-    const LUA_SCRIPT_PREFIX = 'local _ENV = { attributeValue = attributeValue, string = string, math = math}';
+    const LUA_SCRIPT_PREFIX = 'local _ENV = { attributeValue = attributeValue, string = string, math = math, ipairs = ipairs, load = load, next = next, pairs = pairs, rawequal = rawequal, rawget = rawget, rawlen = rawlen, rawset = rawset, select = select, tonumber = tonumber, tostring = tostring, type = type}';
 
     /**
      * Import helper
