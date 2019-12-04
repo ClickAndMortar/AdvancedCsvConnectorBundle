@@ -17,6 +17,23 @@ Made with :blue_heart: by C&M
 ## Requirements
 
 You need to install `php-lua` package for usage of LUA scripts to update your values dynamically during import or export.
+For LUA scripts available functions and libraries have been limited for security reasons. You can use:
+
+* string
+* math
+* ipairs
+* load
+* next
+* pairs
+* rawequal
+* rawgetwget
+* rawlen
+* rawset
+* select
+* tonumber
+* tostring
+* type
+
 
 ## Installation
 
