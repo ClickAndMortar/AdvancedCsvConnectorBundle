@@ -12,6 +12,15 @@ services:
         tags:
             - { name: akeneo_batch.job.job_parameters.default_values_provider }
 
+    candm_advanced_csv_connector.job.job_parameters.default_values_provider.product_model_csv_import:
+        class: '%candm_advanced_csv_connector.job.job_parameters.default_values_provider.product_csv_advanced_import.class%'
+        arguments:
+            - '@pim_connector.job.job_parameters.default_values_provider.product_model_csv_import'
+            -
+                - '%candm_advanced_csv_connector.job_name.csv_advanced_product_model_import%'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
+
     candm_advanced_csv_connector.job.job_parameters.default_values_provider.product_csv_advanced_export:
         class: '%candm_advanced_csv_connector.job.job_parameters.default_values_provider.product_csv_advanced_export.class%'
         arguments:
