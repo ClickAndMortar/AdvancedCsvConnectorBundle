@@ -13,6 +13,28 @@ services:
             - '@pim_connector.writer.database.product'
             - '%pim_connector.step.product.import.bulk_size%'
 
+    candm_advanced_csv_connector.step.csv_advanced_root_product_model.import:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'import_root_product_model'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@candm_advanced_csv_connector.reader.file.csv_advanced_product_model'
+            - '@pim_connector.processor.denormalization.root_product_model'
+            - '@pim_connector.writer.database.product_model'
+            - '%pim_job_product_batch_size%'
+
+    candm_advanced_csv_connector.step.csv_advanced_sub_product_model.import:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'import_sub_product_model'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@candm_advanced_csv_connector.reader.file.csv_advanced_product_model'
+            - '@pim_connector.processor.denormalization.sub_product_model'
+            - '@pim_connector.writer.database.product_model'
+            - '%pim_job_product_batch_size%'
+
     candm_advanced_csv_connector.step.csv_advanced_product.export:
         class: '%pim_connector.step.item_step.class%'
         arguments:
