@@ -9,7 +9,6 @@ use Akeneo\Tool\Component\Batch\Job\BatchStatus;
 use Akeneo\Tool\Component\Batch\Job\ExitStatus;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ImportHelper;
-use Akeneo\Pim\Permission\Bundle\Persistence\ORM\EntityWithValue\ProductRepository;
 use Akeneo\Tool\Component\Connector\ArrayConverter\ArrayConverterInterface;
 use Akeneo\Tool\Component\Connector\Exception\DataArrayConversionException;
 use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\File\Csv\ProductReader;
@@ -17,6 +16,7 @@ use Akeneo\Tool\Component\Connector\Reader\File\FileIteratorFactory;
 use Akeneo\Tool\Component\Connector\Reader\File\MediaPathTransformer;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Product advanced reader
@@ -118,7 +118,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     /**
      * Product repository
      *
-     * @var ProductRepository
+     * @var EntityRepository
      */
     protected $productRepository;
 
@@ -186,7 +186,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param MediaPathTransformer    $mediaPathTransformer
      * @param array                   $options
      * @param ImportHelper            $importHelper
-     * @param ProductRepository       $productRepository
+     * @param EntityRepository        $productRepository
      * @param ImportMappingRepository $importMappingRepository
      * @param ImportMappingRepository $luaUpdaterRepository
      */
@@ -196,7 +196,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         MediaPathTransformer $mediaPathTransformer,
         array $options = [],
         ImportHelper $importHelper,
-        ProductRepository $productRepository,
+        EntityRepository $productRepository,
         CustomEntityRepository $importMappingRepository,
         CustomEntityRepository $luaUpdaterRepository
     )
@@ -457,7 +457,10 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             }
 
             // And set identifier
-            if (isset($attributeMapping[self::MAPPING_IDENTIFIER_KEY])) {
+            if (
+                isset($attributeMapping[self::MAPPING_IDENTIFIER_KEY])
+                && $attributeMapping[self::MAPPING_IDENTIFIER_KEY] === true
+            ) {
                 $this->identifierCode = $attributeMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
             }
         }
