@@ -14,7 +14,7 @@ batch_jobs:
             mapping:
                 label: Mapping des données
         import:
-            label: Import des modèles de produits
+            label: Import des modèles produits
 
     csv_advanced_product_export:
         label: Export des produits avancé (CSV)
@@ -23,6 +23,14 @@ batch_jobs:
                 label: Mapping des données
         export:
             label: Export des produits
+
+    csv_advanced_product_model_export:
+        label: Export des modèles produits avancé (CSV)
+        fields:
+            mapping:
+                label: Mapping des données
+        export:
+            label: Export des modèles produits
 
 # Custom entity
 pim_menu:

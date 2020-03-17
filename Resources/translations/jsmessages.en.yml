@@ -24,6 +24,14 @@ batch_jobs:
         export:
             label: Products export
 
+    csv_advanced_product_model_export:
+        label: Advanced products models export (CSV)
+        fields:
+            mapping:
+                label: Data mapping
+        export:
+            label: Products models export
+
 # Custom entity
 pim_menu:
     tab.reference_data: Referential

@@ -1,6 +1,7 @@
 parameters:
     candm_advanced_csv_connector.writer.file.product.column_sorter_by_mapping.class: ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\ProductColumnSorterByMapping
     candm_advanced_csv_connector.writer.file.csv_advanced_product.class: ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\Csv\ProductAdvancedWriter
+    candm_advanced_csv_connector.writer.file.csv_advanced_product_model.class: ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\Csv\ProductModelAdvancedWriter
 
 services:
     candm_advanced_csv_connector.writer.file.product.column_sorter_by_mapping:
@@ -22,6 +23,23 @@ services:
             - '@pim_connector.array_converter.standard_to_flat.product_localized'
             - '@pim_connector.factory.flat_item_buffer'
             - '@candm_advanced_csv_connector.writer.file.product.flat_item_buffer_flusher'
+            - '@pim_catalog.repository.attribute'
+            - '@pim_connector.writer.file.media_exporter_path_generator'
+            - ['pim_catalog_file', 'pim_catalog_image']
+            - 'filePath'
+            - '@candm_advanced_csv_connector.helper.export'
+            - '@doctrine.orm.entity_manager'
+            - '@candm_advanced_csv_connector.repository.export_mapping'
+            - '@service_container'
+            - '@candm_advanced_csv_connector.repository.lua_updater'
+            - 'fr_FR'
+
+    candm_advanced_csv_connector.writer.file.csv_advanced_product_model:
+        class: '%candm_advanced_csv_connector.writer.file.csv_advanced_product_model.class%'
+        arguments:
+            - '@pim_connector.array_converter.standard_to_flat.product_model_localized'
+            - '@pim_connector.factory.flat_item_buffer'
+            - '@pim_connector.writer.file.product_model.flat_item_buffer_flusher'
             - '@pim_catalog.repository.attribute'
             - '@pim_connector.writer.file.media_exporter_path_generator'
             - ['pim_catalog_file', 'pim_catalog_image']
