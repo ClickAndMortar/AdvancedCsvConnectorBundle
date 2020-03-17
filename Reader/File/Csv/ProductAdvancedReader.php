@@ -255,6 +255,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function flush()
+    {
+        parent::flush();
+        $this->filesPaths = [];
+    }
+
+    /**
      * Read files with JSON mapping on job
      *
      * @return array
