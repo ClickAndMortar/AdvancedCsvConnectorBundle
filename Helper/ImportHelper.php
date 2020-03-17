@@ -270,7 +270,7 @@ class ImportHelper
             $currentEncoding = str_replace("\n", "", $currentEncoding);
 
             // Convert to UTF-8 if necessary with iconv linx command
-            if (strpos($currentEncoding, self::FILE_ENCODING_UTF8) == false) {
+            if (!empty($currentEncoding) && strpos($currentEncoding, self::FILE_ENCODING_UTF8) == false) {
                 $newFilePath       = sprintf('%s.temp', $filePath);
                 $encodeFileCommand = sprintf(
                     'iconv -f %s -t UTF-8 %s > %s',
