@@ -24,11 +24,9 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
-                - '@pim_connector.step.charset_validator'
                 - '@candm_advanced_csv_connector.step.csv_advanced_root_product_model.import'
                 - '@candm_advanced_csv_connector.step.csv_advanced_sub_product_model.import'
-                - '@pim_connector.step.csv_compute_product_models_descendants.import'
-                - '@pim_connector.step.csv_product_model.import_associations'
+                - '@candm_advanced_csv_connector.step.csv_advanced_compute_product_models_descendants.import'
         tags:
             - { name: akeneo_batch.job, connector: '%candm_advanced_csv_connector.connector_name.csv%', type: '%pim_connector.job.import_type%' }
 
