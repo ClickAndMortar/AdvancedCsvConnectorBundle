@@ -8,6 +8,8 @@ Made with :blue_heart: by C&M
 
 | **Bundle version**  | **Akeneo version** |
 | ------------- | ------------- |
+| v1.8.*  | v4.0.*  |
+| v1.7.*  | v3.2.* (EE)  |
 | v1.6.*  | v3.1.* / v3.2.*  |
 | v1.5.*  | v3.1.* / v3.2.*  |
 | v1.4.*  | v2.3.*  |
@@ -33,36 +35,35 @@ For LUA scripts available functions and libraries have been limited for security
 * tostring
 * type
 
+
 ## Installation
 
 ### Download the Bundle
 
 ```console
-$ composer require clickandmortar/advanced-csv-connector-bundle
+$ composer require "clickandmortar/advanced-csv-connector-bundle":"<version-wanted>.*"
 ```
+
+Example for last version:
+
+```console
+$ composer require "clickandmortar/advanced-csv-connector-bundle":"1.8.*"
+```
+
 
 ### Enable the Bundle
 
 Enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
+in the `config/bundles.php` file of your project:
 
 ```php
 <?php
-// app/AppKernel.php
 
-// ...
-class AppKernel extends Kernel
-{
-    protected function registerProjectBundles()
-    {
-        return [
-            // ...
-            new \Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle(),
-            new \ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle(),
-        ];
-      }
+return [
     // ...
-}
+    Pim\Bundle\CustomEntityBundle\PimCustomEntityBundle::class => ['all' => true],
+    ClickAndMortar\AdvancedCsvConnectorBundle\ClickAndMortarAdvancedCsvConnectorBundle::class => ['all' => true]
+];
 ```
 
 Update your `app/config/routing.yml` file:
@@ -77,9 +78,12 @@ candm_advanced_csv_connector:
     resource: "@ClickAndMortarAdvancedCsvConnectorBundle/Resources/config/routing.yml"
 ```
 
-And finally update your database:
+And finally clear cache and update database:
 
 ```
+rm -rf var/cache/*
+php bin/console --env=prod pim:installer:assets --symlink --clean
+yarn run webpack
 php bin/console doctrine:schema:update --force
 ```
 
