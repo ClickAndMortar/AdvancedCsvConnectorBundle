@@ -12,7 +12,7 @@ services:
             - '@pim_catalog.repository.attribute'
 
     candm_advanced_csv_connector.helper.export:
-        class: %candm_advanced_csv_connector.helper.export.class%
+        class: '%candm_advanced_csv_connector.helper.export.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@pim_catalog.repository.attribute_option'

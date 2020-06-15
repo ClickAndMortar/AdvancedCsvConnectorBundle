@@ -66,7 +66,7 @@ return [
 ];
 ```
 
-Update your `app/config/routing.yml` file:
+Update your `config/routes/routes.yml` file:
 
 ```
 pim_customentity:
@@ -86,12 +86,6 @@ php bin/console --env=prod pim:installer:assets --symlink --clean
 yarn run webpack
 php bin/console doctrine:schema:update --force
 ```
-
-### Configuration
-
-You need to add some parameters to your `app/config/parameters.yml` file:
-
-* `media_url_prefix`: This parameter is used in advanced export processor to generate clean url's from PIM visuals (value example: `https://www.my-pim.com/files/catalog/`)
 
 ## Usage
 

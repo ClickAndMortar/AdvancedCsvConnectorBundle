@@ -2,7 +2,9 @@ parameters:
     candm_advanced_csv_connector.controller.lua_updater.class: ClickAndMortar\AdvancedCsvConnectorBundle\Controller\LuaUpdaterController
 
 services:
+    _defaults: { public: true }
+
     candm_advanced_csv_connector.controller.lua_updater:
-        class: %candm_advanced_csv_connector.controller.lua_updater.class%
+        class: '%candm_advanced_csv_connector.controller.lua_updater.class%'
         arguments:
             - '@translator'
