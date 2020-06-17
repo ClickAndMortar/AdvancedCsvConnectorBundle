@@ -54,7 +54,8 @@ Import mapping example:
         {
             "attributeCode": "age_range",
             "dataCode": "trancheAge",
-            "normalizerCallback": "getAgeRange"
+            "normalizerCallback": "getAgeRange",
+            "keepOriginalValue": true
         },
         {
             "attributeCode": "life_cycle",
@@ -108,6 +109,7 @@ Mapping explanation:
 * `locales`: Used to set same attribute value for different locales
 * `completeCallback`: Used to add some more fields with **ImportHelper**
 * `deleteIfNull': Remove key from item mapping if value is null
+* `keepOriginalValue`: Used only with `normalizerCallback` it allows to keep original value if no matching value in normalizer
 
 ### Export
 

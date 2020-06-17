@@ -115,6 +115,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_DELETE_IF_NULL = 'deleteIfNull';
 
     /**
+     * Keep original value if not found for normalizer callback
+     *
+     * @var string
+     */
+    const MAPPING_KEEP_ORIGINAL_VALUE_KEY = 'keepOriginalValue';
+
+    /**
      * Import helper
      *
      * @var ImportHelper
@@ -359,6 +366,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                     if (isset($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY])) {
                         $normalizedValues = $this->getNormalizedValuesByCode($attributeMapping[self::MAPPING_NORMALIZER_CALLBACK_KEY]);
                         $defaultValue     = isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY]) ? $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] : null;
+                        $defaultValue     = isset($attributeMapping[self::MAPPING_KEEP_ORIGINAL_VALUE_KEY]) && $attributeMapping[self::MAPPING_KEEP_ORIGINAL_VALUE_KEY] == true ? $value : $defaultValue;
                         $value            = $this->importHelper->getNormalizedValue($value, $normalizedValues, $defaultValue);
                     }
 
