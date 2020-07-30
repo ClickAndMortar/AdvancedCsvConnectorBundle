@@ -41,7 +41,9 @@ class ProductCsvAdvancedExport implements ConstraintCollectionProviderInterface
     public function getConstraintCollection()
     {
         $constraintFields = array_merge($this->baseConstraintCollectionProvider->getConstraintCollection()->fields, [
-            'mapping' => [
+            'encoding' => [
+            ],
+            'mapping'  => [
                 new NotBlank(),
             ],
         ]);

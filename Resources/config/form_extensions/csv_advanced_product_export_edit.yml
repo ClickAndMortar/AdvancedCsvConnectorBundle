@@ -173,10 +173,21 @@ extensions:
             label: pim_enrich.form.job_instance.tab.properties.with_media.title
             tooltip: pim_enrich.form.job_instance.tab.properties.with_media.help
 
+    pim-job-instance-csv-advanced-product-export-edit-properties-encoding:
+        module: pim/job/common/edit/field/text
+        parent: pim-job-instance-csv-advanced-product-export-edit-global
+        position: 190
+        targetZone: properties
+        config:
+            fieldCode: configuration.encoding
+            readOnly: false
+            label: batch_jobs.csv_advanced_product_export.fields.encoding.label
+            tooltip: batch_jobs.csv_advanced_product_export.fields.encoding.help
+
     pim-job-instance-csv-advanced-product-export-edit-properties-mapping:
         module: pim/job/common/edit/field/textarea
         parent: pim-job-instance-csv-advanced-product-export-edit-global
-        position: 190
+        position: 200
         targetZone: properties
         config:
             fieldCode: configuration.mapping
