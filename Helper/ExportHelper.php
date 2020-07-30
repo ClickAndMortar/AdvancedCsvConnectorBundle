@@ -4,6 +4,7 @@ namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
 use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeOptionRepository;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Process\Process;
 
 /**
  * Export helper
@@ -57,5 +58,31 @@ class ExportHelper
         $option[0]->setLocale($locale)->getTranslation();
 
         return $option[0]->getOptionValue()->getLabel();
+    }
+
+    /**
+     * Encode given $filePath with $encoding from UTF-8
+     *
+     * @param string $filePath
+     * @param string $encoding
+     *
+     * @return void
+     */
+    public function encodeFile($filePath, $encoding)
+    {
+        $tempFilePath      = sprintf('%s.tmp', $filePath);
+        $encodeFileCommand = sprintf(
+            'iconv -f UTF-8 -t %s//TRANSLIT %s > %s',
+            $encoding,
+            $filePath,
+            $tempFilePath
+        );
+        $encodeFileProcess = new Process($encodeFileCommand);
+        $encodeFileProcess->mustRun();
+
+        if (file_exists($tempFilePath)) {
+            unlink($filePath);
+            rename($tempFilePath, $filePath);
+        }
     }
 }

@@ -256,6 +256,24 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     }
 
     /**
+     * Change file encoding if necessary
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        parent::flush();
+
+        $parameters = $this->stepExecution->getJobParameters();
+        $encoding   = $parameters->get('encoding');
+        if (!empty($encoding)) {
+            foreach ($this->getWrittenFiles() as $filePath => $fileName) {
+                $this->exportHelper->encodeFile($filePath, $encoding);
+            }
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getWriterConfiguration()

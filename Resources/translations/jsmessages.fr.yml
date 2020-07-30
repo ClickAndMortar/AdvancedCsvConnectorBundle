@@ -21,6 +21,9 @@ batch_jobs:
         fields:
             mapping:
                 label: Mapping des données
+            encoding:
+                label: Encodage
+                help: Encodage du fichier de sortie (UTF-8 par défaut)
         export:
             label: Export des produits
 
@@ -29,6 +32,9 @@ batch_jobs:
         fields:
             mapping:
                 label: Mapping des données
+            encoding:
+                label: Encodage
+                help: Encodage du fichier de sortie (UTF-8 par défaut)
         export:
             label: Export des modèles produits
 
