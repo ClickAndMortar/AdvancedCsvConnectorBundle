@@ -11,7 +11,7 @@
     ],
     "require": {
         "akeneo/pim-community-dev": "^4.0.0",
-        "akeneo-labs/custom-entity-bundle": "dev-master"
+        "akeneo-labs/custom-entity-bundle": "4.0.*"
     },
     "repositories": [
         {
