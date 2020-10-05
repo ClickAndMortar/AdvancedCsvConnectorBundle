@@ -170,6 +170,13 @@ pim_enrich:
     form.attribute.tab.properties.label:
         name: Nom
     entity:
+        generic:
+            flash:
+                update:
+                    success: Entité mise à jour avec succès !
+                    fail: Erreur pendant la mise à jour
+                info:
+                    field_not_ready: Ce champ n'est pas prêt
         importmapping:
             flash:
                 delete:
