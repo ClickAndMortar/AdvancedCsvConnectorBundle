@@ -89,6 +89,7 @@ candm_advanced_csv_connector:
                 code: Code
                 mapping: Mapping attributes / columns
                 complete_callback: Callback transform after mapping
+                only_update: Products update only
 
         columns:
             attribute_code: Attribute

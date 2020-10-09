@@ -34,6 +34,13 @@ class ImportMapping extends AbstractCustomEntity
     protected $completeCallback;
 
     /**
+     * Update product only if already exists
+     *
+     * @var boolean
+     */
+    protected $onlyUpdate;
+
+    /**
      * Get label
      *
      * @return string
@@ -98,6 +105,26 @@ class ImportMapping extends AbstractCustomEntity
     }
 
     /**
+     * @return bool
+     */
+    public function getOnlyUpdate()
+    {
+        return $this->onlyUpdate;
+    }
+
+    /**
+     * @param bool $onlyUpdate
+     *
+     * @return ImportMapping
+     */
+    public function setOnlyUpdate($onlyUpdate)
+    {
+        $this->onlyUpdate = $onlyUpdate;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function getLabelProperty(): string
@@ -140,10 +167,13 @@ class ImportMapping extends AbstractCustomEntity
             'attributes' => json_decode($attributesMapping, true),
         ];
 
-        // And complete callback if necessary
+        // Add complete callback if necessary
         if (!empty($this->getCompleteCallback())) {
             $mapping['completeCallback'] = $this->getCompleteCallback();
         }
+
+        // Add only update parameter
+        $mapping['onlyUpdate'] = $this->getOnlyUpdate();
 
         return $mapping;
     }

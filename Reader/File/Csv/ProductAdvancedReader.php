@@ -102,6 +102,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_LUA_UPDATER = 'luaUpdater';
 
     /**
+     * Only update mapping parameter
+     *
+     * @var string
+     */
+    const MAPPING_ONLY_UPDATE = 'onlyUpdate';
+
+    /**
      * LUA script prefix used to limit functions
      *
      * @var string
@@ -309,6 +316,9 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
         $item = array_combine($this->fileIterator->getHeaders(), $data);
         $item = $this->updateByMapping($item);
+        if ($item === null) {
+            return null;
+        }
 
         try {
             $item = $this->converter->convert($item, $this->getArrayConverterOptions());
@@ -424,6 +434,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         if ($isNewProduct === null) {
             $isNewProduct = $this->productRepository->findOneByIdentifier($newItem[$this->identifierCode]) === null;
         }
+
+        // Manage only update
+        if (
+            $isNewProduct === true
+            && $this->mapping[self::MAPPING_ONLY_UPDATE] === true
+        ) {
+            return null;
+        }
+
         if (
             isset($this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
             && method_exists($this->importHelper, $this->mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
