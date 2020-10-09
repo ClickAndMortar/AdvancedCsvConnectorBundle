@@ -1,0 +1,12 @@
+<html>
+    <body>
+        {% for messageType, messages in messagesByType %}
+            {{ ('batch_jobs.mail_notification.types.' ~ messageType) | trans }}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message.identifier }} : {{ message.content }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </body>
+</html>

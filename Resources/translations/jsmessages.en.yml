@@ -5,6 +5,9 @@ batch_jobs:
         fields:
             mapping:
                 label: Data mapping
+            email_recipients:
+                label: Email recipients
+                help: Email addresses separated by commas
         import:
             label: Products import
 
@@ -13,6 +16,9 @@ batch_jobs:
         fields:
             mapping:
                 label: Data mapping
+            email_recipients:
+                label: Email recipients
+                help: Email addresses separated by commas
         import:
             label: Products models import
 
@@ -31,6 +37,8 @@ batch_jobs:
                 label: Data mapping
         export:
             label: Products models export
+    default_steps:
+        notification: Email notification
 
 # Custom entity
 pim_menu:

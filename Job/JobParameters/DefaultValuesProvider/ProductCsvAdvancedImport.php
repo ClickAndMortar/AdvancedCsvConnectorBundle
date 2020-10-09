@@ -39,7 +39,8 @@ class ProductCsvAdvancedImport implements DefaultValuesProviderInterface
     public function getDefaultValues()
     {
         return array_merge($this->baseDefaultValuesProvider->getDefaultValues(), [
-            'mapping' => null,
+            'mapping'         => null,
+            'emailRecipients' => '',
         ]);
     }
 

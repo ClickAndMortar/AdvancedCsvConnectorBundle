@@ -5,14 +5,22 @@ batch_jobs:
         fields:
             mapping:
                 label: Mapping des données
+            email_recipients:
+                label: Destinataires pour les rapports
+                help: Adresses emails séparées par des virgules
         import:
             label: Import des produits
+    default_steps:
+        notification: Notification par email
 
     csv_advanced_product_model_import:
         label: Import des modèles produits avancé (CSV)
         fields:
             mapping:
                 label: Mapping des données
+            email_recipients:
+                label: Destinataires pour les rapports
+                help: Adresses emails séparées par des virgules
         import:
             label: Import des modèles produits
 

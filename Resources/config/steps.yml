@@ -1,5 +1,6 @@
 parameters:
     pim_connector.step.product.import.bulk_size: 100
+    candm_advanced_csv_connector.step.mail_notification.class: 'ClickAndMortar\AdvancedCsvConnectorBundle\Step\MailNotification'
 
 services:
     candm_advanced_csv_connector.step.csv_advanced_product.import:
@@ -56,3 +57,13 @@ services:
             - '@pim_connector.processor.normalization.product_model'
             - '@candm_advanced_csv_connector.writer.file.csv_advanced_product_model'
             - '%pim_job_product_batch_size%'
+
+    candm_advanced_csv_connector.step.mail_notification:
+        class: '%candm_advanced_csv_connector.step.mail_notification.class%'
+        arguments:
+            - 'notification'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_notification.email.email_notifier'
+            - '@templating'
+            - '@translator'

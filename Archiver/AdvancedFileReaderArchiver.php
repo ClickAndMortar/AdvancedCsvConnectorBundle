@@ -24,18 +24,23 @@ class AdvancedFileReaderArchiver extends FileReaderArchiver
     {
         $job = $this->jobRegistry->get($jobExecution->getJobInstance()->getJobName());
         foreach ($job->getSteps() as $step) {
-            $reader    = $step->getReader();
-            $filePaths = $reader->getFilePaths();
-            foreach ($filePaths as $filePath) {
-                if (file_exists($filePath)) {
-                    $key = strtr(
-                        $this->getRelativeArchivePath($jobExecution),
-                        [
-                            '%filename%' => basename($filePath),
-                        ]
-                    );
-                    $this->filesystem->put($key, file_get_contents($filePath));
-                    unlink($filePath);
+            if (
+                method_exists($step, 'getReader')
+                && $step->getReader() instanceof MultiFilesReaderInterface
+            ) {
+                $reader    = $step->getReader();
+                $filePaths = $reader->getFilePaths();
+                foreach ($filePaths as $filePath) {
+                    if (file_exists($filePath)) {
+                        $key = strtr(
+                            $this->getRelativeArchivePath($jobExecution),
+                            [
+                                '%filename%' => basename($filePath),
+                            ]
+                        );
+                        $this->filesystem->put($key, file_get_contents($filePath));
+                        unlink($filePath);
+                    }
                 }
             }
         }

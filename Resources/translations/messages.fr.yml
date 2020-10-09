@@ -11,6 +11,10 @@ batch_jobs:
         export:
             errors:
                 no_mapping: Aucun mapping trouvé. Merci de réessayer.
+    mail_notification:
+        subject: "Rapport de l'import '%importLabel%' (%date%)"
+        types:
+            default: Liste des avertissements :
 
 # Custom entity
 importMapping:
