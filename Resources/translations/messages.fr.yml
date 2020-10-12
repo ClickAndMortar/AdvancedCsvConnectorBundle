@@ -15,6 +15,7 @@ batch_jobs:
         subject: "Rapport de l'import '%importLabel%' (%date%)"
         types:
             default: Liste des avertissements :
+        not_imported_products: Produits non importés :
 
 # Custom entity
 importMapping:

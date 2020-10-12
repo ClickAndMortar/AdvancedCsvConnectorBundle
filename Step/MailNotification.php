@@ -126,20 +126,22 @@ class MailNotification extends AbstractStep
         }
 
         // Generate and send notifications
-        $recipients     = $jobParameters->get(self::JOB_PARAMETERS_EMAIL_RECIPIENTS);
-        $mailLabel      = $this->translator->trans('batch_jobs.mail_notification.subject', [
+        $recipients          = $jobParameters->get(self::JOB_PARAMETERS_EMAIL_RECIPIENTS);
+        $mailLabel           = $this->translator->trans('batch_jobs.mail_notification.subject', [
             '%importLabel%' => $jobExecution->getLabel(),
             '%date%'        => $jobExecution->getStartTime()->format('d/m/Y, H:i'),
         ]);
-        $users          = $this->getUsers($recipients);
-        $messagesByType = $this->getMessagesByType($importStepExecution->getWarnings());
+        $users               = $this->getUsers($recipients);
+        $notImportedProducts = [];
+        $messagesByType      = $this->getMessagesByType($importStepExecution->getWarnings(), $notImportedProducts);
         if (empty($messagesByType)) {
             return;
         }
         $contentAsHtml = $this->templating->render(
             'ClickAndMortarAdvancedCsvConnectorBundle::notification.html.twig',
             [
-                'messagesByType' => $messagesByType,
+                'messagesByType'      => $messagesByType,
+                'notImportedProducts' => $notImportedProducts,
             ]
         );
         $this->notifier->notify($users, $mailLabel, '', $contentAsHtml);
@@ -169,10 +171,11 @@ class MailNotification extends AbstractStep
      * Get messages by type from import step execution $warnings
      *
      * @param Warning[] $warnings
+     * @param array     $notImportedProducts
      *
      * @return array
      */
-    protected function getMessagesByType($warnings)
+    protected function getMessagesByType($warnings, &$notImportedProducts = [])
     {
         $messages = [];
         foreach ($warnings as $warning) {
@@ -183,6 +186,7 @@ class MailNotification extends AbstractStep
             } else {
                 $identifier = $item['code'];
             }
+            $notImportedProducts[] = $identifier;
 
             // Get message type from reason parameters
             $reasonParameters = $warning->getReasonParameters();
