@@ -14,37 +14,27 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\ProductColumnSorter;
 class ProductColumnSorterByMapping extends ProductColumnSorter implements ColumnSorterInterface
 {
     /**
-     * Main mapping key
+     * Columns order context key
      *
      * @var string
      */
-    const MAPPING_KEY_MAIN = 'mapping';
-
-    /**
-     * Columns order mapping key
-     *
-     * @var string
-     */
-    const MAPPING_KEY_COLUMNS_ORDER = 'columnsOrder';
+    const CONTEXT_KEY_COLUMNS_ORDER = 'columnsOrder';
 
     /**
      * {@inheritdoc}
      */
     public function sort(array $columns, array $context = [])
     {
-        // Get order from mapping if possible
-        if (isset($context[self::MAPPING_KEY_MAIN])) {
-            $mapping = json_decode($context[self::MAPPING_KEY_MAIN], true);
-            if ($mapping !== null && isset($mapping[self::MAPPING_KEY_COLUMNS_ORDER])) {
-                $sortedColumns = [];
-                foreach ($mapping[self::MAPPING_KEY_COLUMNS_ORDER] as $columnName) {
-                    if (in_array($columnName, $columns)) {
-                        $sortedColumns[] = $columnName;
-                    }
+        // Get order from context if possible
+        if (isset($context[self::CONTEXT_KEY_COLUMNS_ORDER])) {
+            $sortedColumns = [];
+            foreach ($context[self::CONTEXT_KEY_COLUMNS_ORDER] as $columnName) {
+                if (in_array($columnName, $columns)) {
+                    $sortedColumns[] = $columnName;
                 }
-
-                return $sortedColumns;
             }
+
+            return $sortedColumns;
         }
 
         // Else keep classic case

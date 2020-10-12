@@ -26,6 +26,7 @@ use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ExportHelper;
 use Doctrine\ORM\EntityManager;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 use Symfony\Component\DependencyInjection\Container;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\ProductColumnSorterByMapping;
 
 /**
  * Write product data into a csv file by reading JSON mapping
@@ -314,7 +315,12 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             return [];
         }
 
-        return $exportMapping->getMappingAsArray();
+        // Set columns order from mapping
+        $mappingAsArray = $exportMapping->getMappingAsArray();
+        $columnsOrder   = $this->getColumnsOrderByMapping($mappingAsArray);
+        $parameters->set(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER, $columnsOrder);
+
+        return $mappingAsArray;
     }
 
     /**
@@ -479,5 +485,29 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         return $label;
+    }
+
+    /**
+     * Get columns order by $mapping
+     *
+     * @param array $mapping
+     *
+     * @return array
+     */
+    protected function getColumnsOrderByMapping($mapping)
+    {
+        $columnsOrder = [];
+        foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
+            if (
+                isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
+                && !empty($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
+            ) {
+                $columnsOrder[] = $columnMapping[self::MAPPING_COLUMN_NAME_KEY];
+            } else {
+                $columnsOrder[] = $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
+            }
+        }
+
+        return $columnsOrder;
     }
 }
