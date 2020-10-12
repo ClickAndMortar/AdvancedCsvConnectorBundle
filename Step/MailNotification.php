@@ -137,6 +137,7 @@ class MailNotification extends AbstractStep
         if (empty($messagesByType)) {
             return;
         }
+        $notImportedProducts = array_unique($notImportedProducts);
         $contentAsHtml = $this->templating->render(
             'ClickAndMortarAdvancedCsvConnectorBundle::notification.html.twig',
             [

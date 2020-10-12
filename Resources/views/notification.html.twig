@@ -4,7 +4,11 @@
             {{ ('batch_jobs.mail_notification.types.' ~ messageType) | trans }}
             <ul>
                 {% for message in messages %}
-                    <li>{{ message.identifier }} : {{ message.content }}</li>
+                    {% if messageType == 'default' %}
+                        <li>{{ message.identifier }} : {{ message.content|raw }}</li>
+                    {% else %}
+                        <li>{{ message.content|raw }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         {% endfor %}
