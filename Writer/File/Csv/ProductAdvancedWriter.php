@@ -342,7 +342,10 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                 $locale               = $this->defaultLocale;
                 foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
                     $attributeValue = $attributeBaseValue;
-                    if ($attributeKey == $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]) {
+                    if (
+                        isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])
+                        && $attributeKey == $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]
+                    ) {
                         $keepCurrentAttribute = true;
 
                         // Force value if necessary
@@ -429,7 +432,9 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         }
                     }
 
-                    if ($attributeKey != $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]
+                    if (
+                        isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])
+                        && $attributeKey != $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]
                         && !empty($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
                         && $attributeKey == $columnMapping[self::MAPPING_COLUMN_NAME_KEY]
                     ) {
@@ -440,6 +445,17 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                 // Delete original column
                 if (!$keepCurrentAttribute) {
                     unset($item[$attributeKey]);
+                }
+            }
+
+            // Add also additional columns
+            foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
+                if (
+                    !isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])
+                    && isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
+                    && !empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])
+                ) {
+                    $item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]] = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
                 }
             }
         }
