@@ -351,28 +351,6 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                             $item[$attributeKey] = $attributeValue;
                         }
 
-                        // Update value with LUA script if necessary
-                        if (!empty($columnMapping[self::MAPPING_LUA_UPDATER])) {
-                            // Get linked custom entity if necessary
-                            $luaUpdaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
-                            if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
-                                $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
-                            }
-
-                            // Apply LUA script on value
-                            if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
-                                $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
-                                $lua        = new \Lua();
-                                $lua->assign('attributeValue', $attributeValue);
-                                $attributeValue      = $lua->eval(sprintf(
-                                    "%s\n%s",
-                                    ProductAdvancedReader::LUA_SCRIPT_PREFIX,
-                                    $luaUpdater->getScript()
-                                ));
-                                $item[$attributeKey] = $attributeValue;
-                            }
-                        }
-
                         // Set locale if necessary
                         if (!empty($columnMapping[self::MAPPING_LOCALE_KEY])) {
                             $locale = $columnMapping[self::MAPPING_LOCALE_KEY];
@@ -411,6 +389,28 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         // Set default value if necessary
                         if (!empty($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY]) && empty($attributeValue)) {
                             $attributeValue = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
+                        }
+
+                        // Update value with LUA script if necessary
+                        if (!empty($columnMapping[self::MAPPING_LUA_UPDATER])) {
+                            // Get linked custom entity if necessary
+                            $luaUpdaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
+                            if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
+                                $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
+                            }
+
+                            // Apply LUA script on value
+                            if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
+                                $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
+                                $lua        = new \Lua();
+                                $lua->assign('attributeValue', $attributeValue);
+                                $attributeValue      = $lua->eval(sprintf(
+                                    "%s\n%s",
+                                    ProductAdvancedReader::LUA_SCRIPT_PREFIX,
+                                    $luaUpdater->getScript()
+                                ));
+                                $item[$attributeKey] = $attributeValue;
+                            }
                         }
 
                         // Update column name if necessary
