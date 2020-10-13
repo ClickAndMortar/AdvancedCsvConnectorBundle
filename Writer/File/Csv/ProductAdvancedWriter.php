@@ -392,7 +392,10 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         }
 
                         // Update value with LUA script if necessary
-                        if (!empty($columnMapping[self::MAPPING_LUA_UPDATER])) {
+                        if (
+                            !empty($columnMapping[self::MAPPING_LUA_UPDATER])
+                            && $attributeValue !== null
+                        ) {
                             // Get linked custom entity if necessary
                             $luaUpdaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
                             if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
