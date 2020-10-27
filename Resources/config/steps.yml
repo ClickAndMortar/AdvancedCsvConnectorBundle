@@ -45,7 +45,7 @@ services:
             - '@pim_connector.reader.database.product'
             - '@pim_connector.processor.normalization.product'
             - '@candm_advanced_csv_connector.writer.file.csv_advanced_product'
-            - 10
+            - '%pim_job_product_batch_size%'
 
     candm_advanced_csv_connector.step.csv_advanced_product_model.export:
         class: '%pim_connector.step.item_step.class%'
