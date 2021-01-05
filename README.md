@@ -15,9 +15,9 @@ Made with :blue_heart: by C&M
 | v1.4.*  | v2.3.*  |
 | v1.3.*  | v2.1.*  |
 
-## Requirements
+## Optional
 
-You need to install `php-lua` package for usage of LUA scripts to update your values dynamically during import or export.
+You can use `php-lua` package to update your values dynamically during import or export.
 For LUA scripts available functions and libraries have been limited for security reasons. You can use:
 
 * string
@@ -35,6 +35,7 @@ For LUA scripts available functions and libraries have been limited for security
 * tostring
 * type
 
+This package is not a requirement. A classic PHP method can also be used.
 
 ## Installation
 
@@ -98,7 +99,7 @@ Some explanations for table columns:
 
 * `Attribut` (mandatory): Attribute code in your Akeneo project (you can use suffixes like `-fr_FR` or `-EUR` for locales, channels, currencies, ...)
 * `Nom de la colonne` (mandatory): Column name in your file to import
-* `Transformation`: LUA script name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
+* `Transformation`: LUA script name or PHP method name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`).
 * `Valeur par défaut`: Default value for attribute if empty data in file
 * `Identifiant` (mandatory):  Used to defined main identifier attribute of product
 * `Uniquement à la création`: Set attribute value only if product is new (checked with `identifier` attribute)
@@ -118,7 +119,7 @@ Some explanations for table columns:
 * `Attribut` (mandatory): Attribute code in your Akeneo project (you can use suffixes like `-fr_FR` or `-EUR` for locales, channels, currencies, ...)
 * `Nom de la colonne` (mandatory): Column name in your file to export
 * `Valeur forcée`: Force a value (erase given attribute value from Akeneo)
-* `Transformation`: LUA script name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
+* `Transformation`: LUA script name or PHP method name to update value after mapping. Example: Uppercase, lowercase, ... (you can create a new LUA script under `Référenciel / Scripts LUA`)
 * `Utiliser le libellé`: Boolean to get the label associated to the code given (for attribute options or custom entities)
 * `Langue`: Select a specific locale for the label to export (linked to `Utiliser le libellé` column)
 * `Longueur max.`: Integer use to shorten attribute value if necessary

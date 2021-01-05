@@ -393,14 +393,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                     // Update value with LUA script if necessary
                     if (!empty($attributeMapping[self::MAPPING_LUA_UPDATER])) {
                         // Get linked custom entity if necessary
-                        $luaUpdaterCode = $attributeMapping[self::MAPPING_LUA_UPDATER];
-                        if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
-                            $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
+                        $updaterCode = $attributeMapping[self::MAPPING_LUA_UPDATER];
+                        if (!array_key_exists($updaterCode, $this->luaUpdaters)) {
+                            $this->luaUpdaters[$updaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $updaterCode]);
                         }
 
-                        // Apply LUA script on value
-                        if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
-                            $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
+                        // Apply LUA or PHP script on value
+                        if ($this->luaUpdaters[$updaterCode] !== null) {
+                            $luaUpdater = $this->luaUpdaters[$updaterCode];
                             $lua        = new \Lua();
                             $lua->assign('attributeValue', $value);
                             $value = $lua->eval(sprintf(
@@ -408,6 +408,8 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                                 self::LUA_SCRIPT_PREFIX,
                                 $luaUpdater->getScript()
                             ));
+                        } elseif (method_exists($this->importHelper, $updaterCode)) {
+                            $value = $this->importHelper->{$updaterCode}($value);
                         }
                     }
 

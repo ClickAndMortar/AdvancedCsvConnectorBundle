@@ -90,7 +90,8 @@ define([
                             editor: 'autocomplete',
                             editorParams: {
                                 allowEmpty: true,
-                                values: self.luaUpdaters
+                                values: self.luaUpdaters,
+                                freetext: true
                             }
                         },
                         {

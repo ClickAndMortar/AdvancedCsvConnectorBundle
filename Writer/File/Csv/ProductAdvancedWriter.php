@@ -394,20 +394,20 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                             $attributeValue = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
                         }
 
-                        // Update value with LUA script if necessary
+                        // Update value with LUA or PHP script if necessary
                         if (
                             !empty($columnMapping[self::MAPPING_LUA_UPDATER])
                             && $attributeValue !== null
                         ) {
                             // Get linked custom entity if necessary
-                            $luaUpdaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
-                            if (!array_key_exists($luaUpdaterCode, $this->luaUpdaters)) {
-                                $this->luaUpdaters[$luaUpdaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $luaUpdaterCode]);
+                            $updaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
+                            if (!array_key_exists($updaterCode, $this->luaUpdaters)) {
+                                $this->luaUpdaters[$updaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $updaterCode]);
                             }
 
                             // Apply LUA script on value
-                            if ($this->luaUpdaters[$luaUpdaterCode] !== null) {
-                                $luaUpdater = $this->luaUpdaters[$luaUpdaterCode];
+                            if ($this->luaUpdaters[$updaterCode] !== null) {
+                                $luaUpdater = $this->luaUpdaters[$updaterCode];
                                 $lua        = new \Lua();
                                 $lua->assign('attributeValue', $attributeValue);
                                 $attributeValue      = $lua->eval(sprintf(
@@ -415,6 +415,9 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                                     ProductAdvancedReader::LUA_SCRIPT_PREFIX,
                                     $luaUpdater->getScript()
                                 ));
+                                $item[$attributeKey] = $attributeValue;
+                            } elseif (method_exists($this->exportHelper, $updaterCode)) {
+                                $attributeValue      = $this->exportHelper->{$updaterCode}($attributeValue);
                                 $item[$attributeKey] = $attributeValue;
                             }
                         }
