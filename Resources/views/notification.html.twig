@@ -12,13 +12,5 @@
                 {% endfor %}
             </ul>
         {% endfor %}
-        {% if notImportedProducts is not empty %}
-            {{ 'batch_jobs.mail_notification.not_imported_products' | trans }}
-            <ul>
-                {% for notImportedProduct in notImportedProducts %}
-                    <li>{{ notImportedProduct }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
     </body>
 </html>

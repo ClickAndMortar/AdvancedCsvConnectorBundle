@@ -15,7 +15,6 @@ batch_jobs:
         subject: "Import report '%importLabel%' (%date%)"
         types:
             default: Warnings:
-        not_imported_products: Not imported products :
 
 # Custom entity
 importMapping:
