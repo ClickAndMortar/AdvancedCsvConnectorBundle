@@ -374,6 +374,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                     continue;
                 }
                 $attributeValue = $item[$attributeKey];
+                $attributeBaseValue = $attributeValue;
 
                 // Force value if necessary
                 if (!empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])) {
@@ -400,7 +401,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                         $customEntityClassParameter = sprintf('pim_custom_entity.entity.%s.class', $this->attributes[$attributeKey]->getReferenceDataName());
                         if ($this->container->hasParameter($customEntityClassParameter)) {
                             $customEntityClass = $this->container->getParameter($customEntityClassParameter);
-                            $attributeValue    = $this->getReferenceValueFromCode($attributeValue, $locale, $customEntityClass);
+                            $attributeValue    = $this->getReferenceValueFromCode($attributeBaseValue, $locale, $customEntityClass);
                         }
                     }
                 }
