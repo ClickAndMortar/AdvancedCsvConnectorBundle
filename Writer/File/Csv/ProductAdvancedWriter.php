@@ -334,132 +334,118 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      */
     protected function updateItemByMapping(array $item, array $mapping, $localesToExport = [])
     {
+        $newItem = $item;
         if (isset($mapping[self::MAPPING_COLUMNS_KEY])) {
-            $originalItem = $item;
-            foreach ($item as $attributeKey => $attributeValue) {
-                $keepCurrentAttribute = false;
-                $attributeBaseValue   = $attributeValue;
-                $locale               = $this->defaultLocale;
-                foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
-                    $attributeValue = $attributeBaseValue;
-                    if (
-                        isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])
-                        && $attributeKey == $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]
-                    ) {
-                        $keepCurrentAttribute = true;
-
-                        // Force value if necessary
-                        if (!empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])) {
-                            $attributeValue      = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
-                            $item[$attributeKey] = $attributeValue;
-                        }
-
-                        // Set locale if necessary
-                        if (!empty($columnMapping[self::MAPPING_LOCALE_KEY])) {
-                            $locale = $columnMapping[self::MAPPING_LOCALE_KEY];
-                        }
-
-                        // Use Label instead of code in list value cases
-                        if (!empty($columnMapping[self::MAPPING_USE_LABEL_KEY]) && $columnMapping[self::MAPPING_USE_LABEL_KEY] == true) {
-                            $attributeValue      = $this->exportHelper->getValueFromCode($attributeKey, $attributeValue, $locale);
-                            $item[$attributeKey] = $attributeValue;
-
-                            // Load attribute to check if we have custom entity linked
-                            if (!array_key_exists($attributeKey, $this->attributes)) {
-                                $this->attributes[$attributeKey] = $this->attributeRepository->findOneByIdentifier($attributeKey);
-                            }
-                            if (!empty($this->attributes[$attributeKey]) && !empty($this->attributes[$attributeKey]->getReferenceDataName())) {
-                                $customEntityClassParameter = sprintf('pim_custom_entity.entity.%s.class', $this->attributes[$attributeKey]->getReferenceDataName());
-                                if ($this->container->hasParameter($customEntityClassParameter)) {
-                                    $customEntityClass   = $this->container->getParameter($customEntityClassParameter);
-                                    $attributeValue      = $this->getReferenceValueFromCode($attributeBaseValue, $locale, $customEntityClass);
-                                    $item[$attributeKey] = $attributeValue;
-                                }
-                            }
-                        }
-
-                        // Capitalize value if necessary
-                        if (!empty($columnMapping[self::MAPPING_CAPITALIZED_KEY]) && $columnMapping[self::MAPPING_CAPITALIZED_KEY] == true) {
-                            $attributeValue      = strtoupper($item[$attributeKey]);
-                            $item[$attributeKey] = $attributeValue;
-                        }
-
-                        // Shorten value if necessary
-                        if (!empty($columnMapping[self::MAPPING_MAX_LENGTH_KEY]) && strlen($attributeValue) > $columnMapping[self::MAPPING_MAX_LENGTH_KEY]) {
-                            $attributeValue = substr($attributeValue, 0, $columnMapping[self::MAPPING_MAX_LENGTH_KEY]);
-                        }
-
-                        // Set default value if necessary
-                        if (!empty($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY]) && empty($attributeValue)) {
-                            $attributeValue = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
-                        }
-
-                        // Update value with LUA or PHP script if necessary
-                        if (
-                            !empty($columnMapping[self::MAPPING_LUA_UPDATER])
-                            && $attributeValue !== null
-                        ) {
-                            // Get linked custom entity if necessary
-                            $updaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
-                            if (!array_key_exists($updaterCode, $this->luaUpdaters)) {
-                                $this->luaUpdaters[$updaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $updaterCode]);
-                            }
-
-                            // Apply LUA script on value
-                            if ($this->luaUpdaters[$updaterCode] !== null) {
-                                $luaUpdater = $this->luaUpdaters[$updaterCode];
-                                $lua        = new \Lua();
-                                $lua->assign('attributeValue', $attributeValue);
-                                $attributeValue      = $lua->eval(sprintf(
-                                    "%s\n%s",
-                                    ProductAdvancedReader::LUA_SCRIPT_PREFIX,
-                                    $luaUpdater->getScript()
-                                ));
-                                $item[$attributeKey] = $attributeValue;
-                            } elseif (method_exists($this->exportHelper, $updaterCode)) {
-                                $attributeValue      = $this->exportHelper->{$updaterCode}($attributeValue);
-                                $item[$attributeKey] = $attributeValue;
-                            }
-                        }
-
-                        // Update column name if necessary
-                        if (!empty($columnMapping[self::MAPPING_COLUMN_NAME_KEY])) {
-                            $keepCurrentAttribute                                = false;
-                            $item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]] = $attributeValue;
-                        }
-
-                        if (!empty($columnMapping[self::MAPPING_LOCALE_KEY])
-                            && !in_array($columnMapping[self::MAPPING_LOCALE_KEY], $localesToExport)
-                        ) {
-                            unset($item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]]);
-                        }
-                    }
-
-                    if (
-                        isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])
-                        && $attributeKey != $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY]
-                        && !empty($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
-                        && $attributeKey == $columnMapping[self::MAPPING_COLUMN_NAME_KEY]
-                    ) {
-                        $keepCurrentAttribute = true;
-                    }
-                }
-
-                // Delete original column
-                if (!$keepCurrentAttribute) {
-                    unset($item[$attributeKey]);
-                }
-            }
-
-            // Add also additional columns
+            $newItem = [];
+            $locale  = $this->defaultLocale;
             foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
-                if (
-                    !isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])
-                    && isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
-                    && !empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])
-                ) {
-                    $item[$columnMapping[self::MAPPING_COLUMN_NAME_KEY]] = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
+                // Get attribute key
+                if (isset($columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY])) {
+                    $attributeKey = $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
+                } else {
+                    $attributeKey = '';
                 }
+
+                // Get attribute custom key
+                $attributeCustomKey = $attributeKey;
+                if (
+                    isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
+                    && !empty($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
+                ) {
+                    $attributeCustomKey = $columnMapping[self::MAPPING_COLUMN_NAME_KEY];
+                }
+
+                // Check if we have additional column
+                if (empty($attributeKey)) {
+                    if (
+                        isset($columnMapping[self::MAPPING_FORCE_VALUE_KEY])
+                        && !empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])
+                    ) {
+                        $newItem[$attributeCustomKey] = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
+                    } else {
+                        $newItem[$attributeCustomKey] = '';
+                    }
+                    continue;
+                }
+
+                // Check if we have key in item
+                if (!array_key_exists($attributeKey, $item)) {
+                    $newItem[$attributeCustomKey] = '';
+                    continue;
+                }
+                $attributeValue = $item[$attributeKey];
+
+                // Force value if necessary
+                if (!empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])) {
+                    $attributeValue = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
+                }
+
+                // Set locale if necessary
+                if (!empty($columnMapping[self::MAPPING_LOCALE_KEY])) {
+                    $locale = $columnMapping[self::MAPPING_LOCALE_KEY];
+                }
+
+                // Use label instead of code in list value cases
+                if (
+                    !empty($columnMapping[self::MAPPING_USE_LABEL_KEY])
+                    && $columnMapping[self::MAPPING_USE_LABEL_KEY] == true
+                ) {
+                    $attributeValue = $this->exportHelper->getValueFromCode($attributeKey, $attributeValue, $locale);
+
+                    // Load attribute to check if we have custom entity linked
+                    if (!array_key_exists($attributeKey, $this->attributes)) {
+                        $this->attributes[$attributeKey] = $this->attributeRepository->findOneByIdentifier($attributeKey);
+                    }
+                    if (!empty($this->attributes[$attributeKey]) && !empty($this->attributes[$attributeKey]->getReferenceDataName())) {
+                        $customEntityClassParameter = sprintf('pim_custom_entity.entity.%s.class', $this->attributes[$attributeKey]->getReferenceDataName());
+                        if ($this->container->hasParameter($customEntityClassParameter)) {
+                            $customEntityClass = $this->container->getParameter($customEntityClassParameter);
+                            $attributeValue    = $this->getReferenceValueFromCode($attributeValue, $locale, $customEntityClass);
+                        }
+                    }
+                }
+
+                // Capitalize value if necessary
+                if (!empty($columnMapping[self::MAPPING_CAPITALIZED_KEY]) && $columnMapping[self::MAPPING_CAPITALIZED_KEY] == true) {
+                    $attributeValue = strtoupper($attributeValue);
+                }
+
+                // Shorten value if necessary
+                if (!empty($columnMapping[self::MAPPING_MAX_LENGTH_KEY]) && strlen($attributeValue) > $columnMapping[self::MAPPING_MAX_LENGTH_KEY]) {
+                    $attributeValue = substr($attributeValue, 0, $columnMapping[self::MAPPING_MAX_LENGTH_KEY]);
+                }
+
+                // Set default value if necessary
+                if (!empty($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY]) && empty($attributeValue)) {
+                    $attributeValue = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
+                }
+
+                // Update value with LUA or PHP script if necessary
+                if (
+                    !empty($columnMapping[self::MAPPING_LUA_UPDATER])
+                    && $attributeValue !== null
+                ) {
+                    // Get linked custom entity if necessary
+                    $updaterCode = $columnMapping[self::MAPPING_LUA_UPDATER];
+                    if (!array_key_exists($updaterCode, $this->luaUpdaters)) {
+                        $this->luaUpdaters[$updaterCode] = $this->luaUpdaterRepository->findOneBy(['code' => $updaterCode]);
+                    }
+
+                    // Apply LUA script on value
+                    if ($this->luaUpdaters[$updaterCode] !== null) {
+                        $luaUpdater = $this->luaUpdaters[$updaterCode];
+                        $lua        = new \Lua();
+                        $lua->assign('attributeValue', $attributeValue);
+                        $attributeValue = $lua->eval(sprintf(
+                            "%s\n%s",
+                            ProductAdvancedReader::LUA_SCRIPT_PREFIX,
+                            $luaUpdater->getScript()
+                        ));
+                    } elseif (method_exists($this->exportHelper, $updaterCode)) {
+                        $attributeValue = $this->exportHelper->{$updaterCode}($attributeValue);
+                    }
+                }
+                $newItem[$attributeCustomKey] = $attributeValue;
             }
         }
 
@@ -468,10 +454,10 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             !empty($mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
             && method_exists($this->exportHelper, $mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
         ) {
-            $item = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($item);
+            $newItem = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem);
         }
 
-        return $item;
+        return $newItem;
     }
 
     /**
