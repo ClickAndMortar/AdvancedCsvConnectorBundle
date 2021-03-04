@@ -158,6 +158,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $waitingListCsvFilesPaths = [];
 
     /**
+     * CSV file paths to archive
+     *
+     * @var array
+     */
+    protected $toArchiveFilesPaths = [];
+
+    /**
      * Current file path
      *
      * @var string
@@ -228,6 +235,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             $jobFilePath                    = $jobParameters->get('filePath');
             $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath);
             $this->waitingListCsvFilesPaths = $this->filesPaths;
+            $this->toArchiveFilesPaths      = $this->filesPaths;
         }
 
         if (empty($this->mapping)) {
@@ -330,13 +338,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     }
 
     /**
-     * Get all files paths
+     * Get all files paths (used by archiver)
      *
      * @return array
      */
     public function getFilePaths()
     {
-        return $this->filesPaths;
+        return $this->toArchiveFilesPaths;
     }
 
     /**
