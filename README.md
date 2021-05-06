@@ -42,6 +42,21 @@ This package is not a requirement. A classic PHP method can also be used.
 
 ### Download the Bundle
 
+Update your `composer.json` file to use our fork of **Custom entity bundle** in `repositories` node:
+
+```console
+"repositories": [
+        ...
+        {
+            "type": "vcs",
+            "url": "https://github.com/ClickAndMortar/CustomEntityBundle"
+        }
+        ...
+    ],
+```
+
+And add our bundle:
+
 ```console
 $ composer require "clickandmortar/advanced-csv-connector-bundle":"<version-wanted>.*"
 ```
