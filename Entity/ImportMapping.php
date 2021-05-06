@@ -38,7 +38,7 @@ class ImportMapping extends AbstractCustomEntity
      *
      * @var boolean
      */
-    protected $onlyUpdate;
+    protected $onlyUpdate = false;
 
     /**
      * Get label

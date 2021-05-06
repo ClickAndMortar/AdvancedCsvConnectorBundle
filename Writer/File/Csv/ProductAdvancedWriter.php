@@ -2,6 +2,7 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\Csv;
 
+use Akeneo\Pim\Enrichment\Component\Product\Connector\FlatTranslator\FlatTranslatorInterface;
 use Akeneo\Pim\Structure\Component\Model\Attribute;
 use Akeneo\Tool\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Tool\Component\Batch\Job\JobInterface;
@@ -26,7 +27,6 @@ use ClickAndMortar\AdvancedCsvConnectorBundle\Helper\ExportHelper;
 use Doctrine\ORM\EntityManager;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 use Symfony\Component\DependencyInjection\Container;
-use ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\ProductColumnSorterByMapping;
 
 /**
  * Write product data into a csv file by reading JSON mapping
@@ -180,6 +180,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $defaultLocale;
 
     /**
+     * @var FlatTranslatorInterface
+     */
+    protected $flatTranslator;
+
+    /**
      * Loaded attributes
      *
      * @var Attribute[]
@@ -199,6 +204,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      * @param FlatItemBufferFlusher              $flusher
      * @param AttributeRepositoryInterface       $attributeRepository
      * @param FileExporterPathGeneratorInterface $fileExporterPath
+     * @param FlatTranslatorInterface            $flatTranslator
      * @param array                              $mediaAttributeTypes
      * @param String                             $jobParamFilePath
      * @param ExportHelper                       $exportHelper
@@ -214,6 +220,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         FlatItemBufferFlusher $flusher,
         AttributeRepositoryInterface $attributeRepository,
         FileExporterPathGeneratorInterface $fileExporterPath,
+        FlatTranslatorInterface $flatTranslator,
         array $mediaAttributeTypes,
         $jobParamFilePath = self::DEFAULT_FILE_PATH,
         ExportHelper $exportHelper,
@@ -224,7 +231,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         string $defaultLocale
     )
     {
-        parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $mediaAttributeTypes, $jobParamFilePath);
+        parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $flatTranslator, $mediaAttributeTypes, $jobParamFilePath);
         $this->exportHelper            = $exportHelper;
         $this->entityManager           = $entityManager;
         $this->exportMappingRepository = $exportMappingRepository;
@@ -315,12 +322,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             return [];
         }
 
-        // Set columns order from mapping
-        $mappingAsArray = $exportMapping->getMappingAsArray();
-        $columnsOrder   = $this->getColumnsOrderByMapping($mappingAsArray);
-        $parameters->set(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER, $columnsOrder);
-
-        return $mappingAsArray;
+        return $exportMapping->getMappingAsArray();
     }
 
     /**
@@ -373,7 +375,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                     $newItem[$attributeCustomKey] = '';
                     continue;
                 }
-                $attributeValue = $item[$attributeKey];
+                $attributeValue     = $item[$attributeKey];
                 $attributeBaseValue = $attributeValue;
 
                 // Force value if necessary
@@ -494,29 +496,5 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         return $label;
-    }
-
-    /**
-     * Get columns order by $mapping
-     *
-     * @param array $mapping
-     *
-     * @return array
-     */
-    protected function getColumnsOrderByMapping($mapping)
-    {
-        $columnsOrder = [];
-        foreach ($mapping[self::MAPPING_COLUMNS_KEY] as $columnMapping) {
-            if (
-                isset($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
-                && !empty($columnMapping[self::MAPPING_COLUMN_NAME_KEY])
-            ) {
-                $columnsOrder[] = $columnMapping[self::MAPPING_COLUMN_NAME_KEY];
-            } else {
-                $columnsOrder[] = $columnMapping[self::MAPPING_ATTRIBUTE_CODE_KEY];
-            }
-        }
-
-        return $columnsOrder;
     }
 }
