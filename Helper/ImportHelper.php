@@ -127,7 +127,7 @@ class ImportHelper
             $this->encodeToUtf8($currentFilePath);
 
             $linesNumber = $this->getLinesNumberByFilePath($currentFilePath);
-            if ($linesNumber > self::MAX_LINES_PER_FILE) {
+            if ($linesNumber > self::MAX_LINES_PER_FILE + 2) {
                 $hasAtLeastOneSplittedFile = true;
                 $bashCommand               = sprintf(
                     'sh %s/../vendor/clickandmortar/advanced-csv-connector-bundle/Resources/bin/split-csv-files.sh --file_path=%s --lines_per_file=%s --target_folder=%s --prefix=%s',
