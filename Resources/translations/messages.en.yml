@@ -7,6 +7,8 @@ batch_jobs:
                 mapping_attributes_error: Incorrect mapping. Missing "attributes" key.
                 mapping_no_attribute_code: Incorrect mapping. Missing "attributeCode" key.
                 mapping_no_identifier: Incorrect mapping. Missing "identifier" key.
+            warnings:
+                new_product: This product does not exist. It cannot be updated.
     csv_advanced_product_export:
         export:
             errors:

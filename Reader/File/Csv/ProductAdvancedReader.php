@@ -450,7 +450,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             $isNewProduct === true
             && $this->mapping[self::MAPPING_ONLY_UPDATE] === true
         ) {
-            return null;
+            $this->throwInvalidItemException($item, 'batch_jobs.csv_advanced_product_import.import.warnings.new_product');
         }
 
         if (
