@@ -77,6 +77,16 @@ class MailNotification extends AbstractStep
     protected $stepExecution;
 
     /**
+     * Identifier keys for item
+     *
+     * @var string[]
+     */
+    protected $identifierKeys = [
+        'identifier',
+        'code',
+    ];
+
+    /**
      * @param string                   $name
      * @param EventDispatcherInterface $eventDispatcher
      * @param JobRepositoryInterface   $jobRepository
@@ -114,35 +124,35 @@ class MailNotification extends AbstractStep
             return;
         }
 
-        // Check if first step is import step
-        $jobExecution = $this->stepExecution->getJobExecution();
-        /** @var StepExecution $importStepExecution */
-        $importStepExecution = $jobExecution->getStepExecutions()->get(0);
-        if (
-            $importStepExecution === null
-            || $importStepExecution->getStepName() !== self::STEP_NAME_IMPORT
-        ) {
-            return;
-        }
-
         // Generate and send notifications
-        $recipients     = $jobParameters->get(self::JOB_PARAMETERS_EMAIL_RECIPIENTS);
-        $mailLabel      = $this->translator->trans('batch_jobs.mail_notification.subject', [
+        $jobExecution = $this->stepExecution->getJobExecution();
+        $recipients   = $jobParameters->get(self::JOB_PARAMETERS_EMAIL_RECIPIENTS);
+        $mailLabel    = $this->translator->trans('batch_jobs.mail_notification.subject', [
             '%importLabel%' => $jobExecution->getLabel(),
             '%date%'        => $jobExecution->getStartTime()->format('d/m/Y, H:i'),
         ]);
-        $users          = $this->getUsers($recipients);
-        $messagesByType = $this->getMessagesByType($importStepExecution->getWarnings());
-        if (empty($messagesByType)) {
-            return;
+        $users        = $this->getUsers($recipients);
+
+        // Parse warnings from steps
+        $messagesByStepAndType = [];
+        /** @var StepExecution $stepExecution */
+        foreach ($jobExecution->getStepExecutions() as $stepExecution) {
+            $warnings = $stepExecution->getWarnings();
+            if (!$warnings->isEmpty()) {
+                $messagesByStepAndType[$stepExecution->getStepName()] = $this->getMessagesByType($warnings);
+            }
         }
-        $contentAsHtml = $this->templating->render(
-            'ClickAndMortarAdvancedCsvConnectorBundle::notification.html.twig',
-            [
-                'messagesByType' => $messagesByType,
-            ]
-        );
-        $this->notifier->notify($users, $mailLabel, '', $contentAsHtml);
+
+        // Send notification
+        if (!empty($messagesByStepAndType)) {
+            $contentAsHtml = $this->templating->render(
+                'ClickAndMortarAdvancedCsvConnectorBundle::notification.html.twig',
+                [
+                    'messagesByStepAndType' => $messagesByStepAndType,
+                ]
+            );
+            $this->notifier->notify($users, $mailLabel, '', $contentAsHtml);
+        }
     }
 
     /**
@@ -177,11 +187,13 @@ class MailNotification extends AbstractStep
         $messages = [];
         foreach ($warnings as $warning) {
             // Get product identifier
-            $item = $warning->getItem();
-            if (!empty($item['identifier'])) {
-                $identifier = $item['identifier'];
-            } else {
-                $identifier = $item['code'];
+            $identifier = null;
+            $item       = $warning->getItem();
+            foreach ($this->identifierKeys as $identifierKey) {
+                if (isset($item[$identifierKey]) && !empty($item[$identifierKey])) {
+                    $identifier = $item[$identifierKey];
+                    break;
+                }
             }
 
             // Get message type from reason parameters
@@ -201,7 +213,7 @@ class MailNotification extends AbstractStep
             }
             $messages[$messageType][] = [
                 'identifier' => $identifier,
-                'content'    => $warning->getReason(),
+                'content'    => $this->translator->trans($warning->getReason(), $warning->getReasonParameters()),
             ];
         }
 

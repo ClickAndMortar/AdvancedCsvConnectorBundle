@@ -13,8 +13,9 @@ batch_jobs:
                 no_mapping: No mapping found.
     mail_notification:
         subject: "Import report '%importLabel%' (%date%)"
+        step_title: "Step name"
         types:
-            default: Warnings:
+            default: "Warnings:"
 
 # Custom entity
 importMapping:

@@ -15,8 +15,9 @@ batch_jobs:
                 no_mapping: Aucun mapping trouvé. Merci de réessayer.
     mail_notification:
         subject: "Rapport de l'import '%importLabel%' (%date%)"
+        step_title: "Nom de l'étape"
         types:
-            default: Liste des avertissements :
+            default: "Liste des avertissements :"
 
 # Custom entity
 importMapping:

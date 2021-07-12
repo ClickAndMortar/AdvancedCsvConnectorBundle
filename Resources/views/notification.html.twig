@@ -1,16 +1,19 @@
 <html>
     <body>
-        {% for messageType, messages in messagesByType %}
-            {{ ('batch_jobs.mail_notification.types.' ~ messageType) | trans }}
-            <ul>
-                {% for message in messages %}
-                    {% if messageType == 'default' %}
-                        <li>{{ message.identifier }} : {{ message.content|raw }}</li>
-                    {% else %}
-                        <li>{{ message.content|raw }}</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+        {% for stepName, messagesByType in messagesByStepAndType %}
+            <h2>{{ ('batch_jobs.mail_notification.step_title') | trans }} : {{ stepName }}</h2>
+            {% for messageType, messages in messagesByType %}
+                {{ ('batch_jobs.mail_notification.types.' ~ messageType) | trans }}
+                <ul>
+                    {% for message in messages %}
+                        {% if messageType == 'default' and message.identifier is not null %}
+                            <li>{{ message.identifier }} : {{ message.content|raw }}</li>
+                        {% else %}
+                            <li>{{ message.content|raw }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endfor %}
         {% endfor %}
     </body>
 </html>
