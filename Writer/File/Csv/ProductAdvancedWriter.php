@@ -238,19 +238,21 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      */
     public function write(array $items)
     {
-        $parameters       = $this->stepExecution->getJobParameters();
-        $mapping          = $this->getMappingFromJobParameters($parameters);
-        $converterOptions = $this->getConverterOptions($parameters);
-        $flatItems        = [];
-        $directory        = $this->stepExecution->getJobExecution()->getExecutionContext()
-                                                ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
-        $localesToExport  = $parameters->get('filters')['structure']['locales'];
+        $parameters            = $this->stepExecution->getJobParameters();
+        $mapping               = $this->getMappingFromJobParameters($parameters);
+        $columnsOrderByMapping = $this->getColumnsOrderByMapping($mapping);
+        $converterOptions      = $this->getConverterOptions($parameters);
+        $flatItems             = [];
+        $directory             = $this->stepExecution->getJobExecution()->getExecutionContext()
+                                                     ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
+        $localesToExport       = $parameters->get('filters')['structure']['locales'];
         foreach ($items as $item) {
             if ($parameters->has('with_media') && $parameters->get('with_media')) {
                 $item = $this->resolveMediaPaths($item, $directory);
             }
-            $flatItem    = $this->arrayConverter->convert($item, $converterOptions);
-            $flatItem    = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
+            $flatItem = $this->arrayConverter->convert($item, $converterOptions);
+            $flatItem = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
+            $this->updateColumnsOrder($columnsOrderByMapping, $flatItem, $parameters);
             $flatItems[] = $flatItem;
         }
         $this->flatRowBuffer->write($flatItems, ['withHeader' => $parameters->get('withHeader')]);
@@ -315,12 +317,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             return [];
         }
 
-        // Set columns order from mapping
-        $mappingAsArray = $exportMapping->getMappingAsArray();
-        $columnsOrder   = $this->getColumnsOrderByMapping($mappingAsArray);
-        $parameters->set(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER, $columnsOrder);
-
-        return $mappingAsArray;
+        return $exportMapping->getMappingAsArray();
     }
 
     /**
@@ -373,7 +370,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                     $newItem[$attributeCustomKey] = '';
                     continue;
                 }
-                $attributeValue = $item[$attributeKey];
+                $attributeValue     = $item[$attributeKey];
                 $attributeBaseValue = $attributeValue;
 
                 // Force value if necessary
@@ -518,5 +515,31 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         return $columnsOrder;
+    }
+
+    /**
+     * Update columns order to $jobParameters
+     *
+     * @param array         $columnsOrderByMapping
+     * @param array         $flatItem
+     * @param JobParameters $parameters
+     *
+     * @return void
+     */
+    protected function updateColumnsOrder($columnsOrderByMapping, $flatItem, JobParameters $parameters)
+    {
+        // Get current columns order
+        $currentColumnsOrder = $columnsOrderByMapping;
+        if ($parameters->has(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER)) {
+            $currentColumnsOrder = $parameters->get(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER);
+        }
+
+        // Update order by current $flatItem if necessary
+        $itemHeaders = array_keys($flatItem);
+        $headersDiff = array_diff($itemHeaders, $currentColumnsOrder);
+        if (!empty($headersDiff)) {
+            $columnsOrder = array_merge($currentColumnsOrder, $headersDiff);
+            $parameters->set(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER, $columnsOrder);
+        }
     }
 }
