@@ -8,7 +8,7 @@ batch_jobs:
                 mapping_no_attribute_code: Le mapping est incorrect. La clé "attributeCode" est manquante pour un attribut.
                 mapping_no_identifier: Le mapping est incorrect. la clé "identifier" est manquante sur au moins un attribut.
             warnings:
-                new_product: Ce produit n'existe pas, il ne peut pas être mis à jour.
+                new_product: Le produit "%identifier%" n'existe pas, il ne peut pas être mis à jour.
     csv_advanced_product_export:
         export:
             errors:
