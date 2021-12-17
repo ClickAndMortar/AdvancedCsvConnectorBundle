@@ -354,10 +354,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
                 // Check if we have additional column
                 if (empty($attributeKey)) {
-                    if (
-                        isset($columnMapping[self::MAPPING_FORCE_VALUE_KEY])
-                        && !empty($columnMapping[self::MAPPING_FORCE_VALUE_KEY])
-                    ) {
+                    if (isset($columnMapping[self::MAPPING_FORCE_VALUE_KEY])) {
                         $newItem[$attributeCustomKey] = $columnMapping[self::MAPPING_FORCE_VALUE_KEY];
                     } else {
                         $newItem[$attributeCustomKey] = '';
