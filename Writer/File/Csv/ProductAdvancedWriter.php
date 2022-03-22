@@ -364,7 +364,14 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
                 // Check if we have key in item
                 if (!array_key_exists($attributeKey, $item)) {
-                    $newItem[$attributeCustomKey] = '';
+                    if (
+                        isset($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                        && $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY] != ''
+                    ) {
+                        $newItem[$attributeCustomKey] = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
+                    } else {
+                        $newItem[$attributeCustomKey] = '';
+                    }
                     continue;
                 }
                 $attributeValue     = $item[$attributeKey];
@@ -411,7 +418,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                 }
 
                 // Set default value if necessary
-                if (!empty($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY]) && empty($attributeValue)) {
+                if (
+                    isset($columnMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                    && $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY] != ''
+                    && empty($attributeValue)
+                ) {
                     $attributeValue = $columnMapping[self::MAPPING_DEFAULT_VALUE_KEY];
                 }
 
