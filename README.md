@@ -6,15 +6,16 @@ Made with :blue_heart: by C&M
 
 ## Versions
 
-| **Bundle version**  | **Akeneo version** |
-| ------------- | ------------- |
-| v5.0.*  | v5.0.* |
-| v1.8.*  | v4.0.*  |
-| v1.7.*  | v3.2.* (EE)  |
-| v1.6.*  | v3.1.* / v3.2.*  |
-| v1.5.*  | v3.1.* / v3.2.*  |
-| v1.4.*  | v2.3.*  |
-| v1.3.*  | v2.1.*  |
+| **Bundle version** | **Akeneo version** |
+|--------------------|--------------------|
+| v6.0.*             | v6.0.*             |
+| v5.0.*             | v5.0.*             |
+| v1.8.*             | v4.0.*             |
+| v1.7.*             | v3.2.* (EE)        |
+| v1.6.*             | v3.1.* / v3.2.*    |
+| v1.5.*             | v3.1.* / v3.2.*    |
+| v1.4.*             | v2.3.*             |
+| v1.3.*             | v2.1.*             |
 
 ## Optional
 
@@ -64,7 +65,7 @@ $ composer require "clickandmortar/advanced-csv-connector-bundle":"<version-want
 Example for last version:
 
 ```console
-$ composer require "clickandmortar/advanced-csv-connector-bundle":"5.0.*"
+$ composer require "clickandmortar/advanced-csv-connector-bundle":"6.0.*"
 ```
 
 
