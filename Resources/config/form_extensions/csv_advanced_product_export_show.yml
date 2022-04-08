@@ -18,7 +18,7 @@ extensions:
             logout: pim_menu.user.logout
 
     pim-job-instance-csv-advanced-product-export-show-breadcrumbs:
-        module: pim/common/breadcrumbs
+        module: pim/job/common/breadcrumb/breadcrumb
         parent: pim-job-instance-csv-advanced-product-export-show
         targetZone: breadcrumbs
         config:
@@ -43,10 +43,11 @@ extensions:
         position: 100
 
     pim-job-instance-csv-advanced-product-export-show-edit:
-        module: pim/common/redirect
+        module: pim/job/common/edit-button
         parent: pim-job-instance-csv-advanced-product-export-show
         targetZone: buttons
         position: 100
+        aclResourceId: pim_importexport_export_profile_edit
         config:
             label: pim_common.edit
             route: pim_importexport_export_profile_edit
@@ -55,19 +56,8 @@ extensions:
                 path: code
                 name: code
 
-    pim-job-instance-csv-advanced-product-export-show-subsection:
-        module: pim/form/common/subsection
+    pim-job-instance-csv-advanced-product-export-show-last-executions:
+        module: akeneojob/controller/job-instance
         parent: pim-job-instance-csv-advanced-product-export-show
+        position: 100
         targetZone: content
-        config:
-            title: pim_import_export.form.job_instance.subsection.last_executions
-
-    pim-job-instance-csv-advanced-product-export-show-grid:
-        module: pim/job/common/grid
-        parent: pim-job-instance-csv-advanced-product-export-show-subsection
-        position: 1000
-        targetZone: content
-        config:
-            alias: last-export-executions-grid
-            metadata:
-                jobType: export
