@@ -77,7 +77,7 @@ class ExportHelper
             $filePath,
             $tempFilePath
         );
-        $encodeFileProcess = new Process($encodeFileCommand);
+        $encodeFileProcess = new Process([$encodeFileCommand]);
         $encodeFileProcess->mustRun();
 
         if (file_exists($tempFilePath)) {

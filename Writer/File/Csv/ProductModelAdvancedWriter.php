@@ -14,7 +14,7 @@ class ProductModelAdvancedWriter extends ProductAdvancedWriter
     /**
      * {@inheritdoc}
      */
-    protected function getItemIdentifier(array $productModel)
+    protected function getItemIdentifier(array $productModel): string
     {
         return $productModel['code'];
     }

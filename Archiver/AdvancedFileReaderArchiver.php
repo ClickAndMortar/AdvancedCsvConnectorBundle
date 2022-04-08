@@ -20,7 +20,7 @@ class AdvancedFileReaderArchiver extends FileReaderArchiver
      *
      * @param JobExecution $jobExecution
      */
-    public function archive(JobExecution $jobExecution)
+    public function archive(JobExecution $jobExecution): void
     {
         $job = $this->jobRegistry->get($jobExecution->getJobInstance()->getJobName());
         foreach ($job->getSteps() as $step) {
@@ -32,13 +32,21 @@ class AdvancedFileReaderArchiver extends FileReaderArchiver
                 $filePaths = $reader->getFilePaths();
                 foreach ($filePaths as $filePath) {
                     if (file_exists($filePath)) {
-                        $key = strtr(
+                        $archivePath = strtr(
                             $this->getRelativeArchivePath($jobExecution),
                             [
                                 '%filename%' => basename($filePath),
                             ]
                         );
-                        $this->filesystem->put($key, file_get_contents($filePath));
+
+                        if (is_readable($filePath)) {
+                            $fileResource = fopen($filePath, 'r');
+                            $this->filesystem->writeStream($archivePath, $fileResource);
+
+                            if (is_resource($fileResource)) {
+                                fclose($fileResource);
+                            }
+                        }
                         unlink($filePath);
                     }
                 }
@@ -53,7 +61,7 @@ class AdvancedFileReaderArchiver extends FileReaderArchiver
      *
      * @return bool
      */
-    public function supports(JobExecution $jobExecution)
+    public function supports(JobExecution $jobExecution): bool
     {
         $job = $this->jobRegistry->get($jobExecution->getJobInstance()->getJobName());
         foreach ($job->getSteps() as $step) {

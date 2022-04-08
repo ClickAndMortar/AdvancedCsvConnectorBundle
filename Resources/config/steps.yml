@@ -65,5 +65,5 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             - '@pim_notification.email.email_notifier'
-            - '@templating'
+            - '@twig'
             - '@translator'

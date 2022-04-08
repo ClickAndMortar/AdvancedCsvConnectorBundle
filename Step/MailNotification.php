@@ -10,8 +10,8 @@ use Akeneo\Platform\Bundle\NotificationBundle\Email\MailNotifier;
 use Akeneo\UserManagement\Component\Model\User;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Akeneo\Platform\Bundle\UIBundle\Translator\TranslatorDecorator;
+use Twig\Environment;
 
 /**
  * Send email notification after import
@@ -62,12 +62,12 @@ class MailNotification extends AbstractStep
     protected $notifier;
 
     /**
-     * @var EngineInterface $templating
+     * @var Environment $templating
      */
     protected $templating;
 
     /**
-     * @var TranslatorInterface $translator
+     * @var TranslatorDecorator $translator
      */
     protected $translator;
 
@@ -91,16 +91,16 @@ class MailNotification extends AbstractStep
      * @param EventDispatcherInterface $eventDispatcher
      * @param JobRepositoryInterface   $jobRepository
      * @param MailNotifier             $notifier
-     * @param EngineInterface          $templating
-     * @param TranslatorInterface      $translator
+     * @param Environment              $templating
+     * @param TranslatorDecorator      $translator
      */
     public function __construct(
         $name,
         EventDispatcherInterface $eventDispatcher,
         JobRepositoryInterface $jobRepository,
         MailNotifier $notifier,
-        EngineInterface $templating,
-        TranslatorInterface $translator
+        Environment $templating,
+        TranslatorDecorator $translator
     )
     {
         parent::__construct($name, $eventDispatcher, $jobRepository);
@@ -146,7 +146,7 @@ class MailNotification extends AbstractStep
         // Send notification
         if (!empty($messagesByStepAndType)) {
             $contentAsHtml = $this->templating->render(
-                'ClickAndMortarAdvancedCsvConnectorBundle::notification.html.twig',
+                '@ClickAndMortarAdvancedCsvConnector/notification.html.twig',
                 [
                     'messagesByStepAndType' => $messagesByStepAndType,
                 ]

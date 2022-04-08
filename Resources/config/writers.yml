@@ -12,6 +12,8 @@ services:
             - '@pim_catalog.repository.attribute'
             - '@pim_connector.writer.file.media_exporter_path_generator'
             - '@pim_enrich.connector.flat_translators.product_translator'
+            - '@akeneo_file_storage.repository.file_info'
+            - '@akeneo_file_storage.file_storage.filesystem_provider'
             - ['pim_catalog_file', 'pim_catalog_image']
             - 'filePath'
             - '@candm_advanced_csv_connector.helper.export'
@@ -30,6 +32,8 @@ services:
             - '@pim_catalog.repository.attribute'
             - '@pim_connector.writer.file.media_exporter_path_generator'
             - '@pim_enrich.connector.flat_translators.product_translator'
+            - '@akeneo_file_storage.repository.file_info'
+            - '@akeneo_file_storage.file_storage.filesystem_provider'
             - ['pim_catalog_file', 'pim_catalog_image']
             - 'filePath'
             - '@candm_advanced_csv_connector.helper.export'

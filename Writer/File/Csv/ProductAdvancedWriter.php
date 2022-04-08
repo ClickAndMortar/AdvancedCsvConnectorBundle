@@ -9,6 +9,8 @@ use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\Buffer\BufferFactory;
+use Akeneo\Tool\Component\FileStorage\FilesystemProvider;
+use Akeneo\Tool\Component\FileStorage\Repository\FileInfoRepositoryInterface;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ExportMappingRepository;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\LuaUpdaterRepository;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping;
@@ -185,6 +187,16 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $flatTranslator;
 
     /**
+     * @var FileInfoRepositoryInterface
+     */
+    protected $fileInfoRepository;
+
+    /**
+     * @var FilesystemProvider
+     */
+    protected $filesystemProvider;
+
+    /**
      * Loaded attributes
      *
      * @var Attribute[]
@@ -221,6 +233,8 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         AttributeRepositoryInterface $attributeRepository,
         FileExporterPathGeneratorInterface $fileExporterPath,
         FlatTranslatorInterface $flatTranslator,
+        FileInfoRepositoryInterface $fileInfoRepository,
+        FilesystemProvider $filesystemProvider,
         array $mediaAttributeTypes,
         $jobParamFilePath = self::DEFAULT_FILE_PATH,
         ExportHelper $exportHelper,
@@ -231,7 +245,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         string $defaultLocale
     )
     {
-        parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $flatTranslator, $mediaAttributeTypes, $jobParamFilePath);
+        parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $flatTranslator, $fileInfoRepository, $filesystemProvider, $mediaAttributeTypes, $jobParamFilePath);
         $this->exportHelper            = $exportHelper;
         $this->entityManager           = $entityManager;
         $this->exportMappingRepository = $exportMappingRepository;
@@ -243,7 +257,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     /**
      * {@inheritdoc}
      */
-    public function write(array $items)
+    public function write(array $items): void
     {
         $parameters       = $this->stepExecution->getJobParameters();
         $mapping          = $this->getMappingFromJobParameters($parameters);
@@ -268,7 +282,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      *
      * @return void
      */
-    public function flush()
+    public function flush(): void
     {
         parent::flush();
 
@@ -284,7 +298,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     /**
      * {@inheritdoc}
      */
-    protected function getWriterConfiguration()
+    protected function getWriterConfiguration(): array
     {
         $parameters = $this->stepExecution->getJobParameters();
 
@@ -299,7 +313,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     /**
      * {@inheritdoc}
      */
-    protected function getItemIdentifier(array $product)
+    protected function getItemIdentifier(array $product): string
     {
         return $product['identifier'];
     }

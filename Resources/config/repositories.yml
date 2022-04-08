@@ -7,21 +7,21 @@ parameters:
 services:
     candm_advanced_csv_connector.repository.import_mapping:
         class: '%candm_advanced_csv_connector.repository.import_mapping.class%'
-        factory: 'doctrine.orm.entity_manager:getRepository'
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
         arguments: ['%pim_custom_entity.entity.importMapping.class%']
         tags:
             - { name: 'pim_repository' }
 
     candm_advanced_csv_connector.repository.export_mapping:
         class: '%candm_advanced_csv_connector.repository.export_mapping.class%'
-        factory: 'doctrine.orm.entity_manager:getRepository'
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
         arguments: ['%pim_custom_entity.entity.exportMapping.class%']
         tags:
         - { name: 'pim_repository' }
 
     candm_advanced_csv_connector.repository.lua_updater:
         class: '%candm_advanced_csv_connector.repository.lua_updater.class%'
-        factory: 'doctrine.orm.entity_manager:getRepository'
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
         arguments: ['%pim_custom_entity.entity.luaUpdater.class%']
         tags:
         - { name: 'pim_repository' }

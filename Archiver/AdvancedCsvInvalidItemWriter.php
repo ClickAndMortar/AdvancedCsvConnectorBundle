@@ -20,7 +20,7 @@ class AdvancedCsvInvalidItemWriter extends CsvInvalidItemWriter
      *
      * Re-parse imported files and write into a new one the invalid lines.
      */
-    public function archive(JobExecution $jobExecution)
+    public function archive(JobExecution $jobExecution): void
     {
         if (empty($this->collector->getInvalidItems())) {
             return;

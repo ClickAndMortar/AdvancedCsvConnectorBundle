@@ -137,7 +137,7 @@ class ImportHelper
                     $directoryPath,
                     $prefixFilename . $index . '_'
                 );
-                $process                   = new Process($bashCommand);
+                $process                   = new Process([$bashCommand]);
                 $process->mustRun();
             }
         }
@@ -201,12 +201,11 @@ class ImportHelper
      * Download visual from URL and return path
      *
      * @param string $attributeValue
-     * @param string $attributeCode
      *
      * @return null|string
      * @throws Exception
      */
-    public function downloadVisualFromUrl($attributeValue, $attributeCode)
+    public function downloadVisualFromUrl($attributeValue)
     {
         $visualPath = null;
         if (empty($attributeValue)) {
@@ -225,9 +224,9 @@ class ImportHelper
 
             if (in_array($responseCode, $this->downloadVisualValidCodes)) {
                 // Check for upload directory
-                $uploadDirectory = sprintf('%s/../app/uploads/downloaded_visuals', $this->kernelRootDirectory);
+                $uploadDirectory = sprintf('%s/var/file_storage/downloaded_visuals', $this->kernelRootDirectory);
                 if (!is_dir($uploadDirectory)) {
-                    if (!mkdir($uploadDirectory, 664, true)) {
+                    if (!mkdir($uploadDirectory, 0774, true)) {
                         return $visualPath;
                     }
                 }
@@ -264,7 +263,7 @@ class ImportHelper
     {
         try {
             $checkEncodingCommand = sprintf('file -i %s | cut -f 2 -d";" | cut -f 2 -d=', $filePath);
-            $checkEncodingProcess = new Process($checkEncodingCommand);
+            $checkEncodingProcess = new Process([$checkEncodingCommand]);
             $checkEncodingProcess->mustRun();
             $currentEncoding = $checkEncodingProcess->getOutput();
             $currentEncoding = str_replace("\n", "", $currentEncoding);
@@ -278,7 +277,7 @@ class ImportHelper
                     $filePath,
                     $newFilePath
                 );
-                $encodeFileProcess = new Process($encodeFileCommand);
+                $encodeFileProcess = new Process([$encodeFileCommand]);
                 $encodeFileProcess->mustRun();
 
                 // Replace bad encoding file with correct one
