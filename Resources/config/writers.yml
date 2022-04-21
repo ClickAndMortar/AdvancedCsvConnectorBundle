@@ -15,13 +15,13 @@ services:
             - '@akeneo_file_storage.repository.file_info'
             - '@akeneo_file_storage.file_storage.filesystem_provider'
             - ['pim_catalog_file', 'pim_catalog_image']
-            - 'filePath'
             - '@candm_advanced_csv_connector.helper.export'
             - '@doctrine.orm.entity_manager'
             - '@candm_advanced_csv_connector.repository.export_mapping'
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
             - 'fr_FR'
+            - 'filePath'
 
     candm_advanced_csv_connector.writer.file.csv_advanced_product_model:
         class: '%candm_advanced_csv_connector.writer.file.csv_advanced_product_model.class%'
@@ -35,10 +35,10 @@ services:
             - '@akeneo_file_storage.repository.file_info'
             - '@akeneo_file_storage.file_storage.filesystem_provider'
             - ['pim_catalog_file', 'pim_catalog_image']
-            - 'filePath'
             - '@candm_advanced_csv_connector.helper.export'
             - '@doctrine.orm.entity_manager'
             - '@candm_advanced_csv_connector.repository.export_mapping'
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
             - 'fr_FR'
+            - 'filePath'

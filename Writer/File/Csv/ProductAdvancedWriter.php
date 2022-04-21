@@ -218,13 +218,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      * @param FileExporterPathGeneratorInterface $fileExporterPath
      * @param FlatTranslatorInterface            $flatTranslator
      * @param array                              $mediaAttributeTypes
-     * @param String                             $jobParamFilePath
      * @param ExportHelper                       $exportHelper
      * @param EntityManager                      $entityManager
      * @param CustomEntityRepository             $exportMappingRepository
      * @param Container                          $container
      * @param CustomEntityRepository             $luaUpdaterRepository
      * @param string                             $defaultLocale
+     * @param String                             $jobParamFilePath
      */
     public function __construct(
         ArrayConverterInterface $arrayConverter,
@@ -236,13 +236,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         FileInfoRepositoryInterface $fileInfoRepository,
         FilesystemProvider $filesystemProvider,
         array $mediaAttributeTypes,
-        $jobParamFilePath = self::DEFAULT_FILE_PATH,
         ExportHelper $exportHelper,
         EntityManager $entityManager,
         CustomEntityRepository $exportMappingRepository,
         Container $container,
         CustomEntityRepository $luaUpdaterRepository,
-        string $defaultLocale
+        string $defaultLocale,
+        $jobParamFilePath = self::DEFAULT_FILE_PATH,
     )
     {
         parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $flatTranslator, $fileInfoRepository, $filesystemProvider, $mediaAttributeTypes, $jobParamFilePath);
