@@ -198,21 +198,21 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param FileIteratorFactory     $fileIteratorFactory
      * @param ArrayConverterInterface $converter
      * @param MediaPathTransformer    $mediaPathTransformer
-     * @param array                   $options
      * @param ImportHelper            $importHelper
      * @param EntityRepository        $productRepository
      * @param ImportMappingRepository $importMappingRepository
      * @param ImportMappingRepository $luaUpdaterRepository
+     * @param array                   $options
      */
     public function __construct(
         FileIteratorFactory $fileIteratorFactory,
         ArrayConverterInterface $converter,
         MediaPathTransformer $mediaPathTransformer,
-        array $options = [],
         ImportHelper $importHelper,
         EntityRepository $productRepository,
         CustomEntityRepository $importMappingRepository,
-        CustomEntityRepository $luaUpdaterRepository
+        CustomEntityRepository $luaUpdaterRepository,
+        array $options = []
     )
     {
         parent::__construct($fileIteratorFactory, $converter, $mediaPathTransformer, $options);
