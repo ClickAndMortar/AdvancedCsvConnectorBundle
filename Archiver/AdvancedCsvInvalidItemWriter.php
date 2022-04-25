@@ -3,9 +3,11 @@
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Archiver;
 
 use Akeneo\Tool\Component\Batch\Item\InvalidItemInterface;
+use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Model\JobExecution;
+use Akeneo\Tool\Component\Connector\Archiver\AbstractInvalidItemWriter;
+use Akeneo\Tool\Component\Connector\Reader\File\FileIteratorInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Akeneo\Tool\Component\Connector\Archiver\CsvInvalidItemWriter;
 
 /**
  * Extends default CsvInvalidItemWriter to disable creation of CSV file with errors for CSV import with mapping
@@ -13,8 +15,16 @@ use Akeneo\Tool\Component\Connector\Archiver\CsvInvalidItemWriter;
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package ClickAndMortar\AdvancedCsvConnectorBundle\Archiver
  */
-class AdvancedCsvInvalidItemWriter extends CsvInvalidItemWriter
+class AdvancedCsvInvalidItemWriter extends AbstractInvalidItemWriter
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'invalid_advanced_csv';
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -75,5 +85,33 @@ class AdvancedCsvInvalidItemWriter extends CsvInvalidItemWriter
         }
 
         $this->writer->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilename(): string
+    {
+        return 'invalid_items.csv';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getInputFileIterator(JobParameters $jobParameters): FileIteratorInterface
+    {
+        $filePath     = $jobParameters->get('filePath');
+        $delimiter    = $jobParameters->get('delimiter');
+        $enclosure    = $jobParameters->get('enclosure');
+        $fileIterator = $this->fileIteratorFactory->create($filePath, [
+            'reader_options' => [
+                'fieldDelimiter' => $delimiter,
+                'fieldEnclosure' => $enclosure,
+            ],
+        ]);
+        $fileIterator->rewind();
+        $fileIterator->next();
+
+        return $fileIterator;
     }
 }

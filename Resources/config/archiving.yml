@@ -1,3 +1,16 @@
 parameters:
     pim_connector.archiver.file_reader_archiver.class: ClickAndMortar\AdvancedCsvConnectorBundle\Archiver\AdvancedFileReaderArchiver
-    pim_connector.archiver.invalid_item_csv_writer.class: ClickAndMortar\AdvancedCsvConnectorBundle\Archiver\AdvancedCsvInvalidItemWriter
+    candm_advanced_csv_connector.archiver.invalid_item_csv_writer.class: ClickAndMortar\AdvancedCsvConnectorBundle\Archiver\AdvancedCsvInvalidItemWriter
+
+services:
+    candm_advanced_csv_connector.archiver.invalid_item_csv_writer:
+        class: '%candm_advanced_csv_connector.archiver.invalid_item_csv_writer.class%'
+        arguments:
+            - '@pim_connector.event_listener.invalid_items_collector'
+            - '@pim_connector.writer.file.invalid_items_csv'
+            - '@pim_connector.reader.file.csv_iterator_factory'
+            - '@oneup_flysystem.archivist_filesystem'
+            - '@pim_connector.job.job_parameters.default_values_provider.product_csv_export'
+            - 'advanced_csv'
+        tags:
+            - { name: pim_connector.archiver }
