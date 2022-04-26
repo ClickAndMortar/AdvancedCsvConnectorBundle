@@ -18,7 +18,7 @@ class ProductColumnSorterByMapping extends ProductColumnSorter
      * @var string
      */
     const CONTEXT_KEY_COLUMNS_ORDER = 'columnsOrder';
-    
+
     /**
      * {@inheritdoc}
      */
@@ -31,6 +31,12 @@ class ProductColumnSorterByMapping extends ProductColumnSorter
                 if (in_array($columnName, $columns)) {
                     $sortedColumns[] = $columnName;
                 }
+            }
+
+            // Add other columns
+            $otherColumns = array_diff($columns, $sortedColumns);
+            if (!empty($otherColumns)) {
+                $sortedColumns = array_merge($sortedColumns, $otherColumns);
             }
 
             return $sortedColumns;
