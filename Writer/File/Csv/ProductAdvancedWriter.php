@@ -244,7 +244,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $converterOptions      = $this->getConverterOptions($parameters);
         $flatItems             = [];
         $directory             = $this->stepExecution->getJobExecution()->getExecutionContext()
-                                                     ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
+            ->get(JobInterface::WORKING_DIRECTORY_PARAMETER);
         $localesToExport       = $parameters->get('filters')['structure']['locales'];
         foreach ($items as $item) {
             if ($parameters->has('with_media') && $parameters->get('with_media')) {
@@ -543,11 +543,9 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         // Update order by current $flatItem if necessary
-        $itemHeaders = array_keys($flatItem);
-        $headersDiff = array_diff($itemHeaders, $currentColumnsOrder);
-        if (!empty($headersDiff)) {
-            $columnsOrder = array_merge($currentColumnsOrder, $headersDiff);
-            $parameters->set(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER, $columnsOrder);
-        }
+        $itemHeaders  = array_keys($flatItem);
+        $headersDiff  = array_diff($itemHeaders, $currentColumnsOrder);
+        $columnsOrder = array_merge($currentColumnsOrder, $headersDiff);
+        $parameters->set(ProductColumnSorterByMapping::CONTEXT_KEY_COLUMNS_ORDER, $columnsOrder);
     }
 }
