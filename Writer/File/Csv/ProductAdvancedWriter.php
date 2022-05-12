@@ -448,7 +448,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
                             $luaUpdater->getScript()
                         ));
                     } elseif (method_exists($this->exportHelper, $updaterCode)) {
-                        $attributeValue = $this->exportHelper->{$updaterCode}($attributeValue);
+                        $attributeValue = $this->exportHelper->{$updaterCode}($attributeValue, $item);
                     }
                 }
                 $newItem[$attributeCustomKey] = $attributeValue;
@@ -460,7 +460,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             !empty($mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
             && method_exists($this->exportHelper, $mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
         ) {
-            $newItem = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem);
+            $newItem = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $item);
         }
 
         return $newItem;
