@@ -228,6 +228,16 @@ extensions:
             readOnly: false
             label: batch_jobs.csv_advanced_product_import.fields.mapping.label
 
+    pim-job-instance-csv-advanced-product-import-edit-properties-groups-from-encoding:
+        module: pim/job/common/edit/field/text
+        parent: pim-job-instance-csv-advanced-product-import-edit-global
+        position: 260
+        targetZone: properties
+        config:
+            fieldCode: configuration.fromEncoding
+            readOnly: false
+            label: batch_jobs.csv_advanced_product_import.fields.from_encoding.label
+
     pim-job-instance-csv-advanced-product-import-edit-label:
         module: pim/job/common/edit/label
         parent: pim-job-instance-csv-advanced-product-import-edit

@@ -111,10 +111,11 @@ class ImportHelper
      * Split CSV files if necessary and return paths
      *
      * @param string $filePath
+     * @param string $fromEncoding
      *
      * @return array
      */
-    public function splitFiles($filePath)
+    public function splitFiles($filePath, $fromEncoding = '')
     {
         $filePaths                 = [];
         $hasAtLeastOneSplittedFile = false;
@@ -132,7 +133,7 @@ class ImportHelper
             }
 
             // Encode file if necessary
-            $this->encodeToUtf8($currentFilePath);
+            $this->encodeToUtf8($currentFilePath, $fromEncoding);
 
             $linesNumber = $this->getLinesNumberByFilePath($currentFilePath);
             if ($linesNumber > self::MAX_LINES_PER_FILE) {
@@ -289,17 +290,22 @@ class ImportHelper
      * Check and encode file to UTF-8 if necessary
      *
      * @param string $filePath
+     * @param string $fromEncoding
      *
      * @return void
      */
-    protected function encodeToUtf8($filePath)
+    protected function encodeToUtf8($filePath, $fromEncoding = '')
     {
         try {
-            $checkEncodingCommand = sprintf('file -i %s | cut -f 2 -d";" | cut -f 2 -d=', $filePath);
-            $checkEncodingProcess = new Process($checkEncodingCommand);
-            $checkEncodingProcess->mustRun();
-            $currentEncoding = $checkEncodingProcess->getOutput();
-            $currentEncoding = str_replace("\n", "", $currentEncoding);
+            if (empty($fromEncoding)) {
+                $checkEncodingCommand = sprintf('file -i %s | cut -f 2 -d";" | cut -f 2 -d=', $filePath);
+                $checkEncodingProcess = new Process($checkEncodingCommand);
+                $checkEncodingProcess->mustRun();
+                $currentEncoding = $checkEncodingProcess->getOutput();
+                $currentEncoding = str_replace("\n", "", $currentEncoding);
+            } else {
+                $currentEncoding = $fromEncoding;
+            }
 
             // Convert to UTF-8 if necessary with iconv linx command
             if (strpos($currentEncoding, self::FILE_ENCODING_UTF8) == false) {

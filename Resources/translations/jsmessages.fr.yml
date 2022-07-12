@@ -5,6 +5,8 @@ batch_jobs:
         fields:
             mapping:
                 label: Mapping des données
+            from_encoding:
+                label: Encodage en entrée
         import:
             label: Import des produits
 

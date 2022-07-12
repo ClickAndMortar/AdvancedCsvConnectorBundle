@@ -46,7 +46,8 @@ class ProductCsvAdvancedImport implements DefaultValuesProviderInterface
     public function getDefaultValues()
     {
         return array_merge($this->baseDefaultValuesProvider->getDefaultValues(), [
-            'mapping' => self::DEFAULT_MAPPING,
+            'mapping'      => self::DEFAULT_MAPPING,
+            'fromEncoding' => ''
         ]);
     }
 
