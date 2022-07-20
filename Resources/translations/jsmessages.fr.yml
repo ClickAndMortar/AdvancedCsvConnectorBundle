@@ -7,6 +7,8 @@ batch_jobs:
                 label: Mapping des données
             from_encoding:
                 label: Encodage en entrée
+            limit:
+                label: Nombre de produits max. à importer
         import:
             label: Import des produits
 

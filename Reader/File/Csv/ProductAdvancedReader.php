@@ -171,6 +171,20 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $identifierCode = null;
 
     /**
+     * Index to parse products array
+     *
+     * @var int
+     */
+    protected $productIndex = 1;
+
+    /**
+     * Limit products number to import (is null = no limit)
+     *
+     * @var null
+     */
+    protected $limit = null;
+
+    /**
      * Product advanced reader constructor.
      *
      * @param FileIteratorFactory     $fileIteratorFactory
@@ -206,6 +220,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         if (empty($this->filesPaths)) {
             $jobFilePath                    = $jobParameters->get('filePath');
             $fromEncoding                   = $jobParameters->get('fromEncoding');
+            $this->limit                    = $jobParameters->get('limit');
             $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath, $fromEncoding);
             $this->waitingListCsvFilesPaths = $this->filesPaths;
         }
@@ -263,6 +278,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             }
         }
 
+        // Check limit
+        if ($this->limit !== null && $this->productIndex >= $this->limit) {
+            return null;
+        }
+
         $headers      = $this->fileIterator->getHeaders();
         $countHeaders = count($headers);
         $countData    = count($data);
@@ -286,6 +306,9 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         } catch (DataArrayConversionException $e) {
             $this->skipItemFromConversionException($item, $e);
         }
+
+        // Increment global index
+        $this->productIndex++;
 
         return $item;
     }

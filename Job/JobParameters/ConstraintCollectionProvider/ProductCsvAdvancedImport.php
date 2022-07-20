@@ -46,6 +46,9 @@ class ProductCsvAdvancedImport implements ConstraintCollectionProviderInterface
                 new NotBlank(),
             ],
             'fromEncoding' => [],
+            'limit'        => [
+                new Type('digit'),
+            ]
         ]);
 
         return new Collection(['fields' => $constraintFields]);
