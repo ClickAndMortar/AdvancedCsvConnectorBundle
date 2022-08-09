@@ -15,6 +15,13 @@ use Symfony\Component\Process\Process;
 class ExportHelper
 {
     /**
+     * Multi select values separator
+     *
+     * @var string
+     */
+    const MULTI_SELECT_SEPARATOR = ',';
+
+    /**
      * Entity manager
      *
      * @var EntityManager
@@ -50,14 +57,20 @@ class ExportHelper
      */
     public function getValueFromCode($attributeKey, $attributeValue, $locale)
     {
-        $option = $this->attributeOptionRepository->findOptionByCode($attributeKey, array($attributeValue));
-        if (empty($option) || empty($option[0])) {
-            return '';
+        // Use loop if we have multi select attribute
+        $labelAsArray    = [];
+        $attributeValues = explode(self::MULTI_SELECT_SEPARATOR, $attributeValue);
+        foreach ($attributeValues as $attributeValue) {
+            $option = $this->attributeOptionRepository->findOptionByCode($attributeKey, array($attributeValue));
+            if (empty($option) || empty($option[0])) {
+                continue;
+            }
+
+            $option[0]->setLocale($locale)->getTranslation();
+            $labelAsArray[] = $option[0]->getOptionValue()->getLabel();
         }
-
-        $option[0]->setLocale($locale)->getTranslation();
-
-        return $option[0]->getOptionValue()->getLabel();
+        
+        return implode(self::MULTI_SELECT_SEPARATOR, $labelAsArray);
     }
 
     /**
