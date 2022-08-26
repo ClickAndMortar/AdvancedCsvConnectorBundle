@@ -130,14 +130,14 @@ class ImportHelper
             if ($linesNumber > self::MAX_LINES_PER_FILE + 2) {
                 $hasAtLeastOneSplittedFile = true;
                 $bashCommand               = sprintf(
-                    'sh %s/../vendor/clickandmortar/advanced-csv-connector-bundle/Resources/bin/split-csv-files.sh --file_path=%s --lines_per_file=%s --target_folder=%s --prefix=%s',
+                    'sh %s/vendor/clickandmortar/advanced-csv-connector-bundle/Resources/bin/split-csv-files.sh --file_path=%s --lines_per_file=%s --target_folder=%s --prefix=%s',
                     $this->kernelRootDirectory,
                     $currentFilePath,
                     self::MAX_LINES_PER_FILE,
                     $directoryPath,
                     $prefixFilename . $index . '_'
                 );
-                $process                   = new Process([$bashCommand]);
+                $process                   = Process::fromShellCommandline($bashCommand);
                 $process->mustRun();
             }
         }
