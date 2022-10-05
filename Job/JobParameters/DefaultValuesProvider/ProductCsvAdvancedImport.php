@@ -42,6 +42,7 @@ class ProductCsvAdvancedImport implements DefaultValuesProviderInterface
             'mapping'                   => null,
             'emailRecipients'           => '',
             'invalid_items_file_format' => 'advanced_csv',
+            'successNotification'       => false
         ]);
     }
 

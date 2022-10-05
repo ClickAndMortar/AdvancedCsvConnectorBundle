@@ -18,6 +18,11 @@ batch_jobs:
         step_title: "Nom de l'étape"
         types:
             default: "Liste des avertissements :"
+            statistics: "Résumé :"
+        statistics:
+            read: "Lignes lues : %readCount%"
+            write: "Traité(s) : %writeCount%"
+            warning: "Avertissements : %warningCount%"
 
 # Custom entity
 importMapping:

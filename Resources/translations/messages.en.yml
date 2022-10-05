@@ -18,6 +18,11 @@ batch_jobs:
         step_title: "Step name"
         types:
             default: "Warnings:"
+            statistics: "Summary:"
+        statistics:
+            read: "Lines read : %readCount%"
+            write: "Processed : %writeCount%"
+            warning: "Warnings : %warningCount%"
 
 # Custom entity
 importMapping:

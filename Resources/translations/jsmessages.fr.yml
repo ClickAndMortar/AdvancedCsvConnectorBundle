@@ -8,6 +8,9 @@ batch_jobs:
             email_recipients:
                 label: Destinataires pour les rapports
                 help: Adresses emails séparées par des virgules
+            success_notification:
+                label: Notification en cas de succès
+                help: Permet d'avoir une notification par email en cas de succès
         import:
             label: Import des produits
     default_steps:
@@ -21,6 +24,9 @@ batch_jobs:
             email_recipients:
                 label: Destinataires pour les rapports
                 help: Adresses emails séparées par des virgules
+            success_notification:
+                label: Notification en cas de succès
+                help: Permet d'avoir une notification par email en cas de succès
         import:
             label: Import des modèles produits
 

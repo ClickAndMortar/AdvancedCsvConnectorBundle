@@ -229,7 +229,18 @@ extensions:
             fieldCode: configuration.emailRecipients
             readOnly: false
             label: batch_jobs.csv_advanced_product_model_import.fields.email_recipients.label
-            tooltip: batch_jobs.csv_advanced_product_model_import.fields.email_recipients.hel
+            tooltip: batch_jobs.csv_advanced_product_model_import.fields.email_recipients.help
+
+    pim-job-instance-csv-advanced-product-model-import-edit-properties-success-notification:
+        module: pim/job/common/edit/field/switch
+        parent: pim-job-instance-csv-advanced-product-model-import-edit-global
+        position: 270
+        targetZone: properties
+        config:
+            fieldCode: configuration.successNotification
+            readOnly: false
+            label: batch_jobs.csv_advanced_product_model_import.fields.success_notification.label
+            tooltip: batch_jobs.csv_advanced_product_model_import.fields.success_notification.help
 
     pim-job-instance-csv-advanced-product-model-import-edit-label:
         module: pim/job/common/edit/label

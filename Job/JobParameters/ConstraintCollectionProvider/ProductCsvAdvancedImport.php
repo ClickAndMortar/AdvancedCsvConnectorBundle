@@ -42,10 +42,11 @@ class ProductCsvAdvancedImport implements ConstraintCollectionProviderInterface
     public function getConstraintCollection()
     {
         $constraintFields = array_merge($this->baseConstraintCollectionProvider->getConstraintCollection()->fields, [
-            'mapping'         => [
+            'mapping'             => [
                 new NotBlank(),
             ],
-            'emailRecipients' => [],
+            'emailRecipients'     => [],
+            'successNotification' => [],
         ]);
 
         return new Collection(['fields' => $constraintFields]);

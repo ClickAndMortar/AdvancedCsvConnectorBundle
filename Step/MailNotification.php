@@ -29,6 +29,13 @@ class MailNotification extends AbstractStep
     const JOB_PARAMETERS_EMAIL_RECIPIENTS = 'emailRecipients';
 
     /**
+     * Sucess notification parameter
+     *
+     * @var string
+     */
+    const JOB_PARAMETERS_SUCCESS_NOTIFICATION = 'successNotification';
+
+    /**
      * Import step name
      *
      * @var string
@@ -55,6 +62,13 @@ class MailNotification extends AbstractStep
      * @var string
      */
     const MESSAGE_TYPE_DEFAULT = 'default';
+
+    /**
+     * Statistics message type
+     *
+     * @var string
+     */
+    const MESSAGE_TYPE_STATISTICS = 'statistics';
 
     /**
      * @var MailNotifier $notifier
@@ -124,6 +138,9 @@ class MailNotification extends AbstractStep
             return;
         }
 
+        // Check if we want success notification
+        $successNotification = $jobParameters->has(self::JOB_PARAMETERS_SUCCESS_NOTIFICATION) && $jobParameters->get(self::JOB_PARAMETERS_SUCCESS_NOTIFICATION) === true;
+
         // Generate and send notifications
         $jobExecution = $this->stepExecution->getJobExecution();
         $recipients   = $jobParameters->get(self::JOB_PARAMETERS_EMAIL_RECIPIENTS);
@@ -133,13 +150,28 @@ class MailNotification extends AbstractStep
         ]);
         $users        = $this->getUsers($recipients);
 
-        // Parse warnings from steps
+        // Parse data from steps
         $messagesByStepAndType = [];
         /** @var StepExecution $stepExecution */
         foreach ($jobExecution->getStepExecutions() as $stepExecution) {
-            $warnings = $stepExecution->getWarnings();
+            // Get statistics data
+            $statisticsMessages = $this->getStatisticsByStepExecution($stepExecution);
+
+            // Get warnings
+            $warningMessages = [];
+            $warnings        = $stepExecution->getWarnings();
             if (!$warnings->isEmpty()) {
-                $messagesByStepAndType[$stepExecution->getStepName()] = $this->getMessagesByType($warnings);
+                $warningMessages = $this->getMessagesByType($warnings);
+            }
+
+            // Skip if notification success is not activated
+            if (!$successNotification && empty($warningMessages)) {
+                continue;
+            }
+
+            $messagesForCurrentStep = array_merge($statisticsMessages, $warningMessages);
+            if (!empty($messagesForCurrentStep)) {
+                $messagesByStepAndType[$stepExecution->getStepName()] = $messagesForCurrentStep;
             }
         }
 
@@ -173,6 +205,61 @@ class MailNotification extends AbstractStep
         }
 
         return $users;
+    }
+
+    /**
+     * Get statistics used by notification template from $stepExecution
+     *
+     * @param StepExecution $stepExecution
+     *
+     * @return array
+     */
+    protected function getStatisticsByStepExecution($stepExecution)
+    {
+        $statistics   = [];
+        $trackingData = $stepExecution->getTrackingData();
+        $readCount    = intval($trackingData['totalItems']);
+        if ($readCount === 0) {
+            return $statistics;
+        }
+
+        $warningCount = count($stepExecution->getWarnings());
+        $writeCount   = $readCount - $warningCount;
+
+        // Read lines
+        $statistics[] = [
+            'content' => $this->translator->trans(
+                'batch_jobs.mail_notification.statistics.read',
+                [
+                    '%readCount%' => $readCount,
+                ]
+            ),
+        ];
+
+        // Write lines
+        $statistics[] = [
+            'content' => $this->translator->trans(
+                'batch_jobs.mail_notification.statistics.write',
+                [
+                    '%writeCount%' => $writeCount,
+                ]
+            ),
+        ];
+
+        // Warning lines
+        $statistics[] = [
+            'content' => $this->translator->trans(
+                'batch_jobs.mail_notification.statistics.warning',
+                [
+                    '%warningCount%' => $warningCount,
+                ]
+            ),
+        ];
+
+
+        return [
+            self::MESSAGE_TYPE_STATISTICS => $statistics
+        ];
     }
 
     /**
