@@ -6,6 +6,7 @@ use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters\ConstraintCollectionProviderInterface;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Constraint collection provider for CSV product advanced export
@@ -41,11 +42,14 @@ class ProductCsvAdvancedExport implements ConstraintCollectionProviderInterface
     public function getConstraintCollection()
     {
         $constraintFields = array_merge($this->baseConstraintCollectionProvider->getConstraintCollection()->fields, [
-            'encoding' => [
+            'encoding'  => [
             ],
-            'mapping' => [
+            'mapping'   => [
                 new NotBlank(),
             ],
+            'forceXlsx' => [
+                new Type('bool')
+            ]
         ]);
 
         return new Collection(['fields' => $constraintFields]);

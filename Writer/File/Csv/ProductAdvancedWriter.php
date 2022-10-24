@@ -9,6 +9,7 @@ use Akeneo\Tool\Component\Batch\Job\JobInterface;
 use Akeneo\Tool\Component\Batch\Job\JobParameters;
 use Akeneo\Tool\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Tool\Component\Buffer\BufferFactory;
+use Akeneo\Tool\Component\Connector\Writer\File\WrittenFileInfo;
 use Akeneo\Tool\Component\FileStorage\FilesystemProvider;
 use Akeneo\Tool\Component\FileStorage\Repository\FileInfoRepositoryInterface;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\ExportMappingRepository;
@@ -279,16 +280,39 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     }
 
     /**
-     * Change file encoding if necessary
-     *
      * @return void
      */
     public function flush(): void
     {
-        parent::flush();
-
+        $this->flusher->setStepExecution($this->stepExecution);
         $parameters = $this->stepExecution->getJobParameters();
-        $encoding   = $parameters->get('encoding');
+
+        // Force Excel if necessary
+        $currentFilePath = $this->getPath();
+        if ($parameters->get('forceXlsx')) {
+            $currentFilePath = sprintf(
+                '%s/%s.xlsx',
+                pathinfo($currentFilePath, PATHINFO_DIRNAME),
+                pathinfo($currentFilePath, PATHINFO_FILENAME)
+            );
+        }
+
+        $flatFiles = $this->flusher->flush(
+            $this->flatRowBuffer,
+            $this->getWriterConfiguration(),
+            $currentFilePath,
+            ($parameters->has('linesPerFile') ? $parameters->get('linesPerFile') : -1)
+        );
+
+        foreach ($flatFiles as $flatFile) {
+            $this->writtenFiles[] = WrittenFileInfo::fromLocalFile(
+                $flatFile,
+                \basename($flatFile)
+            );
+        }
+
+        // Update encoding if necessary
+        $encoding = $parameters->get('encoding');
         if (!empty($encoding)) {
             foreach ($this->getWrittenFiles() as $filePath => $fileName) {
                 $this->exportHelper->encodeFile($filePath, $encoding);
@@ -302,6 +326,13 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected function getWriterConfiguration(): array
     {
         $parameters = $this->stepExecution->getJobParameters();
+
+        // Force Excel export if necessary
+        if ($parameters->get('forceXlsx')) {
+            return [
+                'type' => 'xlsx'
+            ];
+        }
 
         return [
             'type'           => 'csv',

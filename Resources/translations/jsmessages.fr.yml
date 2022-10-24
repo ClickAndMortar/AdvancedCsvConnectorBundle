@@ -38,6 +38,9 @@ batch_jobs:
             encoding:
                 label: Encodage
                 help: Encodage du fichier de sortie (UTF-8 par défaut)
+            force_xlsx:
+                label: Exporter au format Excel
+                help: Permet de forcer l'export au format .xlsx
         export:
             label: Export des produits
 
@@ -49,6 +52,9 @@ batch_jobs:
             encoding:
                 label: Encodage
                 help: Encodage du fichier de sortie (UTF-8 par défaut)
+            force_xlsx:
+                label: Exporter au format Excel
+                help: Permet de forcer l'export au format .xlsx
         export:
             label: Export des modèles produits
 

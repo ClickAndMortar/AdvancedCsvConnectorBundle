@@ -33,6 +33,12 @@ batch_jobs:
         fields:
             mapping:
                 label: Data mapping
+            encoding:
+                label: Encoding
+                help: Output file encoding (UTF-8 by default)
+            force_xlsx:
+                label: Export to Excel format
+                help: Allows to force the export in .xlsx format
         export:
             label: Products export
 
@@ -41,6 +47,12 @@ batch_jobs:
         fields:
             mapping:
                 label: Data mapping
+            encoding:
+                label: Encoding
+                help: Output file encoding (UTF-8 by default)
+            force_xlsx:
+                label: Export to Excel format
+                help: Allows to force the export in .xlsx format
         export:
             label: Products models export
     default_steps:
