@@ -34,6 +34,13 @@ class ImportMapping extends AbstractCustomEntity
     protected $completeCallback;
 
     /**
+     * Flush callback
+     *
+     * @var string
+     */
+    protected $flushCallback;
+
+    /**
      * Update product only if already exists
      *
      * @var boolean
@@ -105,6 +112,26 @@ class ImportMapping extends AbstractCustomEntity
     }
 
     /**
+     * @return string
+     */
+    public function getFlushCallback()
+    {
+        return $this->flushCallback;
+    }
+
+    /**
+     * @param string $flushCallback
+     *
+     * @return ImportMapping
+     */
+    public function setFlushCallback($flushCallback)
+    {
+        $this->flushCallback = $flushCallback;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function getOnlyUpdate()
@@ -170,6 +197,11 @@ class ImportMapping extends AbstractCustomEntity
         // Add complete callback if necessary
         if (!empty($this->getCompleteCallback())) {
             $mapping['completeCallback'] = $this->getCompleteCallback();
+        }
+
+        // Add flush callback if necessary
+        if (!empty($this->getFlushCallback())) {
+            $mapping['flushCallback'] = $this->getFlushCallback();
         }
 
         // Add only update parameter

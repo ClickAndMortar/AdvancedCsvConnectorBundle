@@ -23,6 +23,10 @@ ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
             type: string
             length: 255
             nullable: true
+        flushCallback:
+            type: string
+            length: 255
+            nullable: true
         onlyUpdate:
             type: boolean
             options:

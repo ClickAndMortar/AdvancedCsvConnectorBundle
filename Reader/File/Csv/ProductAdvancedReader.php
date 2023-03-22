@@ -69,6 +69,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_COMPLETE_CALLBACK_KEY = 'completeCallback';
 
     /**
+     * Flush callback mapping key
+     *
+     * @var string
+     */
+    const MAPPING_FLUSH_CALLBACK_KEY = 'flushCallback';
+
+    /**
      * Complete callback mapping key
      *
      * @var string
@@ -275,6 +282,15 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     public function flush()
     {
         parent::flush();
+
+        // Check for flush callback
+        if (
+            isset($this->mapping[self::MAPPING_FLUSH_CALLBACK_KEY])
+            && method_exists($this->importHelper, $this->mapping[self::MAPPING_FLUSH_CALLBACK_KEY])
+        ) {
+            $this->importHelper->{$this->mapping[self::MAPPING_FLUSH_CALLBACK_KEY]}();
+        }
+
         $this->filesPaths = [];
     }
 

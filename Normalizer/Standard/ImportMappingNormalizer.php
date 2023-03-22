@@ -33,6 +33,7 @@ class ImportMappingNormalizer implements NormalizerInterface
             'code'             => $entity->getCode(),
             'mappingAsJson'    => $entity->getMappingAsJson(),
             'completeCallback' => $entity->getCompleteCallback(),
+            'flushCallback'    => $entity->getFlushCallback(),
             'onlyUpdate'       => $entity->getOnlyUpdate(),
         ];
 
