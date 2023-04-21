@@ -28,13 +28,14 @@ class ImportMappingNormalizer implements NormalizerInterface
     public function normalize($entity, $format = null, array $context = [])
     {
         $mapping = [
-            'id'               => $entity->getId(),
-            'label'            => $entity->getLabel(),
-            'code'             => $entity->getCode(),
-            'mappingAsJson'    => $entity->getMappingAsJson(),
-            'completeCallback' => $entity->getCompleteCallback(),
-            'flushCallback'    => $entity->getFlushCallback(),
-            'onlyUpdate'       => $entity->getOnlyUpdate(),
+            'id'                 => $entity->getId(),
+            'label'              => $entity->getLabel(),
+            'code'               => $entity->getCode(),
+            'mappingAsJson'      => $entity->getMappingAsJson(),
+            'completeCallback'   => $entity->getCompleteCallback(),
+            'initializeCallback' => $entity->getInitializeCallback(),
+            'flushCallback'      => $entity->getFlushCallback(),
+            'onlyUpdate'         => $entity->getOnlyUpdate(),
         ];
 
         return $mapping;

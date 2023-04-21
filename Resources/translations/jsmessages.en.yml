@@ -115,6 +115,7 @@ candm_advanced_csv_connector:
                 code: Code
                 mapping: Mapping attributes / columns
                 complete_callback: Callback transform after mapping
+                initialize_callback: Callback before import
                 flush_callback: Callback after import
                 only_update: Products update only
 

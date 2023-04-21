@@ -69,6 +69,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_COMPLETE_CALLBACK_KEY = 'completeCallback';
 
     /**
+     * Initialize callback mapping key
+     *
+     * @var string
+     */
+    const MAPPING_INITIALIZE_CALLBACK_KEY = 'initializeCallback';
+
+    /**
      * Flush callback mapping key
      *
      * @var string
@@ -238,13 +245,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     public function initialize()
     {
         $jobParameters = $this->stepExecution->getJobParameters();
-        if (empty($this->filesPaths)) {
-            $jobFilePath                    = $jobParameters->get('filePath');
-            $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath);
-            $this->waitingListCsvFilesPaths = $this->filesPaths;
-            $this->toArchiveFilesPaths      = $this->filesPaths;
-        }
-
+        $this->importHelper->setStepExecution($this->stepExecution);
         if (empty($this->mapping)) {
             $mappingCode = $jobParameters->get('mapping');
             /** @var ImportMapping $importMapping */
@@ -256,6 +257,21 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             }
             $this->mapping = $importMapping->getMappingAsArray();
             $this->validateMapping();
+        }
+
+        // Check for initialize callback
+        if (
+            isset($this->mapping[self::MAPPING_INITIALIZE_CALLBACK_KEY])
+            && method_exists($this->importHelper, $this->mapping[self::MAPPING_INITIALIZE_CALLBACK_KEY])
+        ) {
+            $this->importHelper->{$this->mapping[self::MAPPING_INITIALIZE_CALLBACK_KEY]}($jobParameters);
+        }
+
+        if (empty($this->filesPaths)) {
+            $jobFilePath                    = $jobParameters->get('filePath');
+            $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath);
+            $this->waitingListCsvFilesPaths = $this->filesPaths;
+            $this->toArchiveFilesPaths      = $this->filesPaths;
         }
 
         if (!empty($this->waitingListCsvFilesPaths)) {

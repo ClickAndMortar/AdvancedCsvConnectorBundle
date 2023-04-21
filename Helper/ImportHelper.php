@@ -2,6 +2,8 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
+use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use Akeneo\Tool\Component\Batch\Model\Warning;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Monolog\Logger;
@@ -73,6 +75,11 @@ class ImportHelper
     protected $attributeRepository;
 
     /**
+     * @var StepExecution
+     */
+    protected $stepExecution;
+
+    /**
      * Valid HTTP codes on visual download from URL
      *
      * @var array
@@ -96,6 +103,18 @@ class ImportHelper
         $this->entityManager       = $entityManager;
         $this->kernelRootDirectory = $kernelRootDirectory;
         $this->attributeRepository = $attributeRepository;
+    }
+
+    /**
+     * Set step execution
+     *
+     * @param StepExecution $stepExecution
+     *
+     * @return void
+     */
+    public function setStepExecution($stepExecution)
+    {
+        $this->stepExecution = $stepExecution;
     }
 
     /**
@@ -311,5 +330,23 @@ class ImportHelper
         fclose($file);
 
         return $linesNumber;
+    }
+
+    /**
+     * Add warning message to current step execution
+     *
+     * @param string $message
+     *
+     * @return void
+     */
+    protected function addWarning($message)
+    {
+        $warning = new Warning(
+            $this->stepExecution,
+            $message,
+            [],
+            []
+        );
+        $this->jobRepository->addWarning($warning);
     }
 }

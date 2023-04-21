@@ -34,6 +34,13 @@ class ImportMapping extends AbstractCustomEntity
     protected $completeCallback;
 
     /**
+     * Initialize callback
+     *
+     * @var string
+     */
+    protected $initializeCallback;
+
+    /**
      * Flush callback
      *
      * @var string
@@ -107,6 +114,26 @@ class ImportMapping extends AbstractCustomEntity
     public function setCompleteCallback($completeCallback)
     {
         $this->completeCallback = $completeCallback;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInitializeCallback()
+    {
+        return $this->initializeCallback;
+    }
+
+    /**
+     * @param string $initializeCallback
+     *
+     * @return ImportMapping
+     */
+    public function setInitializeCallback($initializeCallback)
+    {
+        $this->initializeCallback = $initializeCallback;
 
         return $this;
     }
@@ -197,6 +224,11 @@ class ImportMapping extends AbstractCustomEntity
         // Add complete callback if necessary
         if (!empty($this->getCompleteCallback())) {
             $mapping['completeCallback'] = $this->getCompleteCallback();
+        }
+
+        // Add initialize callback if necessary
+        if (!empty($this->getInitializeCallback())) {
+            $mapping['initializeCallback'] = $this->getInitializeCallback();
         }
 
         // Add flush callback if necessary

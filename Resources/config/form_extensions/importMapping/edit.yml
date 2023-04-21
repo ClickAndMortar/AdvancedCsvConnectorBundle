@@ -158,11 +158,20 @@ extensions:
             fieldName: completeCallback
             label: candm_advanced_csv_connector.importMapping.field.label.complete_callback
 
-    pim-importMapping-edit-form-properties-flush-callback:
+    pim-importMapping-edit-form-properties-initialize-callback:
         module: pim/form/common/fields/text
         parent: pim-importMapping-edit-form-properties-common
         targetZone: content
         position: 130
+        config:
+            fieldName: initializeCallback
+            label: candm_advanced_csv_connector.importMapping.field.label.initialize_callback
+
+    pim-importMapping-edit-form-properties-flush-callback:
+        module: pim/form/common/fields/text
+        parent: pim-importMapping-edit-form-properties-common
+        targetZone: content
+        position: 140
         config:
             fieldName: flushCallback
             label: candm_advanced_csv_connector.importMapping.field.label.flush_callback
@@ -171,7 +180,7 @@ extensions:
         module: pim/form/common/fields/boolean
         parent: pim-importMapping-edit-form-properties-common
         targetZone: content
-        position: 140
+        position: 150
         config:
             fieldName: onlyUpdate
             label: candm_advanced_csv_connector.importMapping.field.label.only_update
