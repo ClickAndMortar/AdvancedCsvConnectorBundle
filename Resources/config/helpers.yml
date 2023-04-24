@@ -10,6 +10,7 @@ services:
             - '@doctrine.orm.entity_manager'
             - '%kernel.project_dir%'
             - '@pim_catalog.repository.attribute'
+            - '@translator'
 
     candm_advanced_csv_connector.helper.export:
         class: '%candm_advanced_csv_connector.helper.export.class%'

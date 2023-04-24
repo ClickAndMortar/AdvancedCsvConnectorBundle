@@ -2,6 +2,7 @@
 
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Helper;
 
+use Akeneo\Platform\Bundle\UIBundle\Translator\TranslatorDecorator;
 use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Akeneo\Tool\Component\Batch\Model\Warning;
 use Doctrine\ORM\EntityManager;
@@ -75,6 +76,11 @@ class ImportHelper
     protected $attributeRepository;
 
     /**
+     * @var TranslatorDecorator
+     */
+    protected $translator;
+
+    /**
      * @var StepExecution
      */
     protected $stepExecution;
@@ -92,17 +98,25 @@ class ImportHelper
     /**
      * ImportHelper constructor.
      *
-     * @param Logger        $logger
-     * @param EntityManager $entityManager
-     * @param string        $kernelRootDirectory
-     * @param AttributeRepository
+     * @param Logger              $logger
+     * @param EntityManager       $entityManager
+     * @param string              $kernelRootDirectory
+     * @param AttributeRepository $attributeRepository
+     * @param TranslatorDecorator $translator
      */
-    public function __construct(Logger $logger, EntityManager $entityManager, $kernelRootDirectory, AttributeRepository $attributeRepository)
+    public function __construct(
+        Logger $logger,
+        EntityManager $entityManager,
+        $kernelRootDirectory,
+        AttributeRepository $attributeRepository,
+        TranslatorDecorator $translator
+    )
     {
         $this->logger              = $logger;
         $this->entityManager       = $entityManager;
         $this->kernelRootDirectory = $kernelRootDirectory;
         $this->attributeRepository = $attributeRepository;
+        $this->translator          = $translator;
     }
 
     /**
@@ -336,14 +350,15 @@ class ImportHelper
      * Add warning message to current step execution
      *
      * @param string $message
+     * @param array  $messagesParameters
      *
      * @return void
      */
-    protected function addWarning($message)
+    protected function addWarning($message, $messagesParameters = [])
     {
         $warning = new Warning(
             $this->stepExecution,
-            $message,
+            $this->translator->trans($message, $messagesParameters),
             [],
             []
         );
