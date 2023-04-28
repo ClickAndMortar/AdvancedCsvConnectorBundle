@@ -66,7 +66,7 @@ $ composer require "clickandmortar/advanced-csv-connector-bundle":"<version-want
 Example for last version:
 
 ```console
-$ composer require "clickandmortar/advanced-csv-connector-bundle":"6.0.*"
+$ composer require "clickandmortar/advanced-csv-connector-bundle":"7.0.*"
 ```
 
 
