@@ -144,11 +144,11 @@ class MailNotification extends AbstractStep
         // Generate and send notifications
         $jobExecution = $this->stepExecution->getJobExecution();
         $recipients   = $jobParameters->get(self::JOB_PARAMETERS_EMAIL_RECIPIENTS);
+        $recipients   = explode(self::RECIPIENTS_SEPARATOR, $recipients);
         $mailLabel    = $this->translator->trans('batch_jobs.mail_notification.subject', [
             '%importLabel%' => $jobExecution->getLabel(),
             '%date%'        => $jobExecution->getStartTime()->format('d/m/Y, H:i'),
         ]);
-        $users        = $this->getUsers($recipients);
 
         // Parse data from steps
         $messagesByStepAndType = [];
@@ -183,28 +183,8 @@ class MailNotification extends AbstractStep
                     'messagesByStepAndType' => $messagesByStepAndType,
                 ]
             );
-            $this->notifier->notify($users, $mailLabel, '', $contentAsHtml);
+            $this->notifier->notify($recipients, $mailLabel, '', $contentAsHtml);
         }
-    }
-
-    /**
-     * Get users from $recipientsAsString
-     *
-     * @param string $recipientsAsString
-     *
-     * @return User[]
-     */
-    protected function getUsers($recipientsAsString)
-    {
-        $users      = [];
-        $recipients = explode(self::RECIPIENTS_SEPARATOR, $recipientsAsString);
-        foreach ($recipients as $recipient) {
-            $user = new User();
-            $user->setEmail($recipient);
-            $users[] = $user;
-        }
-
-        return $users;
     }
 
     /**
