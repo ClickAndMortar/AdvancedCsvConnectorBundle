@@ -22,7 +22,7 @@ extensions:
         parent: pim-job-instance-csv-advanced-product-import-edit
         targetZone: breadcrumbs
         config:
-            tab: pim-menu-imports
+            isEdit: true
 
     pim-job-instance-csv-advanced-product-import-edit-cache-invalidator:
         module: pim/cache-invalidator
@@ -85,16 +85,15 @@ extensions:
             fieldCode: label
             label: pim_common.label
 
-    pim-job-instance-csv-advanced-product-import-edit-properties-file-path:
-        module: pim/job/common/edit/field/file-path
+    pim-job-instance-csv-advanced-product-import-edit-properties-storage:
+        module: pimimportexport/js/job/common/edit/storage-form
         parent: pim-job-instance-csv-advanced-product-import-edit-global
         position: 120
-        targetZone: properties
+        targetZone: additional-properties
         config:
-            fieldCode: configuration.filePath
-            readOnly: false
-            label: pim_import_export.form.job_instance.tab.properties.file_path.title
-            tooltip: pim_import_export.form.job_instance.tab.properties.file_path.help
+            tabCode: pim-job-instance-properties
+            jobType: import
+            fileExtension: csv
 
     pim-job-instance-csv-advanced-product-import-edit-properties-file-upload:
         module: pim/job/common/edit/field/allow-file-upload
@@ -285,6 +284,16 @@ extensions:
                 success: pim_import_export.entity.job_instance.flash.delete.success
                 failed: error.removing.job_instance
             redirect: pim_importexport_import_profile_index
+
+    pim-job-instance-csv-advanced-product-import-edit-duplicate:
+        module: pim/job/common/duplicate/duplicate
+        parent: pim-job-instance-csv-advanced-product-import-edit-secondary-actions
+        targetZone: secondary-actions
+        aclResourceId: pim_importexport_import_profile_create
+        position: 80
+        config:
+            subTitle: pim_menu.tab.imports
+            editRoute: pim_importexport_import_profile_edit
 
     pim-job-instance-csv-advanced-product-import-edit-save-buttons:
         module: pim/form/common/save-buttons

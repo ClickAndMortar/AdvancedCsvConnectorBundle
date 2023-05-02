@@ -83,7 +83,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      *
      * @var string
      */
-    const DEFAULT_FILE_PATH = 'filePath';
+    const DEFAULT_FILE_PATH = 'file_path';
 
     /**
      * Use Label option key

@@ -268,7 +268,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         }
 
         if (empty($this->filesPaths)) {
-            $jobFilePath                    = $jobParameters->get('filePath');
+            $jobFilePath                    = $jobParameters->get('storage')['file_path'];
             $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath);
             $this->waitingListCsvFilesPaths = $this->filesPaths;
             $this->toArchiveFilesPaths      = $this->filesPaths;
