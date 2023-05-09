@@ -37,7 +37,7 @@ services:
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
             - 'fr_FR'
-            - 'filePath'
+            - 'file_path'
 
     candm_advanced_csv_connector.writer.file.csv_advanced_product_model:
         class: '%candm_advanced_csv_connector.writer.file.csv_advanced_product_model.class%'
@@ -57,4 +57,4 @@ services:
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
             - 'fr_FR'
-            - 'filePath'
+            - 'file_path'
