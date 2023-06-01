@@ -13,6 +13,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
+                - '@akeneo.job_automation.connector.step.download'
                 - '@candm_advanced_csv_connector.step.csv_advanced_product.import'
                 - '@candm_advanced_csv_connector.step.mail_notification'
         tags:
@@ -25,6 +26,7 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
+                - '@akeneo.job_automation.connector.step.download'
                 - '@candm_advanced_csv_connector.step.csv_advanced_root_product_model.import'
                 - '@candm_advanced_csv_connector.step.csv_advanced_sub_product_model.import'
                 - '@candm_advanced_csv_connector.step.mail_notification'
