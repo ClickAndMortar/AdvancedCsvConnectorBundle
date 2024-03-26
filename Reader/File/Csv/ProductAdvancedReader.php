@@ -423,7 +423,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                 if (
                     empty($value)
                     && isset($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])
-                    && !empty($attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY])
+                    && $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY] !== ''
                 ) {
                     $value = $attributeMapping[self::MAPPING_DEFAULT_VALUE_KEY];
                 }
