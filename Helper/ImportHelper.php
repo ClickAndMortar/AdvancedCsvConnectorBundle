@@ -219,6 +219,7 @@ class ImportHelper
     public function setMetricUnitAsSuffix($attributeValue, $attributeCode)
     {
         // Set to 0 if we have empty value
+        $attributeValue = str_replace(',', '.', $attributeValue);
         $attributeValue = !empty($attributeValue) ? floatval($attributeValue) : 0;
 
         /** @var Attribute $attribute */

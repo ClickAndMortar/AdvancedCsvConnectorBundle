@@ -449,7 +449,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
                                 $luaUpdater->getScript()
                             ));
                         } elseif (method_exists($this->importHelper, $updaterCode)) {
-                            $value = $this->importHelper->{$updaterCode}($value);
+                            $value = $this->importHelper->{$updaterCode}($value, $attributesCode);
                         }
                     }
 
