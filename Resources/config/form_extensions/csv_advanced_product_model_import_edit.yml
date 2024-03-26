@@ -241,6 +241,17 @@ extensions:
             label: batch_jobs.csv_advanced_product_model_import.fields.success_notification.label
             tooltip: batch_jobs.csv_advanced_product_model_import.fields.success_notification.help
 
+    pim-job-instance-csv-advanced-product-model-import-edit-properties-from-encoding:
+        module: pim/job/common/edit/field/text
+        parent: pim-job-instance-csv-advanced-product-model-import-edit-global
+        position: 280
+        targetZone: properties
+        config:
+            fieldCode: configuration.fromEncoding
+            readOnly: false
+            label: batch_jobs.csv_advanced_product_model_import.fields.from_encoding.label
+            tooltip: batch_jobs.csv_advanced_product_model_import.fields.from_encoding.help
+
     pim-job-instance-csv-advanced-product-model-import-edit-label:
         module: pim/job/common/edit/label
         parent: pim-job-instance-csv-advanced-product-model-import-edit

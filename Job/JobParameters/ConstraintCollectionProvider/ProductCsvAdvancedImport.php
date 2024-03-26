@@ -47,6 +47,7 @@ class ProductCsvAdvancedImport implements ConstraintCollectionProviderInterface
             ],
             'emailRecipients'     => [],
             'successNotification' => [],
+            'fromEncoding'        => []
         ]);
 
         return new Collection(['fields' => $constraintFields]);

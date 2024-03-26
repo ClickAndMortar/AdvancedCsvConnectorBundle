@@ -11,6 +11,9 @@ batch_jobs:
             success_notification:
                 label: Notification on success
                 help: Allows you to have an email notification in case of success
+            from_encoding:
+                label: From encoding
+                help: Allows you to select the input encoding of the file (it will be re-encoded in UTF-8)
         import:
             label: Products import
 
@@ -25,6 +28,9 @@ batch_jobs:
             success_notification:
                 label: Notification on success
                 help: Allows you to have an email notification in case of success
+            from_encoding:
+                label: From encoding
+                help: Allows you to select the input encoding of the file (it will be re-encoded in UTF-8)
         import:
             label: Products models import
 

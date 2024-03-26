@@ -11,6 +11,9 @@ batch_jobs:
             success_notification:
                 label: Notification en cas de succès
                 help: Permet d'avoir une notification par email en cas de succès
+            from_encoding:
+                label: Encodage en entrée
+                help: Permet de sélectionner l'encodage en entrée du fichier (il sera ré-encodé en UTF-8)
         import:
             label: Import des produits
     default_steps:
@@ -27,6 +30,9 @@ batch_jobs:
             success_notification:
                 label: Notification en cas de succès
                 help: Permet d'avoir une notification par email en cas de succès
+            from_encoding:
+                label: Encodage en entrée
+                help: Permet de sélectionner l'encodage en entrée du fichier (il sera ré-encodé en UTF-8)
         import:
             label: Import des modèles produits
 
