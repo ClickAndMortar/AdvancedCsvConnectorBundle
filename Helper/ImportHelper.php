@@ -287,6 +287,19 @@ class ImportHelper
     }
 
     /**
+     * Replace comma by dot
+     *
+     * @param string $attributeValue
+     * @param string $attributeCode
+     *
+     * @return string
+     */
+    public function replaceCommaByDot($attributeValue, $attributeCode)
+    {
+        return str_replace(',', '.', $attributeValue);
+    }
+
+    /**
      * Check and encode file to UTF-8 if necessary
      *
      * @param string $filePath
