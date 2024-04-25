@@ -516,7 +516,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             !empty($mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
             && method_exists($this->exportHelper, $mapping[self::MAPPING_COMPLETE_CALLBACK_KEY])
         ) {
-            $newItem = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $item);
+            $newItem = $this->exportHelper->{$mapping[self::MAPPING_COMPLETE_CALLBACK_KEY]}($newItem, $item, $this->writtenFiles);
         }
 
         return $newItem;
