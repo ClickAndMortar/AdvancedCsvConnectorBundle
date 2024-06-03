@@ -69,7 +69,7 @@ class ExportHelper
             $option[0]->setLocale($locale)->getTranslation();
             $labelAsArray[] = $option[0]->getOptionValue()->getLabel();
         }
-        
+
         return implode(self::MULTI_SELECT_SEPARATOR, $labelAsArray);
     }
 
@@ -90,7 +90,7 @@ class ExportHelper
             $filePath,
             $tempFilePath
         );
-        $encodeFileProcess = new Process([$encodeFileCommand]);
+        $encodeFileProcess = Process::fromShellCommandline($encodeFileCommand);
         $encodeFileProcess->mustRun();
 
         if (file_exists($tempFilePath)) {

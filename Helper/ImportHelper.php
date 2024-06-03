@@ -313,7 +313,7 @@ class ImportHelper
         try {
             if (empty($fromEncoding)) {
                 $checkEncodingCommand = sprintf('file -i %s | cut -f 2 -d";" | cut -f 2 -d=', $filePath);
-                $checkEncodingProcess = new Process([$checkEncodingCommand]);
+                $checkEncodingProcess = Process::fromShellCommandline($checkEncodingCommand);
                 $checkEncodingProcess->mustRun();
                 $currentEncoding = $checkEncodingProcess->getOutput();
                 $currentEncoding = str_replace("\n", "", $currentEncoding);
@@ -330,7 +330,7 @@ class ImportHelper
                     $filePath,
                     $newFilePath
                 );
-                $encodeFileProcess = new Process([$encodeFileCommand]);
+                $encodeFileProcess = Process::fromShellCommandline($encodeFileCommand);
                 $encodeFileProcess->mustRun();
 
                 // Replace bad encoding file with correct one
