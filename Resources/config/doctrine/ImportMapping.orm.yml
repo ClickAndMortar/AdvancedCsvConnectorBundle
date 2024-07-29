@@ -31,6 +31,9 @@ ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ImportMapping:
             type: string
             length: 255
             nullable: true
+        itemsLimit:
+            type: integer
+            nullable: true
         onlyUpdate:
             type: boolean
             options:

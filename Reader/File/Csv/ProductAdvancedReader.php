@@ -83,6 +83,13 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_FLUSH_CALLBACK_KEY = 'flushCallback';
 
     /**
+     * Items limit mapping key
+     *
+     * @var string
+     */
+    const MAPPING_ITEMS_LIMIT_KEY = 'itemsLimit';
+
+    /**
      * Complete callback mapping key
      *
      * @var string
@@ -326,6 +333,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $this->fileIterator->next();
         if ($this->fileIterator->valid() && null !== $this->stepExecution) {
             $this->stepExecution->incrementSummaryInfo('item_position');
+        }
+
+        // Limit items to import if necessary
+        if (
+            isset($this->mapping[self::MAPPING_ITEMS_LIMIT_KEY])
+            && $this->stepExecution->getSummaryInfo('item_position') > $this->mapping[self::MAPPING_ITEMS_LIMIT_KEY]
+        ) {
+            return null;
         }
 
         $data = $this->fileIterator->current();

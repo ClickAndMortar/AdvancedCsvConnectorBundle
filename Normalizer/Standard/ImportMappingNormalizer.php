@@ -35,6 +35,7 @@ class ImportMappingNormalizer implements NormalizerInterface
             'completeCallback'   => $entity->getCompleteCallback(),
             'initializeCallback' => $entity->getInitializeCallback(),
             'flushCallback'      => $entity->getFlushCallback(),
+            'itemsLimit'         => $entity->getItemsLimit(),
             'onlyUpdate'         => $entity->getOnlyUpdate(),
         ];
 

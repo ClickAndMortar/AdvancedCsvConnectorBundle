@@ -176,11 +176,20 @@ extensions:
             fieldName: flushCallback
             label: candm_advanced_csv_connector.importMapping.field.label.flush_callback
 
+    pim-importMapping-edit-form-properties-items-limit:
+        module: pim/form/common/fields/text
+        parent: pim-importMapping-edit-form-properties-common
+        targetZone: content
+        position: 150
+        config:
+            fieldName: itemsLimit
+            label: candm_advanced_csv_connector.importMapping.field.label.items_limit
+
     pim-importMapping-edit-form-properties-only-update:
         module: pim/form/common/fields/boolean
         parent: pim-importMapping-edit-form-properties-common
         targetZone: content
-        position: 150
+        position: 160
         config:
             fieldName: onlyUpdate
             label: candm_advanced_csv_connector.importMapping.field.label.only_update

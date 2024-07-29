@@ -48,6 +48,13 @@ class ImportMapping extends AbstractCustomEntity
     protected $flushCallback;
 
     /**
+     * Items limit
+     *
+     * @var int
+     */
+    protected $itemsLimit;
+
+    /**
      * Update product only if already exists
      *
      * @var boolean
@@ -159,6 +166,26 @@ class ImportMapping extends AbstractCustomEntity
     }
 
     /**
+     * @return int
+     */
+    public function getItemsLimit()
+    {
+        return $this->itemsLimit;
+    }
+
+    /**
+     * @param int $itemsLimit
+     *
+     * @return ImportMapping
+     */
+    public function setItemsLimit($itemsLimit)
+    {
+        $this->itemsLimit = $itemsLimit;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function getOnlyUpdate()
@@ -234,6 +261,11 @@ class ImportMapping extends AbstractCustomEntity
         // Add flush callback if necessary
         if (!empty($this->getFlushCallback())) {
             $mapping['flushCallback'] = $this->getFlushCallback();
+        }
+
+        // Add items limit if necessary
+        if (!empty($this->getItemsLimit())) {
+            $mapping['itemsLimit'] = $this->getItemsLimit();
         }
 
         // Add only update parameter

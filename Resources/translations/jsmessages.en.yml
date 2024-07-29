@@ -123,6 +123,7 @@ candm_advanced_csv_connector:
                 complete_callback: Callback transform after mapping
                 initialize_callback: Callback before import
                 flush_callback: Callback after import
+                items_limit: Items limit
                 only_update: Products update only
 
         columns:
