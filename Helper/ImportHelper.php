@@ -86,11 +86,11 @@ class ImportHelper
     protected $stepExecution;
 
     /**
-     * Valid HTTP codes on visual download from URL
+     * Valid HTTP codes for file download
      *
      * @var array
      */
-    protected $downloadVisualValidCodes = [
+    protected $downloadValidCodes = [
         '200',
         '304',
     ];
@@ -248,43 +248,57 @@ class ImportHelper
         }
 
         try {
-            $curlRequest = curl_init($attributeValue);
-            curl_setopt($curlRequest, CURLOPT_HEADER, true);
-            curl_setopt($curlRequest, CURLOPT_NOBODY, true);
-            curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curlRequest, CURLOPT_TIMEOUT, 5);
-            curl_exec($curlRequest);
-            $responseCode = curl_getinfo($curlRequest, CURLINFO_HTTP_CODE);
-            curl_close($curlRequest);
+            if (!$this->canBeDownloaded($attributeValue)) {
+                return null;
+            }
 
-            if (in_array($responseCode, $this->downloadVisualValidCodes)) {
-                // Check for upload directory
-                $uploadDirectory = sprintf('%s/var/file_storage/downloaded_visuals', $this->kernelRootDirectory);
-                if (!is_dir($uploadDirectory)) {
-                    if (!mkdir($uploadDirectory, 0774, true)) {
-                        return $visualPath;
-                    }
+            // Check for upload directory
+            $uploadDirectory = sprintf('%s/var/file_storage/downloaded_visuals', $this->kernelRootDirectory);
+            if (!is_dir($uploadDirectory)) {
+                if (!mkdir($uploadDirectory, 0774, true)) {
+                    return $visualPath;
                 }
+            }
 
-                $extension  = pathinfo($attributeValue, PATHINFO_EXTENSION);
-                $visualPath = sprintf(
-                    '%s/%s.%s',
-                    $uploadDirectory,
-                    uniqid(self::PRODUCT_VISUAL_PREFIX),
-                    $extension
-                );
-                file_put_contents($visualPath, file_get_contents($attributeValue));
+            $extension  = pathinfo($attributeValue, PATHINFO_EXTENSION);
+            $visualPath = sprintf(
+                '%s/%s.%s',
+                $uploadDirectory,
+                uniqid(self::PRODUCT_VISUAL_PREFIX),
+                $extension
+            );
+            file_put_contents($visualPath, file_get_contents($attributeValue));
 
-                // Check visual
-                if (filesize($visualPath) < self::EXIF_IMAGETYPE_FILE_MIN_SIZE || exif_imagetype($visualPath) === false) {
-                    return null;
-                }
+            // Check visual
+            if (filesize($visualPath) < self::EXIF_IMAGETYPE_FILE_MIN_SIZE || exif_imagetype($visualPath) === false) {
+                return null;
             }
         } catch (Exception $e) {
             return null;
         }
 
         return $visualPath;
+    }
+
+    /**
+     * Check if file with $url can be downloaded
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public function canBeDownloaded($url)
+    {
+        $curlRequest = curl_init($url);
+        curl_setopt($curlRequest, CURLOPT_HEADER, true);
+        curl_setopt($curlRequest, CURLOPT_NOBODY, true);
+        curl_setopt($curlRequest, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlRequest, CURLOPT_TIMEOUT, 5);
+        curl_exec($curlRequest);
+        $responseCode = curl_getinfo($curlRequest, CURLINFO_HTTP_CODE);
+        curl_close($curlRequest);
+
+        return in_array($responseCode, $this->downloadValidCodes);
     }
 
     /**
