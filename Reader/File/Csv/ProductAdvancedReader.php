@@ -282,22 +282,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
             $this->toArchiveFilesPaths      = $this->filesPaths;
         }
 
-        if (!empty($this->waitingListCsvFilesPaths)) {
-            $this->currentFilePath = array_shift($this->waitingListCsvFilesPaths);
-            $delimiter             = $jobParameters->get('delimiter');
-            $enclosure             = $jobParameters->get('enclosure');
-            $defaultOptions        = [
-                'reader_options' => [
-                    'fieldDelimiter' => $delimiter,
-                    'fieldEnclosure' => $enclosure,
-                ],
-            ];
-            $this->fileIterator    = $this->fileIteratorFactory->create(
-                $this->currentFilePath,
-                array_merge($defaultOptions, $this->options)
-            );
-            $this->fileIterator->rewind();
-        }
+        $this->updateCurrentFilePathFromWaitingList();
     }
 
     /**
@@ -346,8 +331,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $data = $this->fileIterator->current();
         if (is_null($data)) {
             if (!empty($this->waitingListCsvFilesPaths)) {
-                // Read files from waiting list
-                $this->initialize();
+                $this->updateCurrentFilePathFromWaitingList();
 
                 return $this->read();
             } else {
@@ -584,5 +568,31 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $this->stepExecution->setExitStatus(new ExitStatus(ExitStatus::FAILED));
         $this->stepExecution->setEndTime(new \DateTime('now'));
         $this->stepExecution->addFailureException(new \Exception($errorMessage));
+    }
+
+    /**
+     * Update current file path from waiting list
+     *
+     * @return void
+     */
+    protected function updateCurrentFilePathFromWaitingList()
+    {
+        if (!empty($this->waitingListCsvFilesPaths)) {
+            $jobParameters         = $this->stepExecution->getJobParameters();
+            $this->currentFilePath = array_shift($this->waitingListCsvFilesPaths);
+            $delimiter             = $jobParameters->get('delimiter');
+            $enclosure             = $jobParameters->get('enclosure');
+            $defaultOptions        = [
+                'reader_options' => [
+                    'fieldDelimiter' => $delimiter,
+                    'fieldEnclosure' => $enclosure,
+                ],
+            ];
+            $this->fileIterator    = $this->fileIteratorFactory->create(
+                $this->currentFilePath,
+                array_merge($defaultOptions, $this->options)
+            );
+            $this->fileIterator->rewind();
+        }
     }
 }
