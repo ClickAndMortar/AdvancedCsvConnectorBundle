@@ -297,6 +297,12 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
             );
         }
 
+        // Manage custom date placeholder
+        if (strpos($currentFilePath, '%date%') !== false) {
+            $date = $this->stepExecution->getStartTime()->format('Ymd');
+            $currentFilePath = str_replace('%date%', $date, $currentFilePath);
+        }
+
         $flatFiles = $this->flusher->flush(
             $this->flatRowBuffer,
             $this->getWriterConfiguration(),
