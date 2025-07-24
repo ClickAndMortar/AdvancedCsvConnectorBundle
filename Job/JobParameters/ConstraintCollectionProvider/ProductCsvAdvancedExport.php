@@ -49,6 +49,9 @@ class ProductCsvAdvancedExport implements ConstraintCollectionProviderInterface
             ],
             'forceXlsx' => [
                 new Type('bool')
+            ],
+            'onlyMediaUrl' => [
+                new Type('bool')
             ]
         ]);
 

@@ -36,8 +36,10 @@ services:
             - '@candm_advanced_csv_connector.repository.export_mapping'
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
+            - '@router'
             - 'fr_FR'
             - 'filePath'
+            - '%env(AKENEO_PIM_URL)%'
 
     candm_advanced_csv_connector.writer.file.csv_advanced_product_model:
         class: '%candm_advanced_csv_connector.writer.file.csv_advanced_product_model.class%'
@@ -56,5 +58,7 @@ services:
             - '@candm_advanced_csv_connector.repository.export_mapping'
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
+            - '@router'
             - 'fr_FR'
             - 'filePath'
+            - '%env(AKENEO_PIM_URL)%'

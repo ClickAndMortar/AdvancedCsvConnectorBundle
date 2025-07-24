@@ -41,6 +41,9 @@ batch_jobs:
             force_xlsx:
                 label: Exporter au format Excel
                 help: Permet de forcer l'export au format .xlsx
+            only_media_url:
+                label: Exporter uniquement les URLs des médias
+                help: Permet d'exporter uniquement les URLs des médias au lieu des données complètes des médias (uniquement si l'export des médias est activé)
         export:
             label: Export des produits
 
@@ -55,6 +58,9 @@ batch_jobs:
             force_xlsx:
                 label: Exporter au format Excel
                 help: Permet de forcer l'export au format .xlsx
+            only_media_url:
+                label: Exporter uniquement les URLs des médias
+                help: Permet d'exporter uniquement les URLs des médias au lieu des données complètes des médias (uniquement si l'export des médias est activé)
         export:
             label: Export des modèles produits
 

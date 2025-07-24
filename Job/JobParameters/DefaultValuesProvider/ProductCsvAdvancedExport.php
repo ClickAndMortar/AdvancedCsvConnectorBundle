@@ -41,7 +41,8 @@ class ProductCsvAdvancedExport implements DefaultValuesProviderInterface
         return array_merge($this->baseDefaultValuesProvider->getDefaultValues(), [
             'encoding'  => null,
             'mapping'   => null,
-            'forceXlsx' => false
+            'forceXlsx' => false,
+            'onlyMediaUrl' => false,
         ]);
     }
 

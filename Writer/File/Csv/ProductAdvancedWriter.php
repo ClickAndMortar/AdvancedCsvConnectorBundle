@@ -31,6 +31,7 @@ use Doctrine\ORM\EntityManager;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 use Symfony\Component\DependencyInjection\Container;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Writer\File\ProductColumnSorterByMapping;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Write product data into a csv file by reading JSON mapping
@@ -177,11 +178,21 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $luaUpdaterRepository;
 
     /**
+     * @var UrlGeneratorInterface
+     */
+    protected $router;
+
+    /**
      * Default locale
      *
      * @var string
      */
     protected $defaultLocale;
+
+    /**
+     * @var string
+     */
+    protected $akeneoPimUrl;
 
     /**
      * @var FlatTranslatorInterface
@@ -243,8 +254,10 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         CustomEntityRepository $exportMappingRepository,
         Container $container,
         CustomEntityRepository $luaUpdaterRepository,
+        UrlGeneratorInterface $router,
         string $defaultLocale,
         $jobParamFilePath = self::DEFAULT_FILE_PATH,
+        string $akeneoPimUrl
     )
     {
         parent::__construct($arrayConverter, $bufferFactory, $flusher, $attributeRepository, $fileExporterPath, $flatTranslator, $fileInfoRepository, $filesystemProvider, $mediaAttributeTypes, $jobParamFilePath);
@@ -253,7 +266,9 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $this->exportMappingRepository = $exportMappingRepository;
         $this->container               = $container;
         $this->luaUpdaterRepository    = $luaUpdaterRepository;
+        $this->router                  = $router;
         $this->defaultLocale           = $defaultLocale;
+        $this->akeneoPimUrl            = $akeneoPimUrl;
     }
 
     /**
@@ -270,7 +285,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $localesToExport  = $parameters->get('filters')['structure']['locales'];
         foreach ($items as $item) {
             if ($parameters->has('with_media') && $parameters->get('with_media')) {
-                $item = $this->resolveMediaPaths($item, $directory);
+                if ($parameters->has('onlyMediaUrl') && $parameters->get('onlyMediaUrl')) {
+                    $item = $this->resolveMediaPathsToUrls($item);
+                } else {
+                    $item = $this->resolveMediaPaths($item, $directory);
+                }
             }
             $flatItem    = $this->arrayConverter->convert($item, $converterOptions);
             $flatItem    = $this->updateItemByMapping($flatItem, $mapping, $localesToExport);
@@ -579,5 +598,67 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         }
 
         return $columnsOrder;
+    }
+
+    /**
+     * Resolves media file paths in the item array to public URLs
+     *
+     * @param array $item
+     *
+     * @return array
+     */
+    protected function resolveMediaPathsToUrls(array $item): array
+    {
+        $attributeTypes = $this->attributeRepository->getAttributeTypeByCodes(array_keys($item['values']));
+        $mediaAttributeTypes = array_filter(
+            $attributeTypes,
+            fn (string $attributeCode): bool =>  \in_array($attributeCode, $this->mediaAttributeTypes)
+        );
+        $identifier = $this->getItemIdentifier($item);
+
+        foreach ($mediaAttributeTypes as $attributeCode => $attributeType) {
+            if (!isset($item['values'][$attributeCode])) {
+                continue;
+            }
+
+            foreach ($item['values'][$attributeCode] as $index => $value) {
+                if ($value['data'] === null) {
+                    continue;
+                }
+
+                if (array_key_exists('paths', $value)) {
+                    $paths = [];
+                    foreach ($value['paths'] as $fileKey) {
+                        $paths[] = $this->getUrlFromFileKey($fileKey);
+                    }
+                    $item['values'][$attributeCode][$index]['paths'] = $paths;
+                } elseif (\is_string($value['data'])) {
+                    $item['values'][$attributeCode][$index]['data'] = $this->getUrlFromFileKey($value['data']);
+                }
+            }
+        }
+
+        return $item;
+    }
+
+    /**
+     * Get url from $fileKey
+     *
+     * @param string $fileKey
+     *
+     * @return string
+     */
+    protected function getUrlFromFileKey(string $fileKey): string
+    {
+        $mediaPath = $this->router->generate(
+            'pim_enrich_media_download',
+            [
+                'filename' => urlencode($fileKey),
+            ]
+        );
+        // Fix slash in url
+        $mediaPath = str_replace('%2F', '%252F', $mediaPath);
+        
+        return sprintf('%s%s', $this->akeneoPimUrl, $mediaPath);
     }
 }

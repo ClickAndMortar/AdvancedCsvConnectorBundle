@@ -39,6 +39,9 @@ batch_jobs:
             force_xlsx:
                 label: Export to Excel format
                 help: Allows to force the export in .xlsx format
+            only_media_url:
+                label: Export only media URLs
+                help: Allows to export only media URLs instead of the full media data (only if export media is enabled)
         export:
             label: Products export
 
@@ -50,9 +53,9 @@ batch_jobs:
             encoding:
                 label: Encoding
                 help: Output file encoding (UTF-8 by default)
-            force_xlsx:
-                label: Export to Excel format
-                help: Allows to force the export in .xlsx format
+            only_media_url:
+                label: Export only media URLs
+                help: Allows to export only media URLs instead of the full media data (only if export media is enabled)
         export:
             label: Products models export
     default_steps:

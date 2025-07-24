@@ -145,3 +145,18 @@ Some explanations for table columns:
 
 Once mapping is saved, go to `Exports` part and create a new job with type `Export des produits avancé (CSV)`.
 After job creation, go to edition mode and update `Mapping` parameter in global parameters tab.
+
+#### Media url export
+
+To allow media url export, you need to adapt your `config/packages/security.yml` file:
+
+```yaml
+security:
+    firewalls:
+        media_download:
+          pattern:                        ^/media/download
+          security:                       false
+          anonymous:                      true
+    access_control:
+      - { path: ^/media/download, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+```

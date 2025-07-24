@@ -173,6 +173,17 @@ extensions:
             label: pim_import_export.form.job_instance.tab.properties.with_media.title
             tooltip: pim_import_export.form.job_instance.tab.properties.with_media.help
 
+    pim-job-instance-csv-advanced-product-export-edit-properties-only-media-url:
+        module: pim/job/common/edit/field/switch
+        parent: pim-job-instance-csv-advanced-product-export-edit-global
+        position: 185
+        targetZone: properties
+        config:
+            fieldCode: configuration.onlyMediaUrl
+            readOnly: false
+            label: pim_import_export.form.job_instance.tab.properties.only_media_url.title
+            tooltip: pim_import_export.form.job_instance.tab.properties.only_media_url.help
+
     pim-job-instance-csv-advanced-product-export-edit-properties-force-xlsx:
         module: pim/job/common/edit/field/switch
         parent: pim-job-instance-csv-advanced-product-export-edit-global
