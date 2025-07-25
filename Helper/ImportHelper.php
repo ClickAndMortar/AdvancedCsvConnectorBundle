@@ -12,6 +12,7 @@ use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeRepository;
 use Akeneo\Pim\Structure\Component\Model\Attribute;
 use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Symfony\Component\Process\Process;
+use Akeneo\Tool\Component\Batch\Item\DataInvalidItem;
 
 /**
  * Import helper
@@ -356,12 +357,6 @@ class ImportHelper
      */
     protected function addWarning($message, $messagesParameters = [])
     {
-        $warning = new Warning(
-            $this->stepExecution,
-            $this->translator->trans($message, $messagesParameters),
-            [],
-            []
-        );
-        $this->jobRepository->addWarning($warning);
+        $this->stepExecution->addWarning($this->translator->trans($message, $messagesParameters), [], new DataInvalidItem([]));
     }
 }
