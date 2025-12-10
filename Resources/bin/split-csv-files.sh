@@ -8,6 +8,7 @@ FILE_PATH=${1}
 LINES_PER_FILE=${2}
 TARGET_FOLDER=${3}
 PREFIX_FILES=${4}
+SEPARATOR=";"
 
 # Help menu
 print_help() {
@@ -18,8 +19,9 @@ You need to provide the following arguments:
 2) Lines per each new file.
 3) Target folder for new files.
 4) Prefix for new generated files.
-Usage: bash ${0##*/} --file_path=FILE_PATH --lines_per_file=LINES_PER_FILE --target_folder=TARGET_FOLDER --prefix=PREFIX_FILES
-Example: bash ${0##*/} --file_path=/tmp/frames_csv.csv --lines_per_file=500 --target_folder=/tmp --prefix=products_part_
+5) Separator (optional, default: ;).
+Usage: bash ${0##*/} --file_path=FILE_PATH --lines_per_file=LINES_PER_FILE --target_folder=TARGET_FOLDER --prefix=PREFIX_FILES [--separator=SEPARATOR]
+Example: bash ${0##*/} --file_path=/tmp/frames_csv.csv --lines_per_file=500 --target_folder=/tmp --prefix=products_part_ --separator=;
 HELP
 exit 0
 }
@@ -39,6 +41,9 @@ while [ $# -gt 0 ]; do
     --prefix=*)
       PREFIX_FILES="${1#*=}"
       ;;
+    --separator=*)
+      SEPARATOR="${1#*=}"
+      ;;
     --help) print_help;;
     *)
       printf "Invalid argument, run --help for valid arguments.\n";
@@ -47,19 +52,96 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+# Count occurrences of separator in a string
+count_separators() {
+    echo "$1" | awk -F"$SEPARATOR" '{print NF-1}'
+}
+
 if [ -e $FILE_PATH ] ; then
-    # Create files
-    tail -n +2 $FILE_PATH | split -l $LINES_PER_FILE --additional-suffix=.csv - $TARGET_FOLDER/$PREFIX_FILES
+    # Get header and count expected separators per record
+    HEADER=$(head -n 1 "$FILE_PATH")
+    EXPECTED_SEPARATORS=$(count_separators "$HEADER")
+
+    # Split CSV respecting multiline fields
+    awk -v lines_per_file="$LINES_PER_FILE" \
+        -v target_folder="$TARGET_FOLDER" \
+        -v prefix="$PREFIX_FILES" \
+        -v sep="$SEPARATOR" \
+        -v expected_sep="$EXPECTED_SEPARATORS" \
+    'BEGIN {
+        file_num = 0
+        line_count = 0
+        current_record = ""
+        current_sep_count = 0
+        # Generate suffix like split command (aa, ab, ac...)
+        split("a b c d e f g h i j k l m n o p q r s t u v w x y z", letters, " ")
+    }
+
+    function get_suffix(num) {
+        first = int(num / 26)
+        second = num % 26
+        return letters[first + 1] letters[second + 1]
+    }
+
+    function write_record(record) {
+        if (line_count % lines_per_file == 0) {
+            if (file_num > 0) {
+                close(current_file)
+            }
+            current_file = target_folder "/" prefix get_suffix(file_num) ".csv"
+            file_num++
+        }
+        print record > current_file
+        line_count++
+    }
+
+    function count_sep(str) {
+        n = gsub(sep, sep, str)
+        return n
+    }
+
+    NR == 1 {
+        # Store header, do not write yet (will be added later)
+        header = $0
+        next
+    }
+
+    {
+        if (current_record == "") {
+            current_record = $0
+            current_sep_count = count_sep($0)
+        } else {
+            current_record = current_record "\n" $0
+            current_sep_count += count_sep($0)
+        }
+
+        # Check if we have a complete record
+        if (current_sep_count >= expected_sep) {
+            write_record(current_record)
+            current_record = ""
+            current_sep_count = 0
+        }
+    }
+
+    END {
+        # Write any remaining record
+        if (current_record != "") {
+            write_record(current_record)
+        }
+        if (file_num > 0) {
+            close(current_file)
+        }
+    }' "$FILE_PATH"
 
     # Add header for all files
     for CURRENT_FILE in $TARGET_FOLDER/$PREFIX_FILES*
     do
-        head -n 1 $FILE_PATH > $TARGET_FOLDER/tmp_file
-        cat $CURRENT_FILE >> $TARGET_FOLDER/tmp_file
-        mv -f $TARGET_FOLDER/tmp_file $CURRENT_FILE
+        head -n 1 "$FILE_PATH" > "$TARGET_FOLDER/tmp_file"
+        cat "$CURRENT_FILE" >> "$TARGET_FOLDER/tmp_file"
+        mv -f "$TARGET_FOLDER/tmp_file" "$CURRENT_FILE"
     done
 
     # Delete original file
-    rm -f $FILE_PATH
+    rm -f "$FILE_PATH"
     printf "$FILE_PATH file splitted !\n"
 fi
