@@ -1,0 +1,8 @@
+parameters:
+    candm_advanced_csv_connector.service.lua_script_runner.class: ClickAndMortar\AdvancedCsvConnectorBundle\Service\LuaScriptRunner
+
+services:
+    candm_advanced_csv_connector.service.lua_script_runner:
+        class: '%candm_advanced_csv_connector.service.lua_script_runner.class%'
+        arguments:
+            - '@candm_advanced_csv_connector.repository.lua_updater'

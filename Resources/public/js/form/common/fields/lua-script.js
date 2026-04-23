@@ -17,7 +17,7 @@ define([
         return BaseField.extend({
             template: _.template(template),
             events: {
-                'keyup textarea': function (event) {
+                'keyup textarea[name]': function (event) {
                     this.errors = [];
                     this.updateModel(this.getFieldValue(event.target));
                 },
@@ -28,6 +28,17 @@ define([
                         'testValue': $('.AknTextField--testValue').val()
                     };
 
+                    var rawOriginal = $('.AknTextareaField--testOriginalItem').val();
+                    if (rawOriginal && rawOriginal.trim() !== '') {
+                        try {
+                            data.originalItem = JSON.parse(rawOriginal);
+                        } catch (e) {
+                            $messageContainer.empty();
+                            $messageContainer.append('<div class="AknMessageBox AknMessageBox--danger">originalItem: invalid JSON — ' + _.escape(e.message) + '</div>');
+                            return;
+                        }
+                    }
+
                     $.ajax({
                         method: 'POST',
                         url: Routing.generate('candm_advanced_csv_connector_api_luaUpdater_test'),
@@ -36,7 +47,11 @@ define([
                         success: function (response) {
                             $messageContainer.empty();
                             if (_.has(response, 'value')) {
-                                $messageContainer.append('<div class="AknMessageBox AknMessageBox--apply">' + response.value + '</div>');
+                                var raw = response.value;
+                                var display = (raw !== null && typeof raw === 'object')
+                                    ? JSON.stringify(raw, null, 2)
+                                    : String(raw);
+                                $messageContainer.append('<div class="AknMessageBox AknMessageBox--apply"><pre>' + _.escape(display) + '</pre></div>');
                             }
                         },
                         error: function (response) {

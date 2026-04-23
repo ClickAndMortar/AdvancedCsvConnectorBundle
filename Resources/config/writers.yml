@@ -36,6 +36,7 @@ services:
             - '@candm_advanced_csv_connector.repository.export_mapping'
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
+            - '@candm_advanced_csv_connector.service.lua_script_runner'
             - 'fr_FR'
             - 'file_path'
 
@@ -56,5 +57,6 @@ services:
             - '@candm_advanced_csv_connector.repository.export_mapping'
             - '@service_container'
             - '@candm_advanced_csv_connector.repository.lua_updater'
+            - '@candm_advanced_csv_connector.service.lua_script_runner'
             - 'fr_FR'
             - 'file_path'

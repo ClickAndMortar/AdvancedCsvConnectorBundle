@@ -4,5 +4,7 @@ parameters:
 services:
     candm_advanced_csv_connector.validator.lua_script:
         class: '%candm_advanced_csv_connector.validator.lua_script.class%'
+        arguments:
+            - '@candm_advanced_csv_connector.service.lua_script_runner'
         tags:
         - { name: validator.constraint_validator, alias: candm_advanced_csv_connector.validator.lua_script }

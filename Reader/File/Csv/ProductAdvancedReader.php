@@ -15,6 +15,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Connector\Reader\File\Csv\ProductRea
 use Akeneo\Tool\Component\Connector\Reader\File\FileIteratorFactory;
 use Akeneo\Tool\Component\Connector\Reader\File\MediaPathTransformer;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\MultiFilesReaderInterface;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Service\LuaScriptRunner;
 use Pim\Bundle\CustomEntityBundle\Entity\Repository\CustomEntityRepository;
 use Doctrine\ORM\EntityRepository;
 
@@ -130,11 +131,14 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     const MAPPING_ONLY_UPDATE = 'onlyUpdate';
 
     /**
-     * LUA script prefix used to limit functions
+     * LUA script prefix used to limit functions.
+     *
+     * @deprecated Use LuaScriptRunner::SCRIPT_PREFIX. Kept as an alias for
+     *             backward compatibility with any external reference.
      *
      * @var string
      */
-    const LUA_SCRIPT_PREFIX = 'local _ENV = { attributeValue = attributeValue, string = string, math = math, ipairs = ipairs, load = load, next = next, pairs = pairs, rawequal = rawequal, rawget = rawget, rawlen = rawlen, rawset = rawset, select = select, tonumber = tonumber, tostring = tostring, type = type}';
+    const LUA_SCRIPT_PREFIX = LuaScriptRunner::SCRIPT_PREFIX;
 
     /**
      * Import helper
@@ -214,6 +218,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
     protected $luaUpdaters = [];
 
     /**
+     * @var LuaScriptRunner
+     */
+    protected $luaScriptRunner;
+
+    /**
      * Product advanced reader constructor.
      *
      * @param FileIteratorFactory     $fileIteratorFactory
@@ -223,6 +232,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
      * @param EntityRepository        $productRepository
      * @param ImportMappingRepository $importMappingRepository
      * @param ImportMappingRepository $luaUpdaterRepository
+     * @param LuaScriptRunner         $luaScriptRunner
      * @param array                   $options
      */
     public function __construct(
@@ -233,6 +243,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         EntityRepository $productRepository,
         CustomEntityRepository $importMappingRepository,
         CustomEntityRepository $luaUpdaterRepository,
+        LuaScriptRunner $luaScriptRunner,
         array $options = []
     )
     {
@@ -242,6 +253,7 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         $this->productRepository       = $productRepository;
         $this->importMappingRepository = $importMappingRepository;
         $this->luaUpdaterRepository    = $luaUpdaterRepository;
+        $this->luaScriptRunner         = $luaScriptRunner;
     }
 
     /**
@@ -440,14 +452,11 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
 
                         // Apply LUA or PHP script on value
                         if ($this->luaUpdaters[$updaterCode] !== null) {
-                            $luaUpdater = $this->luaUpdaters[$updaterCode];
-                            $lua        = new \Lua();
-                            $lua->assign('attributeValue', $value);
-                            $value = $lua->eval(sprintf(
-                                "%s\n%s",
-                                self::LUA_SCRIPT_PREFIX,
-                                $luaUpdater->getScript()
-                            ));
+                            $value = $this->luaScriptRunner->run(
+                                $this->luaUpdaters[$updaterCode]->getScript(),
+                                $value,
+                                $item
+                            );
                         } elseif (method_exists($this->importHelper, $updaterCode)) {
                             $value = $this->importHelper->{$updaterCode}($value, $attributesCode);
                         }

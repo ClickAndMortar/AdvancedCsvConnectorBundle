@@ -3,7 +3,7 @@
 namespace ClickAndMortar\AdvancedCsvConnectorBundle\Validator;
 
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater;
-use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductAdvancedReader;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Service\LuaScriptRunner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -15,12 +15,12 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class LuaScriptValidator extends ConstraintValidator
 {
-    /**
-     * Test attribute value
-     *
-     * @var string
-     */
-    const ATTRIBUTE_VALUE_TEST = '1';
+    protected LuaScriptRunner $luaScriptRunner;
+
+    public function __construct(LuaScriptRunner $luaScriptRunner)
+    {
+        $this->luaScriptRunner = $luaScriptRunner;
+    }
 
     /**
      * @param LuaUpdater $luaUpdater
@@ -30,22 +30,15 @@ class LuaScriptValidator extends ConstraintValidator
     {
         $luaScript = $luaUpdater->getScript();
 
-        // Check if script is empty
         if (empty($luaScript)) {
             $this->context->addViolation(
                 'candm_advanced_csv_connector.lua_updater.validation.lua_script.empty'
             );
+
+            return;
         }
 
-        // Check script validity
-        $lua = new \Lua();
-        $lua->assign('attributeValue', self::ATTRIBUTE_VALUE_TEST);
-        $value = $lua->eval(sprintf(
-            "%s\n%s",
-            ProductAdvancedReader::LUA_SCRIPT_PREFIX,
-            $luaScript
-        ));
-        if ($value === false) {
+        if (!$this->luaScriptRunner->validate($luaScript)) {
             $this->context->addViolation(
                 'candm_advanced_csv_connector.lua_updater.validation.lua_script.error'
             );

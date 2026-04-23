@@ -17,6 +17,7 @@ use ClickAndMortar\AdvancedCsvConnectorBundle\Doctrine\ORM\Repository\LuaUpdater
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\ExportMapping;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Entity\LuaUpdater;
 use ClickAndMortar\AdvancedCsvConnectorBundle\Reader\File\Csv\ProductAdvancedReader;
+use ClickAndMortar\AdvancedCsvConnectorBundle\Service\LuaScriptRunner;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractCustomEntity;
 use Pim\Bundle\CustomEntityBundle\Entity\AbstractTranslatableCustomEntity;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
@@ -213,6 +214,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
     protected $luaUpdaters = [];
 
     /**
+     * @var LuaScriptRunner
+     */
+    protected $luaScriptRunner;
+
+    /**
      * @param ArrayConverterInterface            $arrayConverter
      * @param BufferFactory                      $bufferFactory
      * @param FlatItemBufferFlusher              $flusher
@@ -225,6 +231,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
      * @param CustomEntityRepository             $exportMappingRepository
      * @param Container                          $container
      * @param CustomEntityRepository             $luaUpdaterRepository
+     * @param LuaScriptRunner                    $luaScriptRunner
      * @param string                             $defaultLocale
      * @param String                             $jobParamFilePath
      */
@@ -243,6 +250,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         CustomEntityRepository $exportMappingRepository,
         Container $container,
         CustomEntityRepository $luaUpdaterRepository,
+        LuaScriptRunner $luaScriptRunner,
         string $defaultLocale,
         $jobParamFilePath = self::DEFAULT_FILE_PATH,
     )
@@ -253,6 +261,7 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
         $this->exportMappingRepository = $exportMappingRepository;
         $this->container               = $container;
         $this->luaUpdaterRepository    = $luaUpdaterRepository;
+        $this->luaScriptRunner         = $luaScriptRunner;
         $this->defaultLocale           = $defaultLocale;
     }
 
@@ -501,14 +510,11 @@ class ProductAdvancedWriter extends AbstractItemMediaWriter implements
 
                     // Apply LUA script on value
                     if ($this->luaUpdaters[$updaterCode] !== null) {
-                        $luaUpdater = $this->luaUpdaters[$updaterCode];
-                        $lua        = new \Lua();
-                        $lua->assign('attributeValue', $attributeValue);
-                        $attributeValue = $lua->eval(sprintf(
-                            "%s\n%s",
-                            ProductAdvancedReader::LUA_SCRIPT_PREFIX,
-                            $luaUpdater->getScript()
-                        ));
+                        $attributeValue = $this->luaScriptRunner->run(
+                            $this->luaUpdaters[$updaterCode]->getScript(),
+                            $attributeValue,
+                            $item
+                        );
                     } elseif (method_exists($this->exportHelper, $updaterCode)) {
                         $attributeValue = $this->exportHelper->{$updaterCode}($attributeValue, $item);
                     }

@@ -8,3 +8,4 @@ services:
         class: '%candm_advanced_csv_connector.controller.lua_updater.class%'
         arguments:
             - '@translator'
+            - '@candm_advanced_csv_connector.service.lua_script_runner'
