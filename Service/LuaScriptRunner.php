@@ -25,8 +25,6 @@ class LuaScriptRunner
      */
     const SCRIPT_PREFIX = 'local _ENV = { attributeValue = attributeValue, originalItem = originalItem, loadData = loadData, string = string, math = math, ipairs = ipairs, load = load, next = next, pairs = pairs, rawequal = rawequal, rawget = rawget, rawlen = rawlen, rawset = rawset, select = select, tonumber = tonumber, tostring = tostring, type = type}';
 
-    const DATA_SCRIPT_PREFIX = '_data_';
-
     protected LuaUpdaterRepository $luaUpdaterRepository;
 
     /**
@@ -99,7 +97,12 @@ class LuaScriptRunner
 
     /**
      * Scan the script for `loadData("…")` calls and pre-execute the
-     * referenced `_data_*` scripts once, caching their returned tables.
+     * referenced data scripts once, caching their returned tables.
+     *
+     * Any LuaUpdater code can be referenced — the script it points to is
+     * expected to return a LUA table (naming convention: data scripts are
+     * typically prefixed with `getData…` or `_data_…`, but this is not
+     * enforced).
      *
      * @return array<string, mixed> Map of updater code => LUA table.
      */
@@ -111,9 +114,6 @@ class LuaScriptRunner
 
         $resolved = [];
         foreach (array_unique($matches[1]) as $code) {
-            if (strpos($code, self::DATA_SCRIPT_PREFIX) !== 0) {
-                continue;
-            }
             if (!array_key_exists($code, $this->dataCache)) {
                 $this->dataCache[$code] = $this->executeDataScript($code);
             }
@@ -124,7 +124,7 @@ class LuaScriptRunner
     }
 
     /**
-     * Execute a `_data_*` script in its own sandbox and return the table it
+     * Execute a data script in its own sandbox and return the table it
      * produces. No `originalItem` / `loadData` chain here — data scripts are
      * expected to be pure `return { … }` declarations.
      */
