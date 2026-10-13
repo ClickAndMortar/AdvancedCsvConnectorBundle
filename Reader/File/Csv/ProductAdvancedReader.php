@@ -289,7 +289,9 @@ class ProductAdvancedReader extends ProductReader implements InitializableInterf
         if (empty($this->filesPaths)) {
             $jobFilePath                    = $jobParameters->get('storage')['file_path'];
             $fromEncoding                   = $jobParameters->get('fromEncoding');
-            $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath, $fromEncoding);
+            $delimiter                      = $jobParameters->has('delimiter') ? $jobParameters->get('delimiter') : ';';
+            $enclosure                      = $jobParameters->has('enclosure') ? $jobParameters->get('enclosure') : '"';
+            $this->filesPaths               = $this->importHelper->splitFiles($jobFilePath, $fromEncoding, $delimiter, $enclosure);
             $this->waitingListCsvFilesPaths = $this->filesPaths;
             $this->toArchiveFilesPaths      = $this->filesPaths;
         }

@@ -136,10 +136,12 @@ class ImportHelper
      *
      * @param string $filePath
      * @param string $fromEncoding
+     * @param string $delimiter
+     * @param string $enclosure
      *
      * @return array
      */
-    public function splitFiles($filePath, $fromEncoding = '')
+    public function splitFiles($filePath, $fromEncoding = '', $delimiter = ';', $enclosure = '"')
     {
         $filePaths                 = [];
         $hasAtLeastOneSplittedFile = false;
@@ -164,12 +166,14 @@ class ImportHelper
             if ($linesNumber > self::MAX_LINES_PER_FILE + 2) {
                 $hasAtLeastOneSplittedFile = true;
                 $bashCommand               = sprintf(
-                    'sh %s/vendor/clickandmortar/advanced-csv-connector-bundle/Resources/bin/split-csv-files.sh --file_path=%s --lines_per_file=%s --target_folder=%s --prefix=%s',
+                    'sh %s/vendor/clickandmortar/advanced-csv-connector-bundle/Resources/bin/split-csv-files.sh --file_path=%s --lines_per_file=%s --target_folder=%s --prefix=%s --separator=%s --enclosure=%s',
                     $this->kernelRootDirectory,
                     $currentFilePath,
                     self::MAX_LINES_PER_FILE,
                     $directoryPath,
-                    $prefixFilename . $index . '_'
+                    $prefixFilename . $index . '_',
+                    escapeshellarg((string) $delimiter),
+                    escapeshellarg((string) $enclosure)
                 );
                 $process                   = Process::fromShellCommandline($bashCommand);
                 $process->mustRun();
